@@ -1,0 +1,1089 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Home of DS635 - Machine Learning System Engineering, DAU">
+      
+      
+      
+        <link rel="canonical" href="https://DS635.ankushchander.com/lectures/Lecture2/">
+      
+      
+        <link rel="prev" href="../Lecture1/">
+      
+      
+        <link rel="next" href="../Lecture3_4/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>2:Hardware Accelerators - DS635 - Machine Learning System Engineering | DAU</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#why-accelerators-exist" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-header__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DS635 - Machine Learning System Engineering | DAU
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              2:Hardware Accelerators
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Lecture0/" class="md-tabs__link">
+          
+  
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-nav__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DS635 - Machine Learning System Engineering | DAU
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lectures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lectures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0:Course Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1:Machine Learning Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:Hardware Accelerators
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:Hardware Accelerators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-cpu-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The CPU baseline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The CPU baseline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-machine-you-already-know" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The machine you already know
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-the-transistors-actually-go" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where the transistors actually go
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Where the transistors actually go">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#branch-prediction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Branch prediction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#out-of-order-execution-register-renaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out-of-order execution &amp; register renaming
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prefetching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prefetching
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-memory-wall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The memory wall
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-workload-what-does-ml-actually-ask-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The workload: what does ML actually ask for?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The workload: what does ML actually ask for?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#its-matmul-all-the-way-down" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        It's matmul all the way down
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anatomy-of-one-matmul" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anatomy of one matmul
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-three-properties-that-change-everything" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The three properties that change everything
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#now-look-back-at-the-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Now look back at the CPU
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture3_4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3_4:Memory Hierarchy & Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-cpu-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The CPU baseline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The CPU baseline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-machine-you-already-know" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The machine you already know
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-the-transistors-actually-go" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where the transistors actually go
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Where the transistors actually go">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#branch-prediction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Branch prediction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#out-of-order-execution-register-renaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out-of-order execution &amp; register renaming
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prefetching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prefetching
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-memory-wall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The memory wall
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-workload-what-does-ml-actually-ask-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The workload: what does ML actually ask for?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The workload: what does ML actually ask for?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#its-matmul-all-the-way-down" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        It's matmul all the way down
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anatomy-of-one-matmul" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anatomy of one matmul
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-three-properties-that-change-everything" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The three properties that change everything
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#now-look-back-at-the-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Now look back at the CPU
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="why-accelerators-exist">Why Accelerators Exist</h1>
+<h2 id="the-cpu-baseline">The CPU baseline</h2>
+<h3 id="the-machine-you-already-know">The machine you already know</h3>
+<p><img alt="" src="../../images/ai_acceleration/fetch_decode_execute.png" />  </p>
+<ul>
+<li>The von Neumann loop: <strong>fetch → decode → execute</strong> (→ memory access → write back)<ul>
+<li>Fetch the next instruction from memory, decode what it asks for, execute it, repeat — billions of times per second</li>
+</ul>
+</li>
+<li>One core = one instruction stream, executed <em>in program order</em> (as far as you can tell)</li>
+<li>The contract a CPU offers: run <em>any</em> program — branchy, pointer-chasing, unpredictable — as fast as possible</li>
+</ul>
+<h3 id="where-the-transistors-actually-go">Where the transistors actually go</h3>
+<p>A modern CPU core is mostly <em>not</em> arithmetic. The ALU is a sliver; the rest is machinery for keeping that one instruction stream moving:</p>
+<ul>
+<li><strong>Branch prediction</strong> — guess which way an <code>if</code> goes before it resolves; speculate past it (~95%+ accuracy)</li>
+<li><strong>Out-of-order execution</strong> — hundreds of instructions in flight, reordered around stalls, retired in order</li>
+<li><strong>Deep cache hierarchy</strong> — L1 → L2 → L3, most of the chip's area, betting that data just used will be used again</li>
+<li><strong>Prefetching, register renaming, speculation</strong> — all in service of <em>latency</em>: finish this one stream sooner</li>
+</ul>
+<p>The unifying idea: arithmetic takes ~1 cycle, but a trip to DRAM takes ~300. A core is a machine for <strong>hiding latency in a single instruction stream</strong> — every feature below is a different trick for the same goal.</p>
+<h4 id="branch-prediction">Branch prediction</h4>
+<ul>
+<li><em>Intuition</em>: reading a choose-your-own-adventure aloud, but the page saying which fork to take arrives late. Don't wait — notice the story went left 47 of the last 50 times, guess left, keep reading. Wrong guess → tear up the notes, go back.</li>
+<li>The pipeline fetches instructions many cycles before an <code>if</code> resolves; the predictor keeps history tables ("what did this branch do recently, given the path that led here?"). Loops and structured code predict at 98–99%+</li>
+<li>A wrong guess <strong>flushes</strong> everything fetched after the branch: ~15–20 cycles lost</li>
+<li>Cost model: extra cycles/instruction = (branch fraction) × (miss rate) × (flush penalty). E.g. 0.20 × 0.05 × 15 ≈ <strong>0.15 cycles per instruction</strong> — a huge tax on a core aiming for 4 instructions/cycle</li>
+<li>Why accuracy must be <em>extreme</em>, not just good: speculating past 20 branches at 95% each → 0.95²⁰ ≈ 36% chance all were right; at 99% → 82%</li>
+</ul>
+<h4 id="out-of-order-execution-register-renaming">Out-of-order execution &amp; register renaming</h4>
+<ul>
+<li><em>Intuition</em>: a cook who hits "wait for the dough to rise" doesn't stop — they look ahead and chop the onions now, as long as the dish comes together <em>as if</em> the recipe order was followed</li>
+<li>Instructions enter a <strong>reorder buffer</strong> (~300–600 entries) in program order; any instruction whose inputs are ready executes, regardless of position; results <strong>retire in order</strong>, so the illusion of sequential execution holds — which is also what makes speculation safe to undo</li>
+<li><strong>Register renaming</strong> removes <em>false</em> dependencies: 16 architectural names (<code>rax</code>, …) are aliases onto ~300 physical registers, so two writes to "<code>rax</code>" become independent values, not a collision</li>
+<li>Why the window is so big: to hide an <em>L</em>-cycle miss on a <em>W</em>-wide core you need ~<em>W × L</em> independent instructions in flight — 4 × 300 ≈ 1200, more than even today's windows. A DRAM miss still hurts</li>
+</ul>
+<h4 id="cache-hierarchy">Cache hierarchy</h4>
+<ul>
+<li><em>Intuition</em>: desk (L1) → drawer (L2) → filing cabinet (L3) → warehouse (DRAM). Whatever you just used stays on the desk, because you'll likely need it again in a moment</li>
+<li>The hierarchy is a <em>bet</em> on two empirical properties of real programs:<ul>
+<li><strong>Temporal locality</strong> — data touched now will be touched again soon (loop variables, hot structures)</li>
+<li><strong>Spatial locality</strong> — data <em>near</em> it will be touched too; caches move 64-byte lines, not bytes, precisely for this</li>
+</ul>
+</li>
+<li>The bet pays off so often that over half the die is SRAM</li>
+</ul>
+<p><img alt="" src="https://raw.githubusercontent.com/Ankush-Chander/IT603-notes/6678e9b7bcc58cd88b6feb98a6e216d8d7743365/lectures/images/memory_hierarchy.png" />  </p>
+<h4 id="prefetching">Prefetching</h4>
+<ul>
+<li><em>Intuition</em>: the librarian who sees you request volumes 3, 4, 5 — and fetches 6 and 7 before you ask</li>
+<li>Hardware watches the address stream; a constant stride (array traversal) is detected within a few accesses and loads are issued several steps <em>ahead</em> — the miss isn't faster, it's <strong>started earlier</strong>, overlapped with useful work</li>
+<li>This is why linear array scans run near full speed while pointer-chasing (linked lists, trees) crawls: no pattern → every hop eats the full latency, serialized</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">💬 Quick check</p>
+<p>Roughly what fraction of a modern CPU core's silicon does actual arithmetic?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>A few percent. The overwhelming majority is control, prediction, and cache — overhead for keeping one stream fed.</li>
+<li>Corollary: for a workload that doesn't need the machinery, almost the whole transistor budget is wasted.</li>
+</ul>
+</details>
+</div>
+<h3 id="the-memory-wall">The memory wall</h3>
+<ul>
+<li>The numbers that define computing:<ul>
+<li>Arithmetic: a fused multiply-add costs <strong>~1 cycle</strong>  </li>
+<li>L1 cache hit: ~4 cycles </li>
+<li>L2: ~12 </li>
+<li>L3: ~40  </li>
+<li><strong>Main memory (DRAM): ~200–400 cycles</strong>  </li>
+</ul>
+</li>
+<li>One cache miss = hundreds of potential arithmetic operations forfeited</li>
+<li>How well does the hierarchy paper over this? <strong>Average memory access time</strong> nests across levels:  <ul>
+<li><code>AMAT = t_L1 + m_L1 · (t_L2 + m_L2 · (t_L3 + m_L3 · t_DRAM))</code></li>
+<li>With hit rates 95% / 80% / 60%: <code>4 + 0.05·(12 + 0.20·(40 + 0.40·300)) ≈</code> <strong>6 cycles</strong> — vs 300 with no caches, a ~50× win from betting on locality</li>
+</ul>
+</li>
+<li>The gap has <em>widened</em> for 30 years: compute (FLOPs) has scaled far faster than memory bandwidth<ul>
+<li>Transistors got smaller and faster; wires to off-chip DRAM did not keep pace</li>
+</ul>
+</li>
+<li>Consequence: <strong>moving bytes, not multiplying them, is the bottleneck</strong><ul>
+<li>Caches, prediction, out-of-order — the whole CPU design — are all <em>responses to the memory wall</em> for irregular programs</li>
+<li>Keep this fact in view all module: the GPU will need a <em>different</em> answer to the same wall</li>
+</ul>
+</li>
+</ul>
+<h2 id="the-workload-what-does-ml-actually-ask-for">The workload: what does ML actually ask for?</h2>
+<h3 id="its-matmul-all-the-way-down">It's matmul all the way down</h3>
+<ul>
+<li>Nearly everything in a neural network <em>is</em> (or reduces to) a <strong>matrix multiplication</strong>:<ul>
+<li>Linear / fully-connected layers — literally <code>X @ W</code></li>
+<li>Attention — Q·Kᵀ and scores·V are both matmuls</li>
+<li>Convolutions — unrolled (im2col) into matmuls</li>
+</ul>
+</li>
+<li>Training and inference alike: the same matmuls, run millions of times</li>
+<li>Everything that <em>isn't</em> matmul (softmax, LayerNorm, activations) is tiny by FLOP count — it will matter later, but for a different reason</li>
+</ul>
+<h3 id="anatomy-of-one-matmul">Anatomy of one matmul</h3>
+<p><img alt="" src="../../images/ai_acceleration/fma.png" /><br />
+<div class="highlight"><pre><span></span><code>C[i,j] = Σₖ A[i,k] · B[k,j]
+</code></pre></div></p>
+<ul>
+<li>Each output element <code>C[i,j]</code> = one <strong>dot product</strong> = a chain of <strong>fused multiply-adds</strong> (FMA: <code>acc += a·b</code>, ~1 cycle)</li>
+<li>Count the work: multiplying two 4096×4096 matrices = 4096³ ≈ <strong>69 billion FMAs</strong> — for <em>one</em> layer of <em>one</em> forward pass</li>
+</ul>
+<h3 id="the-three-properties-that-change-everything">The three properties that change everything</h3>
+<ol>
+<li><strong>Independent</strong> — <code>C[i,j]</code> never needs any other output element; all ~17 million outputs could be computed <em>simultaneously</em></li>
+<li><strong>Identical</strong> — every output runs the <em>same</em> instruction sequence, only on different data</li>
+<li><strong>Regular</strong> — memory access follows a predictable pattern known <em>before the program runs</em>; nothing to predict, nothing to speculate</li>
+</ol>
+<h3 id="now-look-back-at-the-cpu">Now look back at the CPU</h3>
+<ul>
+<li>Branch prediction? <strong>There are no branches.</strong></li>
+<li>Out-of-order machinery? <strong>There is no dependency chain to reorder around.</strong></li>
+<li>Deep speculative pipeline? <strong>The access pattern is known in advance.</strong></li>
+<li>Almost every transistor the CPU spent on making one stream fast is <em>useless overhead</em> for this workload</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">💬 Design exercise</p>
+<p>You get the same transistor budget as a CPU. The workload is billions of independent, identical, regular FMAs — nothing else. What hardware would <em>you</em> build?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>Rip out prediction, reordering, speculation — spend nearly everything on <strong>arithmetic units</strong></li>
+<li>Every operation is identical → one instruction decoder can drive <em>many</em> ALUs in lockstep</li>
+<li>Independence → no need for any single unit to be fast; you win on <strong>width</strong></li>
+<li>This is, roughly, a GPU. But before meeting it, next lecture we build each of its tricks <strong>by hand, on a CPU</strong> — and measure what every one is worth.</li>
+</ul>
+</details>
+</div>
+<h2 id="references">References</h2>
+<ol>
+<li>Vijay Janapa Reddi, <a href="https://mlsysbook.ai"><em>Machine Learning Systems</em></a> — Ch 11: AI Acceleration (§§ 11.2–11.4)</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../Lecture1/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 1:Machine Learning Lifecycle">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                1:Machine Learning Lifecycle
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../Lecture3_4/" class="md-footer__link md-footer__link--next" aria-label="Next: 3_4:Memory Hierarchy &amp; Roofline">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                3_4:Memory Hierarchy & Roofline
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Ankush Chander
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

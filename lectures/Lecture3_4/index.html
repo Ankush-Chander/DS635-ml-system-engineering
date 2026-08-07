@@ -1,0 +1,1483 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Home of DS635 - Machine Learning System Engineering, DAU">
+      
+      
+      
+        <link rel="canonical" href="https://DS635.ankushchander.com/lectures/Lecture3_4/">
+      
+      
+        <link rel="prev" href="../Lecture2/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>3_4:Memory Hierarchy & Roofline - DS635 - Machine Learning System Engineering | DAU</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the-memory-hierarchy-and-the-roofline" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-header__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DS635 - Machine Learning System Engineering | DAU
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              3_4:Memory Hierarchy & Roofline
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Lecture0/" class="md-tabs__link">
+          
+  
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-nav__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DS635 - Machine Learning System Engineering | DAU
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lectures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lectures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0:Course Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1:Machine Learning Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:Hardware Accelerators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3_4:Memory Hierarchy & Roofline
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3_4:Memory Hierarchy & Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#demo-the-matmul-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demo: The Matmul Ladder
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Demo: The Matmul Ladder">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#naive-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naive Python
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NumPy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NumPy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inside-one-call-to-a-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inside one call to A @ B
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#call-an-optimized-library-blas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Call an Optimized Library (BLAS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blas-a-standard-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BLAS: A Standard Interface
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openblas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenBLAS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-blas-so-fast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Is BLAS So Fast?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#naive-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naive C
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache-utilization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache Utilization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cache Utilization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#warm-up-the-cache-in-one-array" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warm-up — the cache, in one array
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loop-reorder-i-k-j" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loop reorder (i-k-j)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SIMD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tiling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tiling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#all-cores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        All cores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lower-precision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lower precision
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-mapping-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The mapping table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-it-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run it yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#demo-the-matmul-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demo: The Matmul Ladder
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Demo: The Matmul Ladder">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#naive-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naive Python
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NumPy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NumPy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inside-one-call-to-a-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inside one call to A @ B
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#call-an-optimized-library-blas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Call an Optimized Library (BLAS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blas-a-standard-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BLAS: A Standard Interface
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openblas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenBLAS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-blas-so-fast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Is BLAS So Fast?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#naive-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naive C
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache-utilization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache Utilization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cache Utilization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#warm-up-the-cache-in-one-array" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warm-up — the cache, in one array
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loop-reorder-i-k-j" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loop reorder (i-k-j)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SIMD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tiling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tiling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#all-cores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        All cores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lower-precision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lower precision
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-mapping-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The mapping table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-it-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run it yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="the-memory-hierarchy-and-the-roofline">The Memory Hierarchy and the Roofline</h1>
+<blockquote>
+<p><strong>Module thesis:</strong> modern ML performance is a bandwidth problem wearing a compute problem's clothes.</p>
+</blockquote>
+<h2 id="demo-the-matmul-ladder">Demo: The Matmul Ladder</h2>
+<p>One fixed problem — an N×N FP32 matrix multiplication — solved nine ways, from naive Python to GPU tensor pipes. Only one number changes from rung to rung:</p>
+<div class="highlight"><pre><span></span><code>GFLOP/s = 2N³ / time
+</code></pre></div>
+<p>(2N³ because each of the N² output elements is a dot product of N multiply-adds, and an FMA counts as 2 FLOPs.)</p>
+<p>Every rung isolates <strong>one hardware fact</strong>. By the top of the ladder you'll see that every CPU optimization we write by hand is a software imitation of something the GPU does natively.</p>
+<p><strong>Code:</strong> <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/tree/main/code/ai_acceleration"><code>code/ai_acceleration/</code></a> — every rung prints the same line (<code>name, N, seconds, GFLOP/s, check</code>), and every rung is verified against the same NumPy-computed reference. If an "optimization" breaks the math, the harness says FAIL. Numbers below are from one specific laptop (8-core Zen 3, RX 6700M); yours will differ — <strong>the shape of the curve is the lesson, not the numbers.</strong></p>
+<hr />
+<h3 id="naive-python">Naive Python</h3>
+<p><em>Code: <code>rung0_python_naive.py</code></em></p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">B</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+        <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span>
+</code></pre></div>
+<ul>
+<li><strong>Concept: interpreter overhead.</strong> Every <code>+</code> and <code>*</code> here is a dispatch through the Python object system — type checks, boxing, reference counting — costing hundreds of instructions per floating-point operation.</li>
+<li>Result: <strong>0.05 GFLOP/s</strong>, run at N=256 because at N=1024 it takes closer to a minute. This is the zero of our scale.</li>
+</ul>
+<h3 id="numpy">NumPy</h3>
+<p><em>Code: <code>rung1_numpy.py</code></em></p>
+<div class="highlight"><pre><span></span><code><span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">B</span>
+</code></pre></div>
+<div class="admonition question">
+<p class="admonition-title">💬 One line of Python. ~5000× faster than the naive Python version. How?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li><code>@</code> dispatches to a <strong>BLAS</strong> library (OpenBLAS here) — decades of hand-tuned, blocked, vectorized, multithreaded native code.</li>
+<li><strong>249 GFLOP/s.</strong> Everything we're about to build by hand, someone already built — that's what "calling a library" actually means.</li>
+</ul>
+</details>
+</div>
+<h4 id="inside-one-call-to-a-b">Inside one call to <code>A @ B</code></h4>
+<h4 id="call-an-optimized-library-blas">Call an Optimized Library (BLAS)</h4>
+<ul>
+<li><code>A @ B</code> invokes <code>A.__matmul__(B)</code> in Python.</li>
+<li>NumPy validates the inputs (shape, dtype) and <strong>dispatches</strong> the entire operation to a compiled routine (<code>sgemm</code>).</li>
+<li>After dispatch, the Python interpreter is no longer involved.</li>
+<li><strong>Key idea:</strong> interpreter overhead is paid <strong>once per matrix multiplication</strong>, instead of once per arithmetic operation.</li>
+</ul>
+<blockquote>
+<p><strong>Dispatch:</strong> handing a high-level operation to an optimized native implementation.</p>
+</blockquote>
+<hr />
+<h4 id="blas-a-standard-interface">BLAS: A Standard Interface</h4>
+<p><strong>BLAS (Basic Linear Algebra Subprograms, 1979)</strong> defines a standard API for linear algebra routines.</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Operation</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Level 1</td>
+<td>Vector–Vector</td>
+<td>Dot product</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td>Matrix–Vector</td>
+<td><code>Ax</code></td>
+</tr>
+<tr>
+<td>Level 3</td>
+<td>Matrix–Matrix</td>
+<td><code>gemm</code> (<code>sgemm</code>, <code>dgemm</code>)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>BLAS specifies the <strong>interface</strong>, not the implementation.</li>
+<li>Any software using BLAS (NumPy, PyTorch, MATLAB, R, Fortran, etc.) automatically benefits from faster implementations.</li>
+</ul>
+<p><strong>Common implementations</strong></p>
+<ul>
+<li>CPU: OpenBLAS, BLIS, Intel MKL</li>
+<li>GPU: cuBLAS (NVIDIA), rocBLAS (AMD)</li>
+</ul>
+<hr />
+<h4 id="openblas">OpenBLAS</h4>
+<p>On this machine, NumPy uses <strong>OpenBLAS</strong>.</p>
+<ul>
+<li>Detects the CPU at runtime.</li>
+<li>Selects kernels optimized for the detected microarchitecture.</li>
+<li>Core computation is performed by a highly tuned <strong>micro-kernel</strong> (typically operating on small blocks such as <strong>8×8</strong>) that keeps registers and FMA units busy.</li>
+</ul>
+<hr />
+<h4 id="why-is-blas-so-fast">Why Is BLAS So Fast?</h4>
+<p>A modern BLAS implementation combines multiple optimization techniques:</p>
+<ul>
+<li>Native compiled machine code (no interpreter overhead)</li>
+<li>Cache-friendly memory access</li>
+<li>Cache blocking (tiling)</li>
+<li>SIMD vector instructions (8–16 values per instruction)</li>
+<li>Multi-core parallel execution</li>
+</ul>
+<p><strong>Key takeaway:</strong> High performance comes from combining many well-known optimizations—not a single breakthrough. The remaining rungs of the performance ladder isolate and explain each of these techniques individually.</p>
+<h3 id="naive-c">Naive C</h3>
+<p><em>Code: <code>rung2_c_naive.c</code></em></p>
+<p>Same triple loop, compiled with vectorization disabled so we isolate one idea at a time.</p>
+<p><strong>Performance Intuition</strong></p>
+<p>Suppose multiplying two numbers takes roughly 1 CPU cycle.<br />
+A Python iteration may require hundreds of instructions before reaching that multiplication.
+<div class="highlight"><pre><span></span><code>Python:
+Interpret → Type Check → Lookup → Multiply → Add → Store
+
+C:
+Load → Multiply → Add → Store
+</code></pre></div></p>
+<p>Thus, even with the same O(N³) algorithm, C typically achieves 20–100× higher performance than naïve Python for compute-intensive loops.</p>
+<h3 id="cache-utilization">Cache Utilization</h3>
+<h4 id="warm-up-the-cache-in-one-array">Warm-up — the cache, in one array</h4>
+<p>Before touching matmul again, a simpler experiment. Sum all elements of one large N×N array, two ways:</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span><span class="w">   </span><span class="c1">// walk along rows</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span><span class="w">   </span><span class="c1">// walk down columns</span>
+</code></pre></div>
+<p>Same elements, same additions, same Big-O — yet the first is several times faster. With everything else identical, only one explanation is left: <strong>the order in which memory is touched</strong>.</p>
+<p>Why: DRAM doesn't hand the CPU one float — it hands over a <strong>cache line</strong> of 64 bytes (16 floats) at a time. The row walk uses all 16 before asking for the next line; the column walk uses 1 of the 16, and by the time that column comes around again, the line is long evicted.</p>
+<p>The principle — and note it is <em>not</em> "rows good, columns bad":</p>
+<blockquote>
+<p><strong>Access memory in the order it is stored.</strong> C stores arrays row-major; Fortran and MATLAB store column-major, and there the <em>opposite</em> loop wins. The lesson is locality, not rows.</p>
+</blockquote>
+<h4 id="loop-reorder-i-k-j">Loop reorder (i-k-j)</h4>
+<p><em>Code: <code>rung3_c_reorder.c</code></em></p>
+<p>Now apply the warm-up to the naive C inner loop, <code>s += A[i*n+k] * B[k*n+j]</code>:</p>
+<div class="admonition question">
+<p class="admonition-title">💬 As <code>k</code> counts up, which operand walks along a row, and which walks down a column?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li><code>A[i*n+k]</code> — walks a <strong>row</strong> ✔</li>
+<li><code>B[k*n+j]</code> — walks a <strong>column</strong> ✘: jumps n floats per step, one wasted cache line per access. The warm-up's slow case, hiding inside matmul.</li>
+</ul>
+</details>
+</div>
+<p>Reordering the loops to i-k-j fixes it — the inner loop (now over <code>j</code>) walks <em>both</em> <code>B</code> and <code>C</code> along rows:</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">n</span><span class="o">+</span><span class="n">k</span><span class="p">];</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
+<span class="w">      </span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">n</span><span class="o">+</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">k</span><span class="o">*</span><span class="n">n</span><span class="o">+</span><span class="n">j</span><span class="p">];</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<p><img alt="" src="../../images/ai_acceleration/matmul_cache_utilization.png" /></p>
+<ul>
+<li>Result: <strong>~9× faster</strong> (0.37 → 3.48 GFLOP/s) — same arithmetic, same instruction count, same flags.</li>
+<li>The cache agrees, measurably: <code>cachegrind</code> reports a <strong>49.9% L1 miss rate for i-j-k vs 2.1% for i-k-j</strong> — one miss per element vs one miss per 16-float cache line.</li>
+<li>Matmul adds one thing the warm-up couldn't show: <code>a = A[i*n+k]</code> is loaded <strong>once</strong> and reused across a whole row of <code>C</code> — <strong>temporal locality</strong> (reuse before eviction) on top of spatial. Tiling, later in the ladder, takes temporal locality further.</li>
+<li><strong>Concept: memory access order.</strong> Nothing about the computation changed — only the order in which memory is touched. Say it once and remember it all term: <em>this was never a compute problem; it's a memory problem.</em></li>
+<li>The GPU version of this exact fact is called <strong>memory coalescing</strong> — we'll meet it soon.</li>
+</ul>
+<details class="example">
+<summary>🔬 Verify it yourself — watch the cache misses directly</summary>
+<p>Don't take the explanation on faith; the CPU has hardware counters that count cache misses, and <code>perf</code> reads them.</p>
+<p><strong>Cache simulation (<code>cachegrind</code>), no sudo needed.</strong> Valgrind simulates the cache instead of reading counters (~50× slower, hence single rep):</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>code/ai_acceleration
+<span class="k">for</span><span class="w"> </span>b<span class="w"> </span><span class="k">in</span><span class="w"> </span>rung2_c_naive<span class="w"> </span>rung3_c_reorder<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;== </span><span class="nv">$b</span><span class="s2"> ==&quot;</span><span class="p">;</span><span class="w"> </span>valgrind<span class="w"> </span>--tool<span class="o">=</span>cachegrind<span class="w"> </span>--cache-sim<span class="o">=</span>yes<span class="w"> </span>./build/<span class="nv">$b</span><span class="w"> </span><span class="m">1024</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;D  refs|D1  miss|LLd miss&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+</code></pre></div>
+<p><strong>Reading the output.</strong> Cachegrind simulates a first-level data cache (<code>D1</code>, your L1d) and a last-level cache (<code>LL</code>, your L3) — the simulated sizes are printed in the run's header lines. Each access is checked top-down: miss L1 → go to L3; miss L3 → go to DRAM.</p>
+<table>
+<thead>
+<tr>
+<th>Output line</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>==NNNNN==</code></td>
+<td>Just the process ID valgrind prefixes to its output</td>
+</tr>
+<tr>
+<td><code>D refs</code></td>
+<td>Total data accesses, split <code>rd</code> (reads) + <code>wr</code> (writes)</td>
+</tr>
+<tr>
+<td><code>D1 misses</code></td>
+<td>Accesses that missed L1 and had to reach L3</td>
+</tr>
+<tr>
+<td><code>LLd misses</code></td>
+<td>Data accesses that missed L3 too — the DRAM trips (<code>d</code> = the data share; instruction fetches are <code>LLi</code>)</td>
+</tr>
+<tr>
+<td><code>D1 / LLd miss rate</code></td>
+<td>The misses above ÷ <code>D refs</code>, per category</td>
+</tr>
+</tbody>
+</table>
+<p>Two decodings worth showing off: the naive run's <strong>50.0% read miss rate</strong> is literal — the inner loop makes exactly two reads per iteration, <code>A[i*n+k]</code> (row walk, hits) and <code>B[k*n+j]</code> (column walk, misses): one of two = 50%. And <code>LLd misses</code> ≈ 198k reads ≈ the three matrices' 12 MB ÷ 64-byte lines — pure <em>cold misses</em>, each line's unavoidable first touch, after which everything lives in L3.</p>
+<p>What to expect (cachegrind, N=1024):</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>i-j-k (naive)</th>
+<th>i-k-j (reordered)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1-d misses</td>
+<td>~1.08 billion</td>
+<td>~67 million</td>
+</tr>
+<tr>
+<td>L1-d miss rate</td>
+<td>~50%</td>
+<td>~2%</td>
+</tr>
+<tr>
+<td>Last-level misses</td>
+<td>~264k</td>
+<td>~264k</td>
+</tr>
+</tbody>
+</table>
+<p>Three checks worth doing against theory:</p>
+<ol>
+<li>N³ = 1,073,741,824 — the naive version misses almost <strong>once per <code>B</code> access</strong>.</li>
+<li>67M ≈ N³/16 — the reordered version misses <strong>once per 16-float cache line</strong>, exactly as the warm-up predicted.</li>
+<li>Last-level misses are <strong>identical</strong> — both versions move the same data through DRAM at this size. The entire 9× win is L1 locality, a fact the GFLOP/s number alone could never tell you.</li>
+</ol>
+<p>(Caution: cachegrind's own timing is meaningless — simulation overhead flattens the difference. Use the harness for <em>time</em>, cachegrind for <em>why</em>.)</p>
+</details>
+<h3 id="simd">SIMD</h3>
+<p><em>Code: <code>rung4_c_simd.c</code> — same source as the loop-reorder step; the change is compiler flags (<code>-O3 -march=native -ffast-math</code>)</em></p>
+<p>The flags don't change the algorithm — they change how aggressively the compiler is allowed to translate it into machine instructions:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>What it allows</th>
+<th>Trade-off</th>
+<th>Impact here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-O3</code></td>
+<td>Every generally-safe optimization: inlining, dead-code removal, <strong>auto-vectorization</strong></td>
+<td>Longer compiles</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td><code>-march=native</code></td>
+<td>Instructions specific to <em>this</em> CPU: AVX2 vectors, FMA (<code>a*b+c</code> in one instruction) instead of generic x86-64</td>
+<td>Binary may not run on older CPUs</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td><code>-ffast-math</code></td>
+<td>Reordering float math — IEEE-754 forbids the compiler from rewriting <code>(a+b)+c</code> as <code>a+(b+c)</code>, since float addition isn't associative; this waives that, unlocking vectorized reductions and FMA fusion</td>
+<td>Results differ in the last bits; fine for ML/graphics, wrong for finance or reproducible science</td>
+<td>★★★</td>
+</tr>
+<tr>
+<td><code>-funroll-loops</code></td>
+<td>Duplicating loop bodies — fewer branch/compare instructions, more room to schedule</td>
+<td>Bigger binary; <code>-O3</code> already unrolls hot loops selectively</td>
+<td>★★</td>
+</tr>
+<tr>
+<td><code>-Wall</code></td>
+<td>Warnings (uninitialized vars, etc.)</td>
+<td>None — zero performance effect, just good hygiene</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Concept: data parallelism in one core.</strong> The compiler turns the inner loop into AVX2 instructions: <strong>one instruction, 8 float lanes</strong>. A preview of SIMT — think of it as a warp with 8 lanes and no scheduler.</li>
+<li>Result at N=1024: <strong>31.5 GFLOP/s</strong>. </li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">💬 Same binary, N=2048 instead of 1024. Predict the GFLOP/s.</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>It <em>collapses</em>: <strong>14.2 GFLOP/s</strong> — half the throughput, same code.</li>
+<li>At N=1024, matrix B is 4 MB and fits in the 16 MB L3 cache. At N=2048 it's 16 MB — it no longer fits, and every pass over B streams from DRAM.</li>
+<li>SIMD raised the compute roof ~8× — high enough that we slammed into the <strong>memory wall</strong>. The bottleneck <em>moved</em>.</li>
+</ul>
+</details>
+</div>
+<h3 id="tiling">Tiling</h3>
+<p><em>Code: <code>rung5_c_tiled.c</code></em></p>
+<p>Process the matrices in T×T blocks so the working set stays in cache:</p>
+<ul>
+<li><strong>Concept: arithmetic intensity</strong> — FLOPs per byte moved. A T×T tile loads 3T² floats but performs 2T³ FLOPs: <strong>reuse scales with T</strong>. Tiling doesn't reduce the arithmetic; it reduces <em>traffic to slow memory</em>.</li>
+<li>Result at N=2048: <strong>30.8 GFLOP/s</strong> — the N=1024 speed, recovered.</li>
+<li>Note the ordering of the ladder: tiling <em>after</em> SIMD. At pre-SIMD scalar speeds the code was compute-bound and tiling did nothing (try it — one <code>make</code> away). Optimizations only pay when they attack the <em>current</em> bottleneck — that is the roofline model in one sentence.</li>
+<li>The GPU version of this is <strong>shared-memory tiling</strong> — and there it's manual, because the GPU has no big automatic cache to hope for.</li>
+<li>Bonus lesson hiding in this file: an innocent <code>&amp;&amp; j &lt; n</code> bounds check in the hot loop silently disables vectorization and costs 3×. Details in the code comments.</li>
+</ul>
+<h3 id="all-cores">All cores</h3>
+<p><em>Code: <code>rung6_c_openmp.c</code> — one <code>#pragma omp parallel for</code> on the outer tile loop</em></p>
+<ul>
+<li><strong>Concept: thread parallelism.</strong> Independent tiles of C can be computed by different cores — no coordination needed, because matmul's outputs don't depend on each other.</li>
+<li>Result: <strong>106 GFLOP/s</strong> on 8 cores. Within ~2× of NumPy's BLAS — we have essentially reconstructed a real library.</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">💬 <code>lscpu</code> says 16 CPUs, yet the speedup over one core is only ~5×. Where did the other 11 go?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li><strong>8 of the 16 were never cores.</strong> This chip has 8 physical cores × 2 SMT threads ("hyperthreads"). Each <em>pair</em> of threads shares one core's FMA units — and a dense matmul already keeps those pipes full with one thread, so the second adds ~nothing. What the OS advertises (logical CPUs) and what the silicon has (FPUs) are different numbers. Honest ceiling: 8×.</li>
+<li><strong>All-core clock &lt; single-core boost.</strong> One busy core turbos to ~4.6 GHz; eight busy cores share the same power/thermal budget and settle near ~3.5 GHz. Each core is ~20% slower than the single core was. The power budget is a shared resource.</li>
+<li><strong>L3 and DRAM bandwidth are shared too.</strong> One core had 16 MB of L3 to itself; eight get 2 MB each, and all their misses queue at one memory controller. Compute ×8, bytes/second ×1.</li>
+<li>Measure it: sweep <code>OMP_NUM_THREADS=1,2,4,8</code> (pinned: <code>OMP_PLACES=cores</code>). Scaling is ~1.9× at 2 threads, sagging by 4, rolled over by 8 — the signature of shared-resource contention. <em>We bought 8× the arithmetic and 1× the memory — and got 5×.</em></li>
+</ul>
+</details>
+</div>
+<ul>
+<li><strong>This is the CPU ceiling.</strong> Every remaining gain needs more cores — and cores multiply neither the memory bandwidth nor the power budget they must share.</li>
+</ul>
+<hr />
+<h3 id="gpu">GPU</h3>
+<p><em>Code: <code>rung7_gpu.py</code></em></p>
+<div class="highlight"><pre><span></span><code><span class="n">C_g</span> <span class="o">=</span> <span class="n">A_g</span> <span class="o">@</span> <span class="n">B_g</span>   <span class="c1"># torch, device=&#39;cuda&#39;</span>
+</code></pre></div>
+<p>Before the real number, two measurement traps — both runnable (<code>--no-sync</code>, <code>--time-transfer</code>):</p>
+<div class="admonition question">
+<p class="admonition-title">💬 Trap 1: we time the matmul and get 314 microseconds — an implied 55 TFLOP/s on a GPU whose spec sheet says 10.6 TFLOP/s peak. What did we actually measure?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>Nothing real: a kernel launch is an <strong>asynchronous enqueue</strong>. Without <code>torch.cuda.synchronize()</code>, the stopwatch stops when the work is <em>queued</em>, not when it's <em>done</em>.</li>
+<li>A GPU "beating" its own theoretical peak is the tell. Always synchronize before and after the timed region.</li>
+</ul>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">💬 Trap 2: timed correctly, the matmul hits 9,022 GFLOP/s. Include the <code>.to('cuda')</code> copy inside the timing and it drops to 2,553. Why?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>The data crossed <strong>PCIe</strong> to reach the GPU, and PCIe bandwidth is a tiny fraction of the GPU's own memory bandwidth.</li>
+<li>Compute is only worth shipping to the GPU if the data lives there long enough to amortize the trip — this constraint shapes the design of every training and serving system we'll see.</li>
+</ul>
+</details>
+</div>
+<ul>
+<li><strong>Concept: throughput hardware.</strong> Timed honestly: <strong>9,022 GFLOP/s</strong> — ~85× the 8-core CPU ceiling, on a <em>laptop</em> GPU.</li>
+</ul>
+<h3 id="lower-precision">Lower precision</h3>
+<p><em>Code: <code>rung8_lowprec.py</code></em></p>
+<ul>
+<li><strong>Concept: precision as a performance knob.</strong> FP16 halves the bytes per number — half the memory traffic, and on most GPUs a faster arithmetic path too.</li>
+<li>Result: <strong>15,546 GFLOP/s</strong> — 1.7× over FP32, from a one-line change and no accuracy check failure at this size.</li>
+<li>On NVIDIA GPUs with <strong>tensor cores</strong>, enabling TF32 reroutes even "FP32" matmuls through dedicated matrix units for a several-fold jump. That hardware — and when lower precision is <em>not</em> free — is the next lecture.</li>
+</ul>
+<hr />
+<h2 id="the-mapping-table">The mapping table</h2>
+<p>The ladder, summarized. Every CPU technique we wrote by hand is an approximation of something the GPU does natively:</p>
+<table>
+<thead>
+<tr>
+<th>CPU technique we wrote</th>
+<th>GPU equivalent</th>
+<th>Why the GPU wins</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Loop reorder for locality</td>
+<td>Memory coalescing</td>
+<td>32 lanes' addresses merge into few transactions</td>
+</tr>
+<tr>
+<td>Cache blocking (tile T)</td>
+<td>Shared-memory tiling</td>
+<td>Scratchpad is explicit, not hoped-for</td>
+</tr>
+<tr>
+<td>SIMD, 8 lanes</td>
+<td>SIMT warp, 32 lanes</td>
+<td>Wider, plus per-lane addressing freedom</td>
+</tr>
+<tr>
+<td>OpenMP, ~8–64 threads</td>
+<td>~100k threads resident</td>
+<td>Latency hidden by oversubscription, not caches</td>
+</tr>
+<tr>
+<td>Prefetch + out-of-order to hide DRAM</td>
+<td>Warp scheduler switch</td>
+<td>Switching is free: registers never spill</td>
+</tr>
+<tr>
+<td>—</td>
+<td>Tensor cores</td>
+<td>A matrix block as a single instruction</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The closing line:</strong> the GPU isn't "faster" — it's a machine built for exactly this loop.</p>
+<h2 id="run-it-yourself">Run it yourself</h2>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:Ankush-Chander/DS635-ml-system-engineering.git
+<span class="nb">cd</span><span class="w"> </span>DS635-ml-system-engineering/code/ai_acceleration
+make<span class="w"> </span>data<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>bench<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>chart
+</code></pre></div>
+<p>The <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/tree/main/code/ai_acceleration">README</a> has per-machine notes (AMD GPUs, device pinning) and the lab exercises: reproduce the ladder on your machine, sweep the tile size to find your cache's sweet spot, and explain both timing traps in your own words. Your curve <em>will</em> differ from the one in class — explaining every difference is the point.</p>
+<h2 id="references">References</h2>
+<ol>
+<li>Vijay Janapa Reddi, <a href="https://mlsysbook.ai"><em>Machine Learning Systems</em></a> — Ch 11: AI Acceleration (§§ 11.4, 11.7)</li>
+<li>Samuel Williams et al., <a href="https://dl.acm.org/doi/10.1145/1498765.1498785"><em>Roofline: An Insightful Visual Performance Model</em></a> (CACM 2009)</li>
+<li><a href="https://alvinwan.com/how-to-tile-matrix-multiplication/">How to Tile Matrix Multiplication</a></li>
+<li><a href="https://arthurviens.github.io/cache-visualizer/">Matrix Multiplication: Tiling &amp; Cache Visualization</a></li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../Lecture2/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 2:Hardware Accelerators">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                2:Hardware Accelerators
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Ankush Chander
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1320 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Home of DS635 - Machine Learning System Engineering, DAU">
+      
+      
+      
+        <link rel="canonical" href="https://DS635.ankushchander.com/lectures/Lecture0/">
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+        <link rel="next" href="../Lecture1/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>0:Course Overview - DS635 - Machine Learning System Engineering | DAU</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#introduction" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-header__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DS635 - Machine Learning System Engineering | DAU
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              0:Course Overview
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-nav__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DS635 - Machine Learning System Engineering | DAU
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lectures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lectures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0:Course Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0:Course Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#software-engineering-systems-vs-machine-learning-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software Engineering systems vs Machine Learning systems
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evolution-of-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evolution of AI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evolution of AI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-symbolic-ai-1956-mid-1970s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Symbolic AI (1956 – mid-1970s)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-expert-systems-mid-1970s-1980s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Expert Systems (mid-1970s – 1980s)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-statistical-learning-1990s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Statistical Learning (1990s)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-shallow-learning-2000s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Shallow Learning (2000s)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-deep-learning-2012" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Deep Learning (2012 –)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-foundation-models-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Foundation Models (2018 –)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-arc-of-the-story" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The arc of the story
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#machine-learning-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Machine learning systems
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Machine learning systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Algorithms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-bitter-lesson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Bitter Lesson
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Bitter Lesson">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#30-years-of-the-bitter-lesson-in-nlp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30 years of the Bitter Lesson in NLP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-study-bloomberggpt-vs-gpt-4-both-march-2023" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case study: BloombergGPT vs GPT-4 (both March 2023)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-it-means-for-ml-system-engineers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it means for ML system engineers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References &amp; Further Reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1:Machine Learning Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:Hardware Accelerators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture3_4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3_4:Memory Hierarchy & Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#software-engineering-systems-vs-machine-learning-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software Engineering systems vs Machine Learning systems
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evolution-of-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evolution of AI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evolution of AI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-symbolic-ai-1956-mid-1970s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Symbolic AI (1956 – mid-1970s)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-expert-systems-mid-1970s-1980s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Expert Systems (mid-1970s – 1980s)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-statistical-learning-1990s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Statistical Learning (1990s)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-shallow-learning-2000s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Shallow Learning (2000s)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-deep-learning-2012" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Deep Learning (2012 –)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-foundation-models-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Foundation Models (2018 –)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-arc-of-the-story" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The arc of the story
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#machine-learning-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Machine learning systems
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Machine learning systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Algorithms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-bitter-lesson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Bitter Lesson
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Bitter Lesson">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#30-years-of-the-bitter-lesson-in-nlp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30 years of the Bitter Lesson in NLP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-study-bloomberggpt-vs-gpt-4-both-march-2023" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case study: BloombergGPT vs GPT-4 (both March 2023)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-it-means-for-ml-system-engineers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it means for ML system engineers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References &amp; Further Reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="introduction">Introduction</h1>
+<p>What this lecture covers:**</p>
+<ul>
+<li>How ML systems differ from traditional software systems</li>
+<li>How we arrived at the current paradigm of AI</li>
+<li>The three pillars every ML system stands on: data, algorithms, infrastructure</li>
+<li>The Bitter Lesson — and what it means for how we build systems today</li>
+</ul>
+<hr />
+<h2 id="software-engineering-systems-vs-machine-learning-systems">Software Engineering systems vs Machine Learning systems</h2>
+<p><img alt="" src="../../images/tradional_programming_vs_ml.png" /></p>
+<p>In <strong>traditional programming</strong>, a human writes explicit rules:</p>
+<div class="highlight"><pre><span></span><code>Data + Rules  →  Program  →  Answers
+</code></pre></div>
+<p>In <strong>machine learning</strong>, we invert the process — the machine derives the rules from examples:</p>
+<div class="highlight"><pre><span></span><code>Data + Answers  →  Training  →  Rules (Model)
+</code></pre></div>
+<p>This inversion has deep consequences for how the resulting systems behave:</p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Software Engineering</th>
+<th>Machine Learning Systems</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Logic</strong></td>
+<td>Written explicitly by humans</td>
+<td>Learned from data</td>
+</tr>
+<tr>
+<td><strong>Correctness</strong></td>
+<td>Deterministic; testable against a spec</td>
+<td>Statistical; evaluated against metrics (accuracy, precision, recall)</td>
+</tr>
+<tr>
+<td><strong>Failure mode</strong></td>
+<td>Crashes, exceptions — loud failures</td>
+<td>Silent degradation — the system keeps running but predictions get worse</td>
+</tr>
+<tr>
+<td><strong>Source of truth</strong></td>
+<td>The code</td>
+<td>The code <strong>and</strong> the data <strong>and</strong> the model</td>
+</tr>
+<tr>
+<td><strong>Change over time</strong></td>
+<td>Behaves the same until code changes</td>
+<td>Degrades as the world drifts away from the training data</td>
+</tr>
+<tr>
+<td><strong>Debugging</strong></td>
+<td>Stack traces, breakpoints</td>
+<td>Data audits, error analysis, ablations</td>
+</tr>
+<tr>
+<td><strong>Versioning</strong></td>
+<td>Version the code</td>
+<td>Version code + data + model + hyperparameters</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key takeaway:</strong> in ML systems, <em>data is code</em>. A bug can live in the dataset, in a feature pipeline, or in a stale model — not just in the source files. Testing, monitoring, and deployment practices must all be rethought accordingly.</p>
+<hr />
+<h2 id="evolution-of-ai">Evolution of AI</h2>
+<p><img alt="" src="../../images/ml_paradigm.png" /></p>
+<p>AI has evolved through distinct eras, each one arising to fix the limitations of the last — and each one delegating <em>more</em> of the work to data and computation.</p>
+<h3 id="1-symbolic-ai-1956-mid-1970s">1. Symbolic AI (1956 – mid-1970s)</h3>
+<ul>
+<li>Born at the <strong>Dartmouth Conference (1956)</strong>, where McCarthy, Minsky, Rochester, and Shannon coined the term "artificial intelligence." Core assumption: intelligence = symbol manipulation.</li>
+<li><strong>STUDENT (1964)</strong> solved algebra word problems by parsing English into equations; <strong>ELIZA (1966)</strong> simulated conversation via pattern matching and substitution — no learning, no data, running on 256KB mainframes.</li>
+<li><strong>Fatal flaw — brittleness:</strong> these systems only handled inputs that exactly matched their pre-programmed patterns. Any minor variation broke them completely, so deployment beyond the lab was infeasible.</li>
+<li><em>Systems footnote:</em> the Dartmouth pioneers underestimated the resources intelligence requires by roughly a <strong>million-fold</strong> — they assumed 1950s hardware (≤64KB memory) would suffice; modern models need hundreds of GB and exaflops of compute. Algorithmic cleverness alone was never going to be enough.</li>
+</ul>
+<h3 id="2-expert-systems-mid-1970s-1980s">2. Expert Systems (mid-1970s – 1980s)</h3>
+<ul>
+<li>The field retreated from "general AI" to capturing <em>expert knowledge in narrow domains</em>.</li>
+<li><strong>MYCIN (Stanford, 1975)</strong> diagnosed blood infections with ~600 hand-written IF-THEN rules carrying certainty factors.</li>
+<li>Three problems it exposed that <strong>still haunt ML today</strong>:<ol>
+<li><strong>Knowledge capture</strong> — experts often can't articulate how they decide</li>
+<li><strong>Uncertainty handling</strong> — rules cope poorly with incomplete information</li>
+<li><strong>Maintenance</strong> — new rules conflicted with old ones as the rule base grew</li>
+</ol>
+</li>
+</ul>
+<h3 id="3-statistical-learning-1990s">3. Statistical Learning (1990s)</h3>
+<ul>
+<li>Shift from hand-coded rules to <strong>learning patterns from data</strong>, enabled by three converging factors: the digital revolution (data), Moore's law (compute), and new algorithms (SVMs, improved neural networks).</li>
+<li>Canonical example — <strong>spam filtering</strong>: instead of writing <code>IF contains("viagra") THEN spam</code> (easily evaded), learn from thousands of examples that certain words appear in 90% of spam but 1% of normal mail, and combine the evidence with <strong>Naive Bayes</strong>: <code>P(spam|word) = P(word|spam) × P(spam) / P(word)</code></li>
+<li>Three concepts introduced here remain central to all of ML:<ol>
+<li><strong>Training data quality/quantity matters as much as the algorithm</strong></li>
+<li><strong>Rigorous evaluation metrics</strong> are needed to measure and compare systems</li>
+<li><strong>Precision vs recall trade-offs</strong> must be chosen per application (a spam filter tolerates some spam; a medical screen must not miss cases)</li>
+</ol>
+</li>
+</ul>
+<h3 id="4-shallow-learning-2000s">4. Shallow Learning (2000s)</h3>
+<ul>
+<li>One or two processing layers ("shallow" vs deep): <strong>decision trees</strong> (interpretable, tiny footprint), <strong>k-NN</strong>, <strong>linear/logistic regression</strong>, and <strong>SVMs</strong> with the kernel trick (project data into higher dimensions where classes become linearly separable).</li>
+<li>The recipe was <strong>hybrid</strong>: human-engineered features + statistical learner. A 2005 computer-vision pipeline: extract SIFT/HOG features by hand → select features → train an SVM → post-process.</li>
+<li>Strengths: solid mathematical foundations, worked with limited data, computationally cheap, reproducible.</li>
+<li><strong>Viola-Jones face detection (2001)</strong>: simple rectangular features + a cascade of classifiers that rejects easy negatives early — real-time detection (24 fps) on 2001 hardware, powering digital-camera face detection for a decade. An early masterclass in <em>algorithm–hardware co-design</em>.</li>
+</ul>
+<h3 id="5-deep-learning-2012">5. Deep Learning (2012 –)</h3>
+<ul>
+<li>Instead of hand-engineering features, stack layers of simple units that learn <strong>increasingly abstract representations</strong>: edges → shapes/textures → parts (whiskers, ears) → concepts ("cat").</li>
+<li><strong>AlexNet (ImageNet 2012)</strong> was the watershed: trained on two GTX 580 GPUs (60M parameters, ~6 days, ~1,287 GPU-hours), it scored <strong>15.3% top-5 error vs 26.2%</strong> for the runner-up — a 42% relative improvement.</li>
+<li>The ideas were <em>old</em> — Rosenblatt's <strong>perceptron (1957)</strong>, <strong>backpropagation (1986)</strong>, LeCun's digit recognition (1989) — but they stagnated for decades because three ingredients were missing: <strong>enough data, enough compute, and training techniques for deep networks</strong>. 2012 was a <em>convergence</em>, not a sudden invention.</li>
+<li>The breakthrough was as much <strong>systems engineering as algorithms</strong>: GPU parallelism, memory-bandwidth-aware design, and frameworks (Theano and successors) providing automatic differentiation at scale.</li>
+</ul>
+<h3 id="6-foundation-models-2018">6. Foundation Models (2018 –)</h3>
+<ul>
+<li>Scale exploded: <strong>GPT-3 (2020)</strong> has 175B parameters (~350GB), a <strong>500x jump over BERT-Large</strong> (340M, 2018), trained on 1,024 V100 GPUs over weeks at an estimated <strong>$4.6M</strong> cost.</li>
+<li><strong>Emergent abilities</strong> appeared from scale alone — fluent text, conversation, code generation — not from explicit programming.</li>
+<li>Systems challenges now dominate: distributed training across thousands of GPUs, serving 100GB+ models to millions of users at sub-second latency, and datasets so large (LAION-5B: ~240TB) that data loading itself becomes a distributed-systems problem. Hence <em>model-as-a-service</em>: providers like OpenAI serve APIs instead of shipping models.</li>
+</ul>
+<h3 id="the-arc-of-the-story">The arc of the story</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Symbolic AI</th>
+<th>Expert Systems</th>
+<th>Statistical Learning</th>
+<th>Shallow / Deep Learning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Key strength</strong></td>
+<td>Logical reasoning</td>
+<td>Domain expertise</td>
+<td>Versatility</td>
+<td>Pattern recognition</td>
+</tr>
+<tr>
+<td><strong>Data needed</strong></td>
+<td>Minimal</td>
+<td>Expert knowledge</td>
+<td>Moderate</td>
+<td>Large-scale</td>
+</tr>
+<tr>
+<td><strong>Adaptability</strong></td>
+<td>Fixed rules</td>
+<td>Domain-specific</td>
+<td>Cross-domain</td>
+<td>Highly adaptable</td>
+</tr>
+<tr>
+<td><strong>Problem complexity</strong></td>
+<td>Simple, logic-based</td>
+<td>Complicated, domain-specific</td>
+<td>Complex, structured</td>
+<td>Highly complex, unstructured</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Two takeaways:</strong></p>
+<ol>
+<li><strong>Hand-coded intelligence → learned intelligence.</strong> Each era replaced more human-encoded knowledge with patterns learned from data — trading brittleness for flexibility, and computational simplicity (ELIZA on 256KB) for infrastructure intensity (GPT-3's GPU fleets).</li>
+<li><strong>Every major advance required an algorithmic breakthrough AND a systems breakthrough.</strong> Perceptrons waited 50 years for their hardware; AlexNet needed GPUs and autograd frameworks; GPT-3 needed distributed training infrastructure. That pairing — and the engineering discipline it demands — is exactly what this course is about.</li>
+</ol>
+<hr />
+<h2 id="machine-learning-systems">Machine learning systems</h2>
+<p>Machine Learning Systems are integrated computing systems comprising three interdependent components: <br />
+- data that guides behavior, <br />
+- algorithms that learn patterns, and <br />
+- computational infrastructure that enables both
+training and inference.</p>
+<p><img alt="" src="../../images/ml_triad.png" /></p>
+<h3 id="1-data">1. Data</h3>
+<ul>
+<li>Collection, labelling, cleaning, versioning</li>
+<li>Feature pipelines and feature stores</li>
+<li>Quality: garbage in → garbage out, <em>at scale</em></li>
+<li>Drift: the world changes; your training set doesn't</li>
+</ul>
+<h3 id="2-algorithms">2. Algorithms</h3>
+<ul>
+<li>Model selection, training, and tuning</li>
+<li>Evaluation: offline metrics vs online (business) metrics</li>
+<li>Trade-offs: accuracy vs latency vs interpretability vs cost</li>
+</ul>
+<h3 id="3-infrastructure">3. Infrastructure</h3>
+<ul>
+<li>Compute for training (GPUs/TPUs, distributed training)</li>
+<li>Serving: batch vs online inference, latency budgets</li>
+<li>Orchestration, CI/CD for models, experiment tracking</li>
+<li>Monitoring and observability in production</li>
+</ul>
+<blockquote>
+<p><strong>A system is only as strong as its weakest pillar.</strong> A state-of-the-art model on bad data is useless; a great model that can't be served within the latency budget never ships.</p>
+</blockquote>
+<p>Most academic ML focuses on the <strong>algorithms</strong> pillar. Most <em>industry</em> effort — and most of this course — lives in the other two.</p>
+<hr />
+<h2 id="the-bitter-lesson">The Bitter Lesson</h2>
+<p>In his 2019 essay, Rich Sutton looked back at 70 years of AI research and drew a provocative conclusion:</p>
+<blockquote>
+<p>General methods that leverage computation are ultimately the most effective, and by a large margin.</p>
+</blockquote>
+<p><strong>The recurring story:</strong></p>
+<ol>
+<li>Researchers build in human knowledge — hand-crafted rules, features, heuristics. It helps in the short term.</li>
+<li>Approaches based on <strong>search and learning</strong>, scaled with more compute and data, eventually win — decisively.</li>
+<li>The human-knowledge approach, once beaten, turns out to have been a <em>ceiling</em>, not a foundation.</li>
+</ol>
+<h3 id="30-years-of-the-bitter-lesson-in-nlp">30 years of the Bitter Lesson in NLP</h3>
+<p>The same pattern has repeated roughly every 3–4 years:</p>
+<table>
+<thead>
+<tr>
+<th>Era</th>
+<th>The "human knowledge" approach</th>
+<th>The "compute + data" winner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1990s</strong></td>
+<td>Rule-based machine translation (SYSTRAN): linguists hand-wrote grammar and transfer rules for decades</td>
+<td>Statistical MT (IBM's Candide, early 1990s): learn word alignments from millions of sentence pairs of parallel parliamentary text — no linguist needed</td>
+</tr>
+<tr>
+<td><strong>2000s</strong></td>
+<td>Feature-engineered NLP: every task needed dozens of hand-crafted features (<code>isCapitalized</code>, gazetteers, POS tags…)</td>
+<td>Word2Vec (2013) / GloVe (2014): predict neighboring words on billions of tokens; representations learn themselves</td>
+</tr>
+<tr>
+<td><strong>2010s</strong></td>
+<td>Task-specific architectures: tree-LSTMs for parsing, CRFs for NER, custom attention for QA</td>
+<td>Transformer (2017): one general architecture + scale displaced them within a few years</td>
+</tr>
+<tr>
+<td><strong>2020s</strong></td>
+<td>Domain-specific pretraining: BloombergGPT, Galactica, BioGPT, LegalBERT</td>
+<td>GPT-4-class general models: train on everything, then prompt or RAG — match or beat domain models on most of their own benchmarks</td>
+</tr>
+<tr>
+<td><strong>Now</strong></td>
+<td>Fine-tune per task with thousands of labeled examples</td>
+<td>Instruction tuning + RLHF: one general model handles many tasks from a few examples in the prompt</td>
+</tr>
+</tbody>
+</table>
+<h3 id="case-study-bloomberggpt-vs-gpt-4-both-march-2023">Case study: BloombergGPT vs GPT-4 (both March 2023)</h3>
+<ul>
+<li><strong>BloombergGPT</strong> — the <em>domain expert</em> bet: 50B parameters trained from scratch on a ~700B-token corpus, roughly half curated financial data (news, filings, Bloomberg data) and half general text. "Finance is special; bake the knowledge in."</li>
+<li><strong>GPT-4</strong> — the <em>bitter lesson</em> bet: general model trained on essentially everything, no financial knowledge deliberately baked in. Just prompt it: <em>"You are a financial analyst. Here are 10 SEC filings…"</em></li>
+</ul>
+<p><strong>Outcome:</strong> In its own paper, BloombergGPT clearly beat similarly-sized general models (GPT-NeoX, OPT-66B, BLOOM-176B) on financial benchmarks — the domain bet worked <em>against its peers</em>. But an independent follow-up study (<a href="https://arxiv.org/abs/2305.05862">Li et al. 2023</a>) found BloombergGPT performed only about as well as zero-shot ChatGPT and <strong>below GPT-4 on most financial tasks</strong> — a general model with no financial pretraining and no access to Bloomberg's data.</p>
+<p><strong>Why the general model won:</strong></p>
+<ol>
+<li><strong>Generalization + scale beat specialization</strong> — GPT-4 read vastly more text (including plenty of public finance) and found the patterns itself.</li>
+<li><strong>Compute beat curation effort</strong> — millions spent curating a finance corpus lost to more compute on a general model.</li>
+<li><strong>Maintenance</strong> — financial knowledge changes; a specialized model goes stale, while a general model + retrieval can be fed tomorrow's 10-K filings tomorrow.</li>
+</ol>
+<p><strong>The nuance — when specialized still wins:</strong></p>
+<ul>
+<li><strong>Domain-heavy tasks</strong> — the same study found GPT-4 still lagged on financial NER and some sentiment tasks, where domain-specific knowledge matters most</li>
+<li><strong>Data privacy</strong> — client data that can't leave the building favors an on-prem specialized model</li>
+<li><strong>Cost &amp; latency</strong> — a 50B model is far cheaper to serve than a frontier model for thousands of internal queries per day</li>
+</ul>
+<p>So the lesson is not "specialized models are useless" — it's that <em>given enough compute and general data, the general model usually wins.</em></p>
+<h3 id="what-it-means-for-ml-system-engineers">What it means for ML system engineers</h3>
+<ul>
+<li><strong>Domain knowledge isn't useless — hard-coding it into the model is what loses.</strong> Let the model learn from data, and supply domain knowledge <em>at runtime</em> via RAG and tools instead of baking it into weights.</li>
+<li>Don't over-invest in hand-tuned heuristics that the next scale-up replaces</li>
+<li>Do invest in what compounds with scale: <strong>data pipelines, evaluation harnesses, compute infrastructure</strong></li>
+<li>The durable skill isn't a particular model architecture — it's the ability to build systems that can absorb <em>the next</em> wave of models</li>
+</ul>
+<p>📖 Read the original: <a href="http://www.incompleteideas.net/IncIdeas/BitterLesson.html">The Bitter Lesson — Rich Sutton (2019)</a></p>
+<hr />
+<h2 id="references-further-reading">References &amp; Further Reading</h2>
+<ul>
+<li>Vijay Janapa Reddi, <a href="https://mlsysbook.ai"><em>Machine Learning Systems</em></a> — Chapter 1: Introduction</li>
+<li>Rich Sutton, <a href="http://www.incompleteideas.net/IncIdeas/BitterLesson.html"><em>The Bitter Lesson</em></a> (2019)</li>
+<li>Chip Huyen, <em>Designing Machine Learning Systems</em> (O'Reilly, 2022)</li>
+<li>D. Sculley et al., <a href="https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems"><em>Hidden Technical Debt in Machine Learning Systems</em></a> (NeurIPS 2015)</li>
+<li>Andrej Karpathy, <a href="https://karpathy.medium.com/software-2-0-a64152b37c35"><em>Software 2.0</em></a> (2017)</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../.." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Home
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../Lecture1/" class="md-footer__link md-footer__link--next" aria-label="Next: 1:Machine Learning Lifecycle">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                1:Machine Learning Lifecycle
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Ankush Chander
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

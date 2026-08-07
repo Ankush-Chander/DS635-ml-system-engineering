@@ -1,0 +1,806 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Home of DS635 - Machine Learning System Engineering, DAU">
+      
+      
+      
+        <link rel="canonical" href="https://DS635.ankushchander.com/lectures/Lecture4/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Tensor Cores, Precision, and the Execution Model - DS635 - Machine Learning System Engineering | DAU</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tensor-cores-precision-and-the-execution-model" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-header__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DS635 - Machine Learning System Engineering | DAU
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Tensor Cores, Precision, and the Execution Model
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../Lecture0/" class="md-tabs__link">
+          
+  
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-nav__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DS635 - Machine Learning System Engineering | DAU
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lectures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lectures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0:Course Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1:Machine Learning Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:Hardware Accelerators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture3_4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3_4:Memory Hierarchy & Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-machine-the-ladder-was-imitating" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The machine the ladder was imitating
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#three-unsolved-mysteries-from-the-matmul-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three unsolved mysteries from the matmul ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tensor-cores-the-ladders-missing-rung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tensor cores — the ladder's missing rung
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-precision-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The precision ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-bf16-won" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why BF16 won
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shape-and-alignment-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shape and alignment constraints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kernel-launch-is-an-asynchronous-enqueue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kernel launch is an asynchronous enqueue
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="tensor-cores-precision-and-the-execution-model">Tensor Cores, Precision, and the Execution Model</h1>
+<blockquote>
+<p><strong>Module thesis:</strong> modern ML performance is a bandwidth problem wearing a compute problem's clothes.</p>
+</blockquote>
+<h2 id="the-machine-the-ladder-was-imitating">The machine the ladder was imitating</h2>
+<p>Two lectures ago you designed this machine from the workload; last lecture you built its tricks by hand on a CPU. Now meet it.</p>
+<p><img alt="" src="../../images/ai_acceleration/cpu_vs_gpu.png" /></p>
+<p>Read the figure left to right:</p>
+<ul>
+<li><strong>CPU side</strong>: 4 cores, and in each one the Control block is as big as the ALU, plus a private L1 and a large shared L2/L3 — one full set of control machinery <em>per</em> arithmetic unit</li>
+<li><strong>GPU side</strong>: each row is one repeating building block — a tiny <code>Ctl</code> + <code>L1</code> slice driving a whole row of ALUs. Control cost amortized across dozens of units; the chip is this row stamped out ~100 times</li>
+<li><strong>Cache demoted</strong>: the GPU's L2 is a thin strip, not the dominant area — caches are not its answer to the memory wall</li>
+<li><strong>Two memories, one narrow bridge</strong>: each side has its <em>own</em> DRAM, joined only by <strong>PCI-Express</strong> — far slower than either memory. That's the transfer tax the ladder's <code>--time-transfer</code> trap measured</li>
+</ul>
+<p><strong>The trade, in numbers</strong> — throughput = units × ops/unit/cycle × clock:</p>
+<ul>
+<li>CPU: ~32 cores × ~16 ops/cycle each × 5 GHz ≈ <strong>a few TFLOPS</strong> peak</li>
+<li>GPU (H100): ~16,000 FP32 units × 2 (FMA) × 1.8 GHz ≈ <strong>~60 TFLOPS</strong> — same transistor technology, opposite bet</li>
+</ul>
+<p>Each GPU thread is <em>much slower</em> than a CPU thread. The CPU minimizes <em>time to finish one thing</em>; the GPU maximizes <em>things finished per second</em>.</p>
+<p><strong>And its answer to the memory wall</strong> — the caches are gone, yet DRAM still takes ~300 cycles. The GPU's move: keep far more groups of work resident than can execute, each with registers parked on-chip; when one group stalls on a load, switch to another <em>next cycle</em>, for free. The <strong>CPU hides latency</strong> (caches + prediction make the wait short); the <strong>GPU tolerates it</strong> (someone else is always ready to run). It can afford this only because the workload has millions of independent items — property 1 from the derivation, cashing its check.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>CPU</th>
+<th>GPU</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Optimized for</td>
+<td>latency of one stream</td>
+<td>throughput of millions of items</td>
+</tr>
+<tr>
+<td>Cores</td>
+<td>~dozens, fast, clever</td>
+<td>~thousands, slow, dumb</td>
+</tr>
+<tr>
+<td>Control</td>
+<td>predict, reorder, speculate</td>
+<td>one decoder drives a lockstep group</td>
+</tr>
+<tr>
+<td>Answer to memory wall</td>
+<td>caches + prediction</td>
+<td>don't wait — switch to other work</td>
+</tr>
+<tr>
+<td>Analogy</td>
+<td>a few professors</td>
+<td>thousands of school kids doing arithmetic</td>
+</tr>
+</tbody>
+</table>
+<h2 id="three-unsolved-mysteries-from-the-matmul-ladder">Three unsolved mysteries from the matmul ladder</h2>
+<ol>
+<li>The TF32 flag did <strong>nothing</strong> on the RX 6700M (8,677 ≈ 9,022 GFLOP/s — within noise)</li>
+<li>FP16 halved the bytes but delivered only <strong>1.7×</strong>, not 2×</li>
+<li>Without <code>synchronize()</code>, we "measured" 314 µs for work that took 1.9 ms — an implied 55 TFLOP/s on a 10.6 TFLOP/s GPU</li>
+</ol>
+<p>This lecture resolves all three.</p>
+<h2 id="tensor-cores-the-ladders-missing-rung">Tensor cores — the ladder's missing rung</h2>
+<ul>
+<li>The progression we already climbed: scalar FMA (1 value/instruction) → SIMD (8 values/instruction) → <strong>tensor core: an entire matrix block per instruction</strong><ul>
+<li>One MMA instruction: <code>D = A×B + C</code> on a small tile (e.g. 16×16), systolic-style</li>
+</ul>
+</li>
+<li>Why it wins: the SIMD amortization argument taken to its extreme — one fetch/decode for a whole tile of FMAs, plus operand reuse <em>inside</em> the unit</li>
+<li>The numbers: H100 ≈ 67 TFLOP/s (FP32 vector pipes) vs ≈ 990 TFLOP/s (FP16 tensor cores) — <strong>~15×</strong></li>
+<li>The whole chip really is built around matmul</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">💬 Mystery 1: why did <code>allow_tf32 = True</code> do nothing on our laptop?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>RDNA2 has <strong>no tensor cores</strong> — the flag toggled hardware that isn't there.</li>
+<li>Dedicated matrix units: NVIDIA (Volta+), AMD CDNA / RDNA3+ (WMMA), Google TPUs. On everything else, TF32 silently falls back to the FP32 pipes.</li>
+</ul>
+</details>
+</div>
+<h2 id="the-precision-ladder">The precision ladder</h2>
+<ul>
+<li>Bit layouts (sign + exponent + mantissa):<ul>
+<li>FP32: 1 + 8 + 23</li>
+<li>TF32: 1 + 8 + 10 — FP32 range, FP16 precision, tensor-core speed</li>
+<li>FP16: 1 + 5 + 10</li>
+<li>BF16: 1 + 8 + 7</li>
+<li>FP8: E4M3 / E5M2 (training frontier)</li>
+</ul>
+</li>
+<li>What halving the bits buys — <strong>twice</strong>:<ul>
+<li>Half the memory footprint <em>and</em> half the bandwidth demand (directly relieves the memory wall)</li>
+<li>Roughly double the tensor-core throughput</li>
+</ul>
+</li>
+<li>Exponent bits = <strong>range</strong>; mantissa bits = <strong>precision</strong></li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">💬 Mystery 2: FP16 halves every byte moved. Why only 1.7× and not 2×?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>The multiply isn't everything: kernel launch, index arithmetic, cache effects, and accumulation (often still FP32) don't halve.</li>
+<li>Rule of thumb all term: <strong>speedup from an optimization is capped by the fraction of time spent on the thing optimized</strong> (Amdahl, in bandwidth clothes).</li>
+</ul>
+</details>
+</div>
+<h2 id="why-bf16-won">Why BF16 won</h2>
+<ul>
+<li>FP16's failure mode: 5 exponent bits → max value <strong>65,504</strong><ul>
+<li>Demo, one line: <code>np.float16(70000)</code> → <code>inf</code></li>
+<li>Gradients overflow → <strong>loss scaling</strong> workaround (multiply loss up, gradients down)</li>
+</ul>
+</li>
+<li>BF16's bet: keep FP32's 8-bit exponent (same range, drop-in), sacrifice mantissa<ul>
+<li>SGD is noisy anyway — training tolerates the lost precision</li>
+</ul>
+</li>
+<li><strong>Mixed precision</strong> — the industry default recipe:<ul>
+<li>Compute in BF16/FP16 · keep FP32 master weights · accumulate in FP32</li>
+</ul>
+</li>
+<li>Where lower precision is <em>not</em> free: outlier activations, small models (production quantization: Module 4)</li>
+</ul>
+<h2 id="shape-and-alignment-constraints">Shape and alignment constraints</h2>
+<ul>
+<li>Tensor cores consume <strong>fixed tile shapes</strong> — odd or misaligned dimensions fall off the fast path</li>
+<li>This is why hidden dimensions are multiples of 64/128 (GPT-3's vocab: padded to a multiple of 128)</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">💬 Your model's hidden dim is 4097 instead of 4096. What happens to throughput?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>The matmul no longer maps cleanly onto tensor-core tiles — the library pads or falls back to slower kernels; throughput can drop by an integer factor.</li>
+<li>One dimension, one unit off. Check your shapes.</li>
+</ul>
+</details>
+</div>
+<h2 id="kernel-launch-is-an-asynchronous-enqueue">Kernel launch is an asynchronous enqueue</h2>
+<ul>
+<li><code>C = A_g @ B_g</code> <strong>enqueues</strong> work on a stream and returns immediately — the GPU executes later</li>
+<li><code>torch.cuda.synchronize()</code> = wait for the queue to drain</li>
+<li>Mystery 3 resolved: the 314 µs was the <em>enqueue</em>, never the compute — a GPU "beating" its own peak is the tell</li>
+<li>Launch overhead is ~5–10 µs per kernel → a model issuing thousands of tiny kernels drowns in launches<ul>
+<li><strong>This is why operator fusion exists — next lecture</strong></li>
+</ul>
+</li>
+</ul>
+<h2 id="recap">Recap</h2>
+<ul>
+<li>Tensor cores: matmul as a single instruction — the ladder's endpoint</li>
+<li>Precision: fewer bits = less bandwidth = more speed; exponent = range, mantissa = precision; BF16 = range over precision</li>
+<li>Execution: launches are async enqueues; always synchronize before timing</li>
+<li>Next: the software stack — compilers, fusion, and kernels</li>
+</ul>
+<!-- Stashed naming material (from Lecture 2) — the "now name it" content, usable here or in a later lecture:
+
+### SIMT: one instruction, thirty-two threads
+
+- *Intuition*: an aerobics class — the instructor calls out one move, 32 people perform it, each on their own body. One voice, many executions
+- Threads are grouped into **warps** of 32; the hardware issues *one* instruction per warp, and all 32 threads execute it in lockstep on their own data and registers
+- **SIMT** = Single Instruction, Multiple Threads: you *write* ordinary scalar code ("compute my `C[i,j]`"), the hardware *runs* it 32-wide — SIMD's efficiency without hand-writing vector code
+- The catch — **branch divergence**: if threads in one warp take different sides of an `if`, the warp runs *both* paths serially, masking threads off. Worst case: 1/32 of the ALUs doing useful work
+    - Matmul has no data-dependent branches — which is exactly *why* this hardware fits it
+
+### The SM: the unit of the chip
+
+- One **streaming multiprocessor** = one row in the CPU-vs-GPU figure: a warp scheduler + a rank of ALUs + a big register file + L1/shared memory
+- A GPU is just this row stamped out ~100+ times — scaling the chip means adding SMs, not making any of them smarter
+- Your program launches thousands of thread blocks; the hardware sprays them across SMs — same code runs on a laptop GPU (few SMs) or an H100 (132), just with less or more parallelism
+
+### Latency hiding: oversubscription, not caching
+
+- Each SM keeps **far more warps resident than it can execute** (up to ~64 resident, issuing from a few per cycle). When a warp stalls on a memory load, the scheduler issues from a *different* ready warp — next cycle
+- The switch is **free**: every resident warp's registers live permanently in the SM's huge register file (256 KB per SM — bigger than its L1). Nothing is saved or restored
+- To cover a ~400-cycle DRAM stall you need ~hundreds of independent instructions in flight: the CPU hunts for them *within one stream* (out-of-order window) and falls short; the GPU takes them *from other warps* — 64 warps × a few instructions each, trivially
+
+!!! question "💬 Quick check"
+    A kernel's threads each hit `if (x[i] > 0)` and roughly half of every warp goes each way. What happens to throughput?
+
+    ??? hint "Answer"
+        - Each warp executes *both* branches serially with half its threads masked off → ~2× slowdown on that stretch, regardless of how many warps exist
+        - Divergence is per-warp: if the data were sorted so whole warps went one way, the cost would vanish
+        - This is why GPU code avoids data-dependent branching — and why branchy, irregular code stays on the CPU
+-->
+
+<h2 id="references">References</h2>
+<ol>
+<li>Vijay Janapa Reddi, <a href="https://mlsysbook.ai"><em>Machine Learning Systems</em></a> — Ch 11.11 (precision), Ch 10.6 (model optimizations)</li>
+<li>NVIDIA, <a href="https://docs.nvidia.com/deeplearning/performance/dl-performance-matrix-multiplication/index.html"><em>Matrix multiplication background: tensor core requirements</em></a></li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Ankush Chander
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

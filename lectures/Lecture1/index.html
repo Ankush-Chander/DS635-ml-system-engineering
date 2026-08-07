@@ -1,0 +1,1076 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Home of DS635 - Machine Learning System Engineering, DAU">
+      
+      
+      
+        <link rel="canonical" href="https://DS635.ankushchander.com/lectures/Lecture1/">
+      
+      
+        <link rel="prev" href="../Lecture0/">
+      
+      
+        <link rel="next" href="../Lecture2/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>1:Machine Learning Lifecycle - DS635 - Machine Learning System Engineering | DAU</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tradiditional-software-engineering" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-header__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DS635 - Machine Learning System Engineering | DAU
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              1:Machine Learning Lifecycle
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Lecture0/" class="md-tabs__link">
+          
+  
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-nav__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DS635 - Machine Learning System Engineering | DAU
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lectures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lectures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0:Course Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1:Machine Learning Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1:Machine Learning Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tradiditional-software-engineering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tradiditional Software Engineering
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#machine-learning-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Machine Learning lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#case-study-waymo-self-driving-initiative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case study: Waymo self-driving initiative
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Case study: Waymo self-driving initiative">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data considerations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#algorithmic-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Algorithmic considerations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core challenges
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core challenges">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data challenges
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model challenges
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ethical-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ethical challenges
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:Hardware Accelerators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture3_4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3_4:Memory Hierarchy & Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tradiditional-software-engineering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tradiditional Software Engineering
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#machine-learning-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Machine Learning lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#case-study-waymo-self-driving-initiative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case study: Waymo self-driving initiative
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Case study: Waymo self-driving initiative">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data considerations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#algorithmic-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Algorithmic considerations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core challenges
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core challenges">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data challenges
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model challenges
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ethical-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ethical challenges
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>1:Machine Learning Lifecycle</h1>
+
+<h2 id="tradiditional-software-engineering">Tradiditional Software Engineering</h2>
+<p>Design -&gt; Implementation -&gt; Testing -&gt; Deployment</p>
+<ul>
+<li><strong>Version control</strong>: track changes to code over time</li>
+<li><strong>CI/CD pipelines</strong>: automate the build, test, and deployment process</li>
+<li><strong>Test automation</strong>: run automated tests to catch bugs and regressions</li>
+<li><strong>Static code analysis</strong>: analyze code for potential bugs and security vulnerabilities</li>
+</ul>
+<h2 id="machine-learning-lifecycle">Machine Learning lifecycle</h2>
+<p>data collection → training → evaluation → deployment → monitoring → retraining <br />
+<img alt="" src="../../images/ml_lifecycle.png" /><br />
+Image credits: MLSys book</p>
+<div class="admonition question">
+<p class="admonition-title">💬 Warm-up: what could have changed?</p>
+<p>You trained a model in a notebook last month and got 94% accuracy. Today you re-ran the <em>same notebook</em> and got 89%. What are all the things that could have changed?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>The data itself, library versions, random seeds, preprocessing steps, hardware nondeterminism — not just the code</li>
+<li>In ML, reproducibility means pinning <em>all</em> of these, not just the source files</li>
+</ul>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">💬 Why can't you just <code>git add</code> your dataset and model weights?</p>
+<p>Git works great for code. Why doesn't it work for data and models?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>Size (GBs–TBs), binary blobs don't diff meaningfully, lineage matters (which data + which config produced which model)</li>
+<li>Purpose-built tools exist for this: DVC, model registries, experiment trackers</li>
+</ul>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">💬 Loud vs silent failures</p>
+<p>A software bug and a bad model both ship to production. How does each announce itself?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>Bug: crash, exception, 500 error — loud</li>
+<li>Bad model: keeps serving predictions, just worse ones — silent</li>
+<li>Silent failures are why production ML needs continuous monitoring, not just pre-deployment tests</li>
+</ul>
+</details>
+</div>
+<ul>
+<li><strong>Data &amp; model versioning</strong> — version data, models, and hyperparameters alongside code (DVC, model registries)</li>
+<li><strong>Experiment tracking</strong> — log every run's config, metrics, and artifacts so results are reproducible and comparable (MLflow, W&amp;B)</li>
+<li><strong>Data validation</strong> — automated checks on schema, distributions, and quality before data reaches training (Great Expectations, TFDV)</li>
+<li><strong>Automated evaluation</strong> — test models against benchmark suites and behavioral tests before promotion, not just accuracy on one held-out set</li>
+<li><strong>CI/CD/CT pipelines</strong> — continuous integration and deployment extended with <em>continuous training</em>: retrain and revalidate automatically as new data arrives</li>
+<li><strong>Feature stores</strong> — share consistent, versioned features between training and serving, avoiding training/serving skew</li>
+<li><strong>Staged rollouts</strong> — shadow deployments, canary releases, and A/B tests before a model takes full traffic</li>
+<li><strong>Monitoring &amp; drift detection</strong> — track prediction quality, data drift, and concept drift in production; alert and trigger retraining</li>
+</ul>
+<h2 id="case-study-waymo-self-driving-initiative">Case study: Waymo self-driving initiative</h2>
+<p><img alt="Waymo: ML from Edge to Cloud" src="../../images/waymo_case_study.png" />
+Image credits: ChatGPT</p>
+<h3 id="data-considerations">Data considerations</h3>
+<ul>
+<li>Each Waymo vehicle generates approximately <em>one terabyte per vehicle per hour</em> of data in structured as well as unstructured format coming from LiDAR, Radar and other high resolution cameras.</li>
+</ul>
+<h3 id="algorithmic-considerations">Algorithmic considerations</h3>
+<ul>
+<li>Specialized models for perception (object detection, lane detection, etc.)</li>
+<li>Prediction models like <a href="https://waymo.com/blog/2020/05/vectornet/">vectornet</a> to anticipate the behavior of other users//vehicles</li>
+</ul>
+<h2 id="infrastructure-considerations">Infrastructure considerations</h2>
+<ul>
+<li>Custom designed infrastructure on device for making real time predictions.</li>
+<li>Extensive use of cloud infrastructure for data collection, storage, processing, and efficient access during training.</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">💬 1 TB per vehicle per hour — what do you throw away?</p>
+<p>You can't keep it all. What would you discard, and what's the risk?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>Most footage is routine highway driving; the rare events (near-misses, unusual pedestrians) are the valuable ones</li>
+<li>The risk: discard something rare today that you'll wish you had trained on tomorrow</li>
+<li>Techniques that address this: data curation, active learning, smart sampling</li>
+</ul>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">💬 Why both on-car AND cloud?</p>
+<p>Why does Waymo run models on the vehicle <em>and</em> in the cloud? Why not all in one place?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>A braking decision can't wait for a network round trip (latency, connectivity)</li>
+<li>Training needs the fleet's collective data and massive compute (scale)</li>
+<li>This is the edge-vs-cloud trade-off: inference where the latency budget lives, training where the data and compute live</li>
+</ul>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">💬 A couch on the highway</p>
+<p>The car sees something it has never seen before. What should the system do <em>at that moment</em>, and what should happen to that data <em>afterwards</em>?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>Now: graceful degradation, fallback behavior, safety envelope</li>
+<li>After: flag it, label it, feed it into retraining — closes the lifecycle loop</li>
+</ul>
+</details>
+</div>
+<h2 id="core-challenges">Core challenges</h2>
+<h3 id="data-challenges">Data challenges</h3>
+<ul>
+<li><strong>Data quality</strong>: Data originates from human or machine sources, and may be noisy, incomplete, or biased. </li>
+<li><strong>Data scale</strong>: The volume of data available for training can be enormous, requiring distributed computing and efficient data pipelines.</li>
+<li><strong>Data drift</strong>: The gradual change in the statistical properties of input data over time, which can degrade model performance if not properly monitored and addressed through retraining or model updates.<br />
+  Eg: For self driving cars:<ul>
+<li>Seasonal variations affect sensor performance through changing sun angles and precipitation patterns.</li>
+<li>Infrastructure modifications alter road layouts.</li>
+<li>Urban growth evolves traffic patterns.</li>
+<li>Each shift can degrade specific model components: pedestrian detection accuracy may decline in winter conditions, while lane following confidence may decrease on newly repaved roads.</li>
+<li>Detecting these shifts requires continuous monitoring of input distributions and model performance across operational contexts.</li>
+</ul>
+</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">💬 Nobody changed the code</p>
+<p>Your spam classifier was 95% accurate at launch. Six months later it's at 80% — and no one touched the code. What happened?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>Spammers <em>adapted</em> to the model — adversarial drift</li>
+<li>Drift isn't always natural (seasons, road changes); sometimes someone is actively working against your model</li>
+</ul>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">💬 Drift on your phone</p>
+<p>Give an example of data drift from an app you use every day.</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>Recommendations going stale after exam season, UPI fraud patterns shifting, festival shopping spikes, slang evolving faster than autocorrect</li>
+</ul>
+</details>
+</div>
+<h3 id="model-challenges">Model challenges</h3>
+<ul>
+<li>Models require enormous computing power to train and run, making it difficult to deploy them in situations with
+  limited resources, like on mobile phones or IoT devices.<br />
+<a href="https://en.wikipedia.org/wiki/Transfer_learning">Transfer learning</a> can help mitigate this challenge by leveraging pre-trained models and fine-tuning them on new data.</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">💬 Why doesn't your keyboard call GPT-4?</p>
+<p>Why doesn't your phone keyboard's next-word prediction call a frontier-model API for every keystroke?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>Latency (must feel instant), cost (billions of keystrokes a day), offline operation, privacy (keystrokes never leave the device)</li>
+<li>Deployment constraints — not accuracy — decide which model runs where</li>
+</ul>
+</details>
+</div>
+<h3 id="ethical-challenges">Ethical challenges</h3>
+<ul>
+<li>Fairness, as ML systems can sometimes learn to make decisions that discriminate against certain groups of people.</li>
+<li>Transparency and interpretability, as ML models can be opaque and difficult to understand, leading to trust issues and ethical concerns.</li>
+<li>Privacy, as ML models often require access to sensitive data, leading to concerns about data privacy and security.</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">💬 Can a model discriminate without seeing the column?</p>
+<p>A loan-approval model never sees the "gender" column. Can it still discriminate by gender?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>Yes — proxy features: shopping patterns, pin codes, employment history correlate with protected attributes</li>
+<li>Removing the column removes the <em>label</em>, not the <em>signal</em></li>
+</ul>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">💬 Accuracy vs explainability</p>
+<p>Would you accept a hospital model that's 2% more accurate but completely unexplainable, over an interpretable one? Would your answer change for a movie recommender?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>Interpretability requirements are application-dependent, not absolute</li>
+<li>Stakes, recourse, and regulation decide the trade-off — not the ML engineer's taste</li>
+</ul>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">💬 Closing: where does the week actually go?</p>
+<p>Of everything today — data, algorithms, infrastructure — which do you think a new ML engineer at Waymo actually spends their week on?</p>
+<details class="hint">
+<summary>Answer</summary>
+<ul>
+<li>Mostly data and infrastructure: pipelines, debugging data quality, monitoring — not designing new architectures</li>
+<li>Hence the saying: "ML systems are 10% machine learning and 90% engineering"</li>
+</ul>
+</details>
+</div>
+<h2 id="references">References</h2>
+<ol>
+<li>
+<ul>
+<li>Vijay Janapa Reddi, <a href="https://mlsysbook.ai"><em>Machine Learning Systems</em></a> — Chapter 1: Introduction</li>
+</ul>
+</li>
+<li><a href="https://waymo.com/blog/2020/05/vectornet/">Vectornet: Waymo</a></li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../Lecture0/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 0:Course Overview">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                0:Course Overview
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../Lecture2/" class="md-footer__link md-footer__link--next" aria-label="Next: 2:Hardware Accelerators">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                2:Hardware Accelerators
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Ankush Chander
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
