@@ -1,0 +1,1231 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Home of DS635 - Machine Learning System Engineering, DAU">
+      
+      
+      
+        <link rel="canonical" href="https://DS635.ankushchander.com/labs/Lab1/">
+      
+      
+        <link rel="prev" href="../../lectures/Lecture3_4/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>1:The Matmul Ladder - DS635 - Machine Learning System Engineering | DAU</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-1-the-matmul-ladder-on-your-machine" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-header__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DS635 - Machine Learning System Engineering | DAU
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              1:The Matmul Ladder
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../lectures/Lecture0/" class="md-tabs__link">
+          
+  
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Labs
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-nav__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DS635 - Machine Learning System Engineering | DAU
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lectures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lectures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Lecture0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0:Course Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Lecture1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1:Machine Learning Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Lecture2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:Hardware Accelerators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Lecture3_4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3_4:Memory Hierarchy & Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Labs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Labs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1:The Matmul Ladder
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1:The Matmul Ladder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-one-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The one rule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-setup-10-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0 — Setup (10 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-1-your-ladder-vs-the-class-ladder-15-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 1 — Your ladder vs the class ladder (15 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2-cache-detective-25-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 2 — Cache detective (25 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-3-find-your-memory-wall-25-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 3 — Find your memory wall (25 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-4-tiling-the-sweep-and-the-trap-25-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 4 — Tiling: the sweep and the trap (25 min)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 4 — Tiling: the sweep and the trap (25 min)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4a-find-your-caches-sweet-spot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4a. Find your cache's sweet spot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4b-the-three-line-bounds-check-that-costs-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4b. The three-line bounds check that costs 3×
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-5-all-cores-and-where-the-speedup-leaks-15-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 5 — All cores, and where the speedup leaks (15 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stretch-optional-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stretch (optional, +4)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-submit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to submit
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-one-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The one rule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-setup-10-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0 — Setup (10 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-1-your-ladder-vs-the-class-ladder-15-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 1 — Your ladder vs the class ladder (15 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2-cache-detective-25-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 2 — Cache detective (25 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-3-find-your-memory-wall-25-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 3 — Find your memory wall (25 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-4-tiling-the-sweep-and-the-trap-25-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 4 — Tiling: the sweep and the trap (25 min)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 4 — Tiling: the sweep and the trap (25 min)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4a-find-your-caches-sweet-spot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4a. Find your cache's sweet spot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4b-the-three-line-bounds-check-that-costs-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4b. The three-line bounds check that costs 3×
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-5-all-cores-and-where-the-speedup-leaks-15-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 5 — All cores, and where the speedup leaks (15 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stretch-optional-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stretch (optional, +4)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-submit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to submit
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-1-the-matmul-ladder-on-your-machine">Lab 1 — The Matmul Ladder on <em>Your</em> Machine</h1>
+<blockquote>
+<p>In class, we ran the ladder on one specific laptop.  This lab is about rebuilding the curve on your own hardware and explaining every place it differs.</p>
+</blockquote>
+<ul>
+<li><strong>Time:</strong> ~2 hours </li>
+<li><strong>Machines:</strong> any Linux CPU box (no GPU needed — the GPU rungs skip automatically)</li>
+<li><strong>Work in pairs, submit individually.</strong></li>
+</ul>
+<h2 id="the-one-rule">The one rule</h2>
+<p>Every experiment below follows the same loop:</p>
+<blockquote>
+<p><strong>Predict → Measure → Explain.</strong></p>
+</blockquote>
+<p>Write your prediction down <em>before</em> running the command. A wrong prediction followed by a correct explanation earns full marks. A correct number with no explanation earns almost none — this is a systems course, not a benchmarking contest.</p>
+<hr />
+<h2 id="part-0-setup-10-min">Part 0 — Setup (10 min)</h2>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:Ankush-Chander/DS635-ml-system-engineering.git
+<span class="nb">cd</span><span class="w"> </span>DS635-ml-system-engineering/code/ai_acceleration
+make<span class="w"> </span>data<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>bench<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>chart
+</code></pre></div>
+<p>You need: <code>gcc</code>, <code>make</code>, <code>python3</code> with <code>numpy</code> + <code>matplotlib</code>, and <code>valgrind</code> (for Part 2 — check with <code>valgrind --version</code>).</p>
+<p>Sanity checks before moving on:</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Every line in <code>results/results.csv</code> ends in <code>PASS</code>. A <code>FAIL</code> means an "optimization" broke the math — that's a bug, not a speedup.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>rung7</code>/<code>rung8</code> were skipped (no GPU) — expected, not an error.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Keep <code>results/ladder.png</code> — you'll submit it.</li>
+</ul>
+<p>Also record your machine's identity — you'll need every one of these numbers later:</p>
+<div class="highlight"><pre><span></span><code>lscpu<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Model name|^CPU\(s\)|Core\(s\)|Thread|MHz&quot;</span>
+lscpu<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>cache<span class="w">        </span><span class="c1"># L1d, L2, L3 sizes</span>
+nproc
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Patience point</p>
+<p>The naive C rung at N=2048 takes ~1–2 minutes on a lab machine. That slowness <em>is</em> the data point.</p>
+</div>
+<hr />
+<h2 id="part-1-your-ladder-vs-the-class-ladder-15-min">Part 1 — Your ladder vs the class ladder (15 min)</h2>
+<p>Fill this table from your <code>results.csv</code> (lecture-laptop numbers included for contrast):</p>
+<table>
+<thead>
+<tr>
+<th>Rung</th>
+<th>Your GFLOP/s</th>
+<th>Lecture laptop</th>
+<th>Your jump vs previous rung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Naive Python (N=256)</td>
+<td></td>
+<td>0.05</td>
+<td>—</td>
+</tr>
+<tr>
+<td>NumPy (N=2048)</td>
+<td></td>
+<td>249</td>
+<td></td>
+</tr>
+<tr>
+<td>Naive C (N=2048)</td>
+<td></td>
+<td>0.37</td>
+<td></td>
+</tr>
+<tr>
+<td>Loop reorder (N=2048)</td>
+<td></td>
+<td>3.5</td>
+<td></td>
+</tr>
+<tr>
+<td>SIMD (N=1024)</td>
+<td></td>
+<td>31.5</td>
+<td></td>
+</tr>
+<tr>
+<td>SIMD (N=2048)</td>
+<td></td>
+<td>14.2</td>
+<td></td>
+</tr>
+<tr>
+<td>Tiled (N=2048)</td>
+<td></td>
+<td>30.8</td>
+<td></td>
+</tr>
+<tr>
+<td>OpenMP (N=2048)</td>
+<td></td>
+<td>106</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition question">
+<p class="admonition-title">💬 Q1.1 — Which single rung gave the biggest multiplicative jump on <em>your</em> machine? Was it the same rung as on the lecture laptop?</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">💬 Q1.2 — Pick the rung where your number differs <em>most</em> (as a ratio) from the lecture laptop's, and explain the difference using a hardware fact about your machine (core count, cache size, SIMD width, clock). \"My CPU is slower\" is not an explanation; \"my CPU has no AVX2, so...\" is.</p>
+</div>
+<hr />
+<h2 id="part-2-cache-detective-25-min">Part 2 — Cache detective (25 min)</h2>
+<p>The lecture claimed the naive→reorder speedup is entirely a cache-line story. Don't believe it — audit it.</p>
+<p><strong>Predict first.</strong> At N=1024, using the two facts <em>cache line = 64 B = 16 floats</em> and <em>the inner loop reads <code>A</code> along a row and <code>B</code> down a column</em>:</p>
+<ul>
+<li>Predicted L1d misses, naive i-j-k: ______ (hint: roughly one per <code>B</code> access)</li>
+<li>Predicted L1d misses, reordered i-k-j: ______ (hint: one per cache line)</li>
+</ul>
+<p><strong>Now measure</strong> (cachegrind simulates the cache — no sudo needed, but ~50× slower; the naive run takes ~5–10 min, start it and read ahead):</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span>b<span class="w"> </span><span class="k">in</span><span class="w"> </span>rung2_c_naive<span class="w"> </span>rung3_c_reorder<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;== </span><span class="nv">$b</span><span class="s2"> ==&quot;</span>
+<span class="w">  </span>valgrind<span class="w"> </span>--tool<span class="o">=</span>cachegrind<span class="w"> </span>--cache-sim<span class="o">=</span>yes<span class="w"> </span>./build/<span class="nv">$b</span><span class="w"> </span><span class="m">1024</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;D  refs|D1  miss|LLd miss&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Predicted</th>
+<th>Measured</th>
+<th>Ratio measured/predicted</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Naive D1 misses</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Reordered D1 misses</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition question">
+<p class="admonition-title">💬 Q2.1 — The naive run's <em>read</em> miss rate comes out to almost exactly 50%. The inner loop makes exactly two reads per iteration. Which one misses, which one hits, and why?</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">💬 Q2.2 — <code>LLd</code> (last-level) misses are nearly <strong>identical</strong> for both versions, even though one is 9× faster. What are these misses (name the category), and what does their equality tell you about <em>where</em> in the hierarchy the 9× was won?</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Do not report cachegrind's runtime as a performance number</p>
+<p>Simulation overhead flattens the real difference. Harness for <em>time</em>, cachegrind for <em>why</em>.</p>
+</div>
+<hr />
+<h2 id="part-3-find-your-memory-wall-25-min">Part 3 — Find your memory wall (25 min)</h2>
+<p>In class, the SIMD rung collapsed from 31.5 to 14.2 GFLOP/s between N=1024 and N=2048 — because matrix B (4N² bytes) stopped fitting in that laptop's 16 MB L3. Your L3 is a different size, so <strong>your wall is in a different place</strong>.</p>
+<p><strong>Predict first.</strong> From your recorded L3 size, solve <code>4N² = L3</code> for N: the wall should appear once N clearly exceeds N* = ______.</p>
+<p><strong>Measure.</strong> Generate the extra sizes, then sweep (any N works as long as its data exists):</p>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>common/gen_inputs.py<span class="w"> </span>--n<span class="w"> </span><span class="m">512</span><span class="w"> </span><span class="m">1536</span><span class="w"> </span><span class="m">3072</span>
+<span class="k">for</span><span class="w"> </span>n<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">512</span><span class="w"> </span><span class="m">1024</span><span class="w"> </span><span class="m">1536</span><span class="w"> </span><span class="m">2048</span><span class="w"> </span><span class="m">3072</span><span class="w"> </span><span class="m">4096</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>./build/rung4_c_simd<span class="w"> </span><span class="nv">$n</span><span class="w"> </span><span class="m">3</span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+</code></pre></div>
+<p>Tabulate GFLOP/s vs N and mark where the cliff starts.</p>
+<div class="admonition question">
+<p class="admonition-title">💬 Q3.1 — Where did your cliff land relative to your predicted N*? If they disagree, consider: is L3 shared or per-core-complex on your CPU? Does the working set include more than just B?</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">💬 Q3.2 — Same binary, same flags, same algorithm at every N — in one sentence, what changed across the cliff?</p>
+</div>
+<hr />
+<h2 id="part-4-tiling-the-sweep-and-the-trap-25-min">Part 4 — Tiling: the sweep and the trap (25 min)</h2>
+<h3 id="4a-find-your-caches-sweet-spot">4a. Find your cache's sweet spot</h3>
+<p>The tiled rung's T×T working set must fit in cache: roughly <code>3 × T² × 4</code> bytes for the three tiles in play. <strong>Predict</strong> your best T from your L1d and L2 sizes, then sweep:</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span>t<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">32</span><span class="w"> </span><span class="m">64</span><span class="w"> </span><span class="m">128</span><span class="w"> </span><span class="m">256</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span>make<span class="w"> </span>clean<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span><span class="nv">T</span><span class="o">=</span><span class="nv">$t</span>
+<span class="w">  </span>./build/rung5_c_tiled<span class="w"> </span><span class="m">2048</span><span class="w"> </span><span class="m">3</span>
+<span class="k">done</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>T</th>
+<th>3·T²·4 bytes</th>
+<th>Fits in…</th>
+<th>GFLOP/s</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>32</td>
+<td>12 KB</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>64</td>
+<td>48 KB</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>128</td>
+<td>192 KB</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>256</td>
+<td>768 KB</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition question">
+<p class="admonition-title">💬 Q4.1 — Explain your winning T from your cache sizes. Why does T=256 (or your largest losing T) fall off, even though bigger tiles mean <em>more</em> reuse per byte?</p>
+</div>
+<h3 id="4b-the-three-line-bounds-check-that-costs-3">4b. The three-line bounds check that costs 3×</h3>
+<p>Open <code>rung5_c_tiled.c</code>, find the innermost loop, and change it to:</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jj</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">jj</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
+</code></pre></div>
+<p>Rebuild with your best T and re-run at N=2048. Then check what the compiler actually emitted, before vs after (revert the edit for the "before" count):</p>
+<div class="highlight"><pre><span></span><code>gcc<span class="w"> </span>-O3<span class="w"> </span>-march<span class="o">=</span>native<span class="w"> </span>-ffast-math<span class="w"> </span>-S<span class="w"> </span>-o<span class="w"> </span>-<span class="w"> </span>rung5_c_tiled.c<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>ymm
+</code></pre></div>
+<div class="admonition question">
+<p class="admonition-title">💬 Q4.2 — Report GFLOP/s and the <code>ymm</code> instruction count with and without the guard. The guard is semantically harmless here (N % T == 0, so <code>j &lt; n</code> is always true). Why does the compiler give up vectorizing anyway — what would it have to <em>prove</em>, and can it?</p>
+</div>
+<p>Revert your edit when done (<code>git checkout rung5_c_tiled.c</code>).</p>
+<hr />
+<h2 id="part-5-all-cores-and-where-the-speedup-leaks-15-min">Part 5 — All cores, and where the speedup leaks (15 min)</h2>
+<p><strong>Predict first.</strong> <code>nproc</code> says ______. Your predicted speedup at that many threads: ______×.</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span>k<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">16</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nv">OMP_PLACES</span><span class="o">=</span>cores<span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="nv">$k</span><span class="w"> </span>./build/rung6_c_openmp<span class="w"> </span><span class="m">2048</span><span class="w"> </span><span class="m">3</span>
+<span class="k">done</span>
+</code></pre></div>
+<p>(Stop the sweep at your <code>nproc</code>.)</p>
+<table>
+<thead>
+<tr>
+<th>Threads</th>
+<th>GFLOP/s</th>
+<th>Speedup vs 1 thread</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition question">
+<p class="admonition-title">💬 Q5.1 — Name the three shared resources from lecture that eat the missing speedup, and point at the evidence for at least one of them in <em>your</em> table (e.g., where does scaling first sag: 2→4 or 4→8?).</p>
+</div>
+<hr />
+<h2 id="stretch-optional-4">Stretch (optional, +4)</h2>
+<p>Pick one:</p>
+<ol>
+<li><strong>Percent of peak.</strong> Compute your CPU's theoretical peak: <code>cores × clock (GHz) × SIMD lanes × 2 (FMA = mul+add) × FMA units per core</code> (most AVX2 desktops: 8 lanes, 2 FMA units → 32 FLOPs/cycle/core). What fraction of peak does your best OpenMP number reach? What fraction does NumPy reach? List two things BLAS does that our ladder still doesn't.</li>
+<li><strong>Prove tiling needs a memory problem.</strong> Rebuild the tiled rung with the <em>scalar</em> flags (<code>-O2 -fno-tree-vectorize -fno-tree-slp-vectorize</code>) and show tiling gains ≈ nothing over the scalar reordered rung. One paragraph: why is this the roofline model in miniature?</li>
+<li><strong>Break the harness (on purpose).</strong> Change <code>-ffast-math</code> to nothing in the FAST flags, rebuild the SIMD rung, and measure. How much of the SIMD speedup depended on the compiler being allowed to reorder float additions — and why does IEEE-754 forbid it by default?</li>
+</ol>
+<hr />
+<h2 id="what-to-submit">What to submit</h2>
+<p>One PDF or Markdown report containing:</p>
+<ol>
+<li>Your machine identity block (Part 0) and <code>ladder.png</code></li>
+<li>The five filled tables</li>
+<li>Answers to Q1.1–Q5.1 — <strong>a few sentences each</strong>; every answer must reference either a number you measured or a hardware fact of your machine</li>
+<li>(Optional) the stretch write-up</li>
+</ol>
+<p><strong>Marks (40):</strong> </p>
+<ul>
+<li>Part 1 — 6</li>
+<li>Part 2 — 10</li>
+<li>Part 3 — 8</li>
+<li>Part 4 — 10</li>
+<li>Part 5 — 6</li>
+<li>Stretch — up to +4.</li>
+</ul>
+<p>Predictions are graded on <em>reasoning</em>, not accuracy. The report we want to read says: "I predicted X because of hardware fact H; I measured Y; the gap is explained by Z."</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../lectures/Lecture3_4/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 3_4:Memory Hierarchy &amp; Roofline">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                3_4:Memory Hierarchy & Roofline
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Ankush Chander
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
