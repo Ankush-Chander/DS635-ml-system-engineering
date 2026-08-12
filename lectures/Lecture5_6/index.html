@@ -1,0 +1,1756 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Home of DS635 - Machine Learning System Engineering, DAU">
+      
+      
+      
+        <link rel="canonical" href="https://DS635.ankushchander.com/lectures/Lecture5_6/">
+      
+      
+        <link rel="prev" href="../Lecture3_4/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>5_6:GPU job submission - DS635 - Machine Learning System Engineering | DAU</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#gpu-job-submission" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-header__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DS635 - Machine Learning System Engineering | DAU
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              5_6:GPU job submission
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Lecture0/" class="md-tabs__link">
+          
+  
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-nav__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DS635 - Machine Learning System Engineering | DAU
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lectures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lectures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0:Course Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1:Machine Learning Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:Hardware Accelerators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture3_4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3_4:Memory Hierarchy & Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU job submission
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU job submission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#who-moves-the-bytes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Who moves the bytes?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Who moves the bytes?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#demo-a-the-argument-the-cpu-is-not-paid-per-byte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demo A — the argument: the CPU is not paid per byte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-kinds-of-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two kinds of traffic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-the-cpu-reaches-a-device-pcie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the CPU reaches a device: PCIe
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How the CPU reaches a device: PCIe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#everything-is-a-tlp-and-this-is-where-the-1-s-came-from" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Everything is a TLP — and this is where the 1 µs came from
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-the-cpu-addresses-a-device-mmio-and-bars" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the CPU addresses a device: MMIO and BARs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How the CPU addresses a device: MMIO and BARs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bars-and-how-they-get-their-addresses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BARs, and how they get their addresses
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-never-gets-an-address-the-pendrive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What never gets an address: the pendrive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-cost-asymmetry-priced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The cost asymmetry, priced
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#try-it-on-your-own-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Try it on your own machine
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-the-device-moves-the-bulk-dma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the device moves the bulk: DMA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How the device moves the bulk: DMA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#three-complications-each-with-a-practical-consequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three complications, each with a practical consequence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-movie-question-closed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The movie question, closed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#putting-it-together-ring-doorbell-fence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Putting it together: ring, doorbell, fence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Putting it together: ring, doorbell, fence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-the-gpu-appeared-to-beat-its-own-peak" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the GPU appeared to beat its own peak
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-else-falls-out-of-the-ring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What else falls out of the ring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-callback-it-was-never-a-gpu-idea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The callback — it was never a GPU idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#and-a-footnote-that-closes-the-opening-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        And a footnote that closes the opening loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-every-term-belongs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where every term belongs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#who-moves-the-bytes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Who moves the bytes?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Who moves the bytes?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#demo-a-the-argument-the-cpu-is-not-paid-per-byte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demo A — the argument: the CPU is not paid per byte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-kinds-of-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two kinds of traffic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-the-cpu-reaches-a-device-pcie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the CPU reaches a device: PCIe
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How the CPU reaches a device: PCIe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#everything-is-a-tlp-and-this-is-where-the-1-s-came-from" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Everything is a TLP — and this is where the 1 µs came from
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-the-cpu-addresses-a-device-mmio-and-bars" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the CPU addresses a device: MMIO and BARs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How the CPU addresses a device: MMIO and BARs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bars-and-how-they-get-their-addresses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BARs, and how they get their addresses
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-never-gets-an-address-the-pendrive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What never gets an address: the pendrive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-cost-asymmetry-priced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The cost asymmetry, priced
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#try-it-on-your-own-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Try it on your own machine
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-the-device-moves-the-bulk-dma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the device moves the bulk: DMA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How the device moves the bulk: DMA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#three-complications-each-with-a-practical-consequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three complications, each with a practical consequence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-movie-question-closed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The movie question, closed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#putting-it-together-ring-doorbell-fence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Putting it together: ring, doorbell, fence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Putting it together: ring, doorbell, fence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-the-gpu-appeared-to-beat-its-own-peak" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the GPU appeared to beat its own peak
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-else-falls-out-of-the-ring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What else falls out of the ring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-callback-it-was-never-a-gpu-idea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The callback — it was never a GPU idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#and-a-footnote-that-closes-the-opening-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        And a footnote that closes the opening loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-every-term-belongs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where every term belongs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="gpu-job-submission">GPU job submission</h1>
+<blockquote>
+<p><strong>Module thesis:</strong> there is no <em>call the GPU</em> instruction. The CPU tells a device what to do by <strong>reading and writing addresses</strong> — a small, expensive control path — and the device then <strong>moves the bulk data itself</strong>. Every kernel launch, every <code>.to('cuda')</code>, every <code>torch.cuda.synchronize()</code> is a protocol built out of those two halves — and the cost of that protocol is why the GPU numbers in the last lecture lied to us.</p>
+</blockquote>
+<p>Last lecture was the memory hierarchy <strong>inside one chip</strong>. This one is the memory hierarchy <strong>between two chips</strong>. The next one goes back inside.</p>
+<p>We are not going to start with a GPU. We are going to start with a movie file, because that is where your intuition already works — and by the time we have finished arguing about the movie, we will have derived most of a GPU driver.</p>
+<hr />
+<h2 id="who-moves-the-bytes">Who moves the bytes?</h2>
+<p>You double-click a 4 GB movie file and it starts playing — instantly, smoothly, and you can still browse the web while it plays. Those 4 GB have to travel <strong>disk → RAM → GPU</strong>.</p>
+<div class="admonition question">
+<p class="admonition-title">💬 Does the CPU execute a load and a store for every one of those bytes?</p>
+<details class="hint">
+<summary>Cost the strawman before answering</summary>
+<p>Let us deliberately build <strong>the stupidest implementation that could possibly work</strong>: the CPU reads one 4-byte word from the disk controller and writes it to RAM, and repeats. Each of those device accesses is a round trip out to the device and back — we'll see when we get to PCIe that the number is about <strong>1 microsecond</strong>:</p>
+<div class="highlight"><pre><span></span><code>4 GB / 4 B                      = 1.07 × 10⁹ transfers
+× ~1 µs per device round trip   ≈ 1070 s   ≈ 18 minutes
+</code></pre></div>
+<p><strong>Eighteen minutes of a 100%-busy core to read one movie file</strong> — and zero cycles left over to decode video. Even if a device register were as cheap as DRAM (~80 ns), it is still 86 seconds and a fully saturated core.</p>
+<p>Playback would be impossible. Yet it demonstrably works. <strong>So whatever is happening, it is not this.</strong></p>
+<p>That number prices <em>the naive design</em>, not programmed I/O in general — a real one bursts through a device FIFO and moves far more per round trip. What survives the improvement is the shape: the CPU is in the data path, and its cost grows with the payload.</p>
+</details>
+</div>
+<p>That style of transfer — the CPU moving the bytes itself with its own load/store instructions — has a name: <strong>programmed I/O (PIO)</strong>. It is not a made-up villain. PC hard drives really were driven this way, and even the batched, FIFO-bursting versions topped out around <strong>16.6 MB/s</strong> (ATA PIO mode 4) with a core pegged. We will find at the end of the lecture that PIO is not dead at all — it lost the data path and kept the control path.</p>
+<p>But the strawman argument above is just arithmetic. Let us actually measure it.</p>
+<h3 id="demo-a-the-argument-the-cpu-is-not-paid-per-byte">Demo A — the argument: the CPU is not paid per byte</h3>
+<p>Prepare an 8 GB file once (takes a few seconds):</p>
+<div class="highlight"><pre><span></span><code>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>~/big.bin<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">8192</span><span class="w"> </span><span class="nv">oflag</span><span class="o">=</span>direct<span class="w"> </span><span class="nv">status</span><span class="o">=</span>progress
+</code></pre></div>
+<p><a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/tree/main/code/gpu_submission"><code>code/gpu_submission/who_pays_per_byte.sh</code></a> reads <strong>the same 512 MB</strong> three times, varying only the request size (<code>bs</code>), and records what the CPU is charged for each time:</p>
+<div class="highlight"><pre><span></span><code>./code/gpu_submission/who_pays_per_byte.sh<span class="w"> </span>~/big.bin<span class="w"> </span>-q
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th><code>bs</code></th>
+<th><code>requests</code></th>
+<th><strong>bytes read</strong></th>
+<th><code>MB/s</code></th>
+<th><code>IRQs</code></th>
+<th><code>KB/IRQ</code></th>
+<th><strong>CPU-seconds</strong></th>
+<th><code>% of 1 core</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4K</td>
+<td>131072</td>
+<td><strong>512 MB</strong></td>
+<td>119</td>
+<td>131156</td>
+<td>4</td>
+<td><strong>1.374</strong></td>
+<td>32%</td>
+</tr>
+<tr>
+<td>64K</td>
+<td>8192</td>
+<td><strong>512 MB</strong></td>
+<td>831</td>
+<td>8192</td>
+<td>64</td>
+<td><strong>0.149</strong></td>
+<td>24%</td>
+</tr>
+<tr>
+<td>4M</td>
+<td>128</td>
+<td><strong>512 MB</strong></td>
+<td>1753</td>
+<td>4086</td>
+<td>128</td>
+<td><strong>0.059</strong></td>
+<td>20%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The two bold columns are the argument. Everything else is the explanation.</strong></p>
+<p><strong>Reading the columns.</strong> Every row moves the same 512 MB. Only <code>bs</code> changes.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Side</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bs</code></td>
+<td>knob</td>
+<td>the request size — how many bytes we ask for in one <code>read()</code></td>
+</tr>
+<tr>
+<td><code>requests</code></td>
+<td>CPU</td>
+<td>how many reads that took: 512 MB ÷ <code>bs</code></td>
+</tr>
+<tr>
+<td><code>bytes read</code></td>
+<td>fixed</td>
+<td>512 MB in every row, by construction — the experiment's control</td>
+</tr>
+<tr>
+<td><code>MB/s</code></td>
+<td><strong>device</strong></td>
+<td>throughput achieved — how fast the bytes actually arrived</td>
+</tr>
+<tr>
+<td><code>IRQs</code></td>
+<td><strong>device</strong></td>
+<td>interrupts the SSD raised during the run, read from <code>/proc/interrupts</code> — the device tapping the CPU on the shoulder to say <em>"this one's done"</em></td>
+</tr>
+<tr>
+<td><code>KB/IRQ</code></td>
+<td>ratio</td>
+<td>data moved per interrupt — how much movement one tap on the shoulder buys</td>
+</tr>
+<tr>
+<td><code>CPU-seconds</code></td>
+<td><strong>CPU</strong></td>
+<td>user + system CPU time the read was charged, from <code>/proc/&lt;pid&gt;/stat</code></td>
+</tr>
+<tr>
+<td><code>% of 1 core</code></td>
+<td>derived</td>
+<td><code>CPU-seconds</code> ÷ wall time, where wall time is 512 MB ÷ <code>MB/s</code> — how busy one core was while the read ran. <strong>Never above a third, and only a fifth at <code>bs=4M</code></strong>: reading half a gigabyte leaves most of a core free for something else</td>
+</tr>
+</tbody>
+</table>
+<p><em>(<code>bytes read</code> and <code>% of 1 core</code> are worked out here; the script prints the rest.)</em></p>
+<p>Now the argument — and it needs only the two bold columns above. <strong>Same bytes in every row. CPU cost swings 23×.</strong></p>
+<p>If the CPU were moving the data, that column would be flat — bytes are bytes, and even a maximally efficient copier still pays <em>per byte</em>. It is not flat. So <strong>the CPU is not being paid per byte</strong>, and whatever work it is doing is not proportional to the payload.</p>
+<p>Be precise about what that buys us. The measurement gives a <strong>symptom</strong> — it kills the strawman without naming what replaced it. The <strong>mechanism</strong> comes from the architecture, and we will read it straight off the hardware two sections from now: the NVMe controller is a <strong>bus master</strong>, so it issues the memory writes itself. <em>Experiment gives the symptom, architecture gives the mechanism</em> — worth keeping separate every time you profile something.</p>
+<p>No root, no profiler, no special hardware.</p>
+<div class="admonition question">
+<p class="admonition-title">💬 If the CPU isn't paid per byte, what <em>is</em> it being paid for?</p>
+<details class="hint">
+<summary>Answer</summary>
+<p><code>CPU-seconds</code> tracks <code>IRQs</code>. Per interrupt the cost is roughly <strong>10–18 µs</strong> and near-constant, even while throughput varies 15×. <strong>The CPU pays per completion, not per byte.</strong> (Not <em>purely</em> interrupt handling — syscall, filesystem and block-layer work ride along. The point is that all of it scales with the number of device operations and none of it with the payload.)</p>
+<p>Note that it does <em>not</em> track <code>requests</code>. The <code>4M</code> row issues 64× fewer <code>read()</code> calls than the <code>64K</code> row, yet takes only 2× fewer interrupts and saves only 2.5× the CPU. What the CPU is billed for is what the <strong>device</strong> did, not what your program asked for.</p>
+<p>And <code>KB/IRQ</code> topping out at <strong>128</strong> is the amortization unit: one notification to the CPU buys 128 KB of data movement.</p>
+</details>
+</div>
+<h3 id="two-kinds-of-traffic">Two kinds of traffic</h3>
+<p>So reading a file involves two different kinds of traffic, and they are not moved by the same thing.</p>
+<ul>
+<li>A <strong>few bytes</strong> that the CPU does move itself: <em>"fetch me sectors 900,000–908,000."</em> → the <strong>control plane</strong></li>
+<li><strong>512 MB</strong> that something else moves: the payload. → the <strong>data plane</strong></li>
+</ul>
+<p>Everything we just measured was the price of the first. The second cost the CPU nothing.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>Control plane</strong></th>
+<th><strong>Data plane</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Question it answers</td>
+<td>how does the CPU <em>say</em> anything to a device?</td>
+<td>how do the <em>bytes</em> actually move?</td>
+</tr>
+<tr>
+<td>Traffic</td>
+<td>a few bytes, rare, latency-sensitive</td>
+<td>gigabytes, bulk, bandwidth-sensitive</td>
+</tr>
+<tr>
+<td>Moved by</td>
+<td>the CPU itself</td>
+<td>the device itself</td>
+</tr>
+<tr>
+<td>Mechanism</td>
+<td>MMIO writes to device registers</td>
+<td>DMA by a bus-mastering engine</td>
+</tr>
+</tbody>
+</table>
+<p>Every term for the rest of this lecture belongs in one column or the other. If you can place a new term in the right column, you have understood the lecture.</p>
+<p>Both columns are the same question asked from opposite ends: <strong>how does a CPU talk to a device at all?</strong> The rest of this lecture answers it in four steps — the wire, the address, the bulk transfer, and the protocol that composes them.</p>
+<hr />
+<h2 id="how-the-cpu-reaches-a-device-pcie">How the CPU reaches a device: PCIe</h2>
+<p>Everything in both columns of that table travels over one link. Before we can price either plane, we need to know what the link actually is.</p>
+<p><strong>Peripheral Component Interconnect Express</strong> connects the CPU to everything that is not RAM: GPUs, NVMe drives, NICs. And despite the name, <strong>it is not a bus.</strong> Legacy PCI was: one shared set of parallel wires, every device electrically attached, one talker at a time, the whole thing clocked down to the slowest participant. PCIe kept the name and the <em>software</em> model — configuration space, BARs, <code>bus:device.function</code> addressing — for compatibility, and replaced the electrical design entirely with <strong>point-to-point, serial, full-duplex, switched links.</strong> Architecturally it is closer to Ethernet than to a bus.</p>
+<p><img alt="PCIe topology" src="../../images/ai_acceleration/pcie.jpeg" /></p>
+<ul>
+<li><strong>Root complex</strong> — the CPU's gateway to the fabric. It translates CPU loads and stores into PCIe transactions, and routes device traffic into memory.</li>
+<li><strong>Switch</strong> — fans one link into many; also enables <strong>peer-to-peer</strong> transfers that never touch the CPU or host RAM (this is what GPUDirect is).</li>
+<li><strong>Endpoint</strong> — a device, identified by <strong>BDF</strong>: <code>bus:device.function</code>, e.g. <code>03:00.0</code>. That is why <code>lspci</code> labels things the way it does, and why a graphics card shows up twice (<code>.0</code> the GPU, <code>.1</code> its HDMI audio device).</li>
+</ul>
+<h3 id="everything-is-a-tlp-and-this-is-where-the-1-s-came-from">Everything is a TLP — and this is where the 1 µs came from</h3>
+<p>Nothing streams across PCIe. Every interaction is packaged into a <strong>Transaction Layer Packet (TLP)</strong> — an envelope carrying <em>what</em>, <em>where</em>, <em>how much</em>, and for a write, the data itself.</p>
+<p>A CPU read of a device is two envelopes, one in each direction — and the core cannot proceed until the second one arrives:</p>
+<div class="highlight"><pre><span></span><code>NON-POSTED  ── a completion must come back, so the requester waits
+
+CPU ──▶ device      ┌──────┬────────────┬────────┐
+                    │ READ │ 0x12345678 │  4 B   │      &quot;give me what is at this address&quot;
+                    └──────┴────────────┴────────┘
+                              ⋮                         core stalled, ~1 µs
+device ──▶ CPU      ┌────────────┬────────────┐
+                    │ COMPLETION │ 0xDEADBEEF │          &quot;here it is&quot;
+                    └────────────┴────────────┘
+</code></pre></div>
+<p>A write is a single envelope with the payload inside, and nothing comes back:</p>
+<div class="highlight"><pre><span></span><code>POSTED  ── no completion, so the CPU hands it off and moves on
+
+CPU ──▶ device      ┌───────┬────────────┬────────┬──────┐
+                    │ WRITE │ 0x12345678 │  4 B   │ DATA │      ~100 ns to issue, then done
+                    └───────┴────────────┴────────┴──────┘
+</code></pre></div>
+<p>Both ends speak the same language. A <strong>device</strong> originates TLPs exactly the way the CPU does — which is what makes DMA possible at all. (Below the transaction layer sit a data link layer and a physical layer, handling retries and pushing bits. The TLP is the letter; those are the tracking system and the trucks. Ignore them.)</p>
+<p>Envelopes come in two categories, and between them they explain the entire cost model of this lecture:</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Examples</th>
+<th>Completion required?</th>
+<th>Consequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Posted</strong></td>
+<td>Memory Write</td>
+<td>No — fire and forget</td>
+<td>the CPU retires the store immediately; ordering needs explicit fences</td>
+</tr>
+<tr>
+<td><strong>Non-posted</strong></td>
+<td>Memory Read, Config Read/Write</td>
+<td><strong>Yes</strong> — a Completion TLP must come back</td>
+<td>the requester <strong>stalls for the full round trip</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>That asymmetry is a protocol category, not an implementation quirk</strong>, and it is the single most load-bearing fact in this lecture. A write to a device costs ~100 ns to issue and then the core moves on. A <strong>read</strong> from a device stalls the core for <strong>~1–2 µs</strong>, uncacheable and unpipelined.</p>
+<p>Go back to the strawman we costed at the start. The "~1 µs per transfer" that produced 18 minutes was not a rhetorical exaggeration — it is this row of this table, repeated 1.07 billion times.</p>
+<p><strong>That is enough PCIe for this lecture.</strong> One distinction has to survive — <em>writes can be fired and forgotten; reads demand an answer</em> — and everything below is built from it:</p>
+<ul>
+<li><strong>DMA</strong> = a <em>device</em> emitting Memory Write/Read TLPs upstream. "Bus master" means: permitted to originate them.</li>
+<li><strong>A doorbell</strong> = one posted Memory Write TLP.</li>
+<li><strong>An MSI-X interrupt</strong> = also a Memory Write TLP, aimed at an address the CPU's interrupt controller watches. Modern PCIe has no interrupt pins — <strong>an interrupt is literally a memory write.</strong></li>
+<li><strong>BARs</strong> = the address ranges the root complex uses to <em>route</em> memory TLPs to the right endpoint. That is the next section.</li>
+</ul>
+<hr />
+<h2 id="how-the-cpu-addresses-a-device-mmio-and-bars">How the CPU addresses a device: MMIO and BARs</h2>
+<p><em>The control plane — the smaller half of the movie question: how does the CPU say "fetch me sectors 900,000–908,000" to a disk at all?</em></p>
+<p>A CPU can do exactly two things to the outside world: <strong>load</strong> from an address, and <strong>store</strong> to an address. There is no <code>send_to_device</code> instruction. So the only way to build device communication is to make some addresses mean something other than DRAM.</p>
+<p><strong>The physical address space is not RAM. It is a routing table.</strong></p>
+<p><div class="highlight"><pre><span></span><code>   0x0000_0000  ┌──────────────────────────┐
+                │        actual DRAM       │  store → a capacitor changes
+                ├──────────────────────────┤
+   0xFCB0_0000  │  GPU control registers   │  store → a wire changes inside the GPU
+                │        (1 MB)            │
+                ├──────────────────────────┤
+ 0xF800_0000_00 │   GPU VRAM aperture      │  store → travels over PCIe into VRAM
+                │        (16 GB)           │
+                └──────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nf">mov</span><span class="w"> </span><span class="p">[</span><span class="mi">0x1000</span><span class="p">],</span><span class="w"> </span><span class="no">eax</span><span class="w"> </span><span class="c1">// lands in DRAM.  </span>
+<span class="nf">mov</span><span class="w"> </span><span class="p">[</span><span class="mi">0xFCB00000</span><span class="p">],</span><span class="w"> </span><span class="no">eax</span><span class="w"> </span><span class="c1">// becomes a PCIe write TLP routed to the GPU.</span>
+</code></pre></div>
+<strong>Same instruction. Only the address differs.</strong> Nothing is physically present at <code>0xFCB00000</code>: the host's address-routing logic sees that the address falls inside a PCIe BAR rather than DRAM, and the root complex forwards the transaction down the link to device <code>03:00.0</code>. Addresses that belong to RAM go to the memory controller instead. <strong>The routing decision is made on the address alone.</strong></p>
+<p>Note this is the <strong>physical</strong> address space, below paging. User code never sees it unless the kernel deliberately maps a window into a process.</p>
+<h3 id="bars-and-how-they-get-their-addresses">BARs, and how they get their addresses</h3>
+<p><strong>BAR = Base Address Register</strong> — the statement <em>"this device owns this range of CPU physical address space."</em></p>
+<p>Nobody hard-codes those addresses. During <strong>PCI enumeration</strong>, firmware (and then the operating system, which can reassign what firmware chose) walks the fabric and asks every device how much address space it needs; each answers with a size, and gets handed a non-overlapping range that is programmed into its BAR. Only after that does <code>mov [0xFCB00000], eax</code> reach the right card. <strong>The address map is assigned during enumeration, not fixed by design</strong> — which is why the numbers below are this machine's, and yours will differ.</p>
+<p>Here is the GPU on the machine these numbers came from — real <code>lspci -v</code> output, with the long model string trimmed to fit:</p>
+<div class="highlight"><pre><span></span><code>lspci -v -s 03:00.0
+
+03:00.0 Display controller: AMD/ATI Navi 22 [Radeon RX 6700 ... 6850M XT] (rev cf)
+        Subsystem: Micro-Star International Co., Ltd. [MSI] Navi 22
+        Flags: bus master, fast devsel, latency 0, IRQ 86, IOMMU group 11
+        Memory at f800000000 (64-bit, prefetchable) [size=16G]
+        Memory at fc00000000 (64-bit, prefetchable) [size=256M]
+        Memory at fcb00000 (32-bit, non-prefetchable) [size=1M]
+        Expansion ROM at fcc00000 [disabled] [size=128K]
+        Capabilities: &lt;access denied&gt;
+        Kernel driver in use: amdgpu
+</code></pre></div>
+<p>Line by line, in plain English:</p>
+<table>
+<thead>
+<tr>
+<th>What it says</th>
+<th>What it means</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>03:00.0</code></td>
+<td>the card's address <strong>on the fabric</strong> — bus 03, device 00, function 0. A street address, not a memory address</td>
+</tr>
+<tr>
+<td><code>Display controller: … Navi 22</code></td>
+<td>what kind of device it is, and which chip</td>
+</tr>
+<tr>
+<td><code>Subsystem: … [MSI]</code></td>
+<td>who built the <em>board</em> around the chip. AMD made the silicon; MSI made the card</td>
+</tr>
+<tr>
+<td><code>bus master</code></td>
+<td><strong>this device is allowed to move data by itself.</strong> This one flag is the DMA permission bit — the data plane, switched on</td>
+</tr>
+<tr>
+<td><code>IRQ 86</code></td>
+<td>the number the device raises to interrupt the CPU when it has finished something</td>
+</tr>
+<tr>
+<td><code>IOMMU group 11</code></td>
+<td>its protection domain — which regions of RAM its DMA is permitted to touch</td>
+</tr>
+<tr>
+<td><code>Memory at f800000000 … [size=16G]</code></td>
+<td><strong>a 16 GB window of address space that is not RAM.</strong> Stores here travel over PCIe into the card's VRAM</td>
+</tr>
+<tr>
+<td><code>Memory at fc00000000 … [size=256M]</code></td>
+<td>a second 256 MB window — doorbells and framebuffer</td>
+</tr>
+<tr>
+<td><code>Memory at fcb00000 … [size=1M]</code></td>
+<td><strong>1 MB of the card's control registers</strong> — the knobs the driver turns</td>
+</tr>
+<tr>
+<td><code>prefetchable</code></td>
+<td>reads here have <strong>no side effects on the device</strong>, so the platform is free to speculate, prefetch, reorder and combine accesses to this window — which is what makes a multi-gigabyte data aperture usable at all</td>
+</tr>
+<tr>
+<td><code>non-prefetchable</code></td>
+<td>the device may attach meaning to an <em>individual</em> access (a read can clear a status bit), so none of those liberties are safe: accesses must reach it as issued</td>
+</tr>
+<tr>
+<td><code>Expansion ROM … [disabled]</code></td>
+<td>the card's own boot firmware, switched off once the real driver takes over</td>
+</tr>
+<tr>
+<td><code>Capabilities: &lt;access denied&gt;</code></td>
+<td>needs <code>sudo</code> — link speed and width, MSI-X tables and power states live in here</td>
+</tr>
+<tr>
+<td><code>Kernel driver in use: amdgpu</code></td>
+<td>which driver claimed the device</td>
+</tr>
+</tbody>
+</table>
+<p>Two of those windows are the whole lecture:</p>
+<ul>
+<li>The <strong>1 MB non-prefetchable</strong> window is the register file — the <strong>control plane</strong>.</li>
+<li>The <strong>16 GB prefetchable</strong> window is a view onto VRAM — the <strong>data plane</strong>. Historically this was capped at 256 MB, a peephole; a full-size aperture means <strong>Resizable BAR</strong> is enabled.</li>
+</ul>
+<p><strong>Now the same command on the disk from the demo:</strong></p>
+<div class="highlight"><pre><span></span><code>lspci -v -s 05:00.0
+05:00.0 Non-Volatile memory controller: Sandisk WD PC SN540 NVMe SSD 1 TB
+        Flags: bus master, fast devsel, latency 0, IRQ 68, IOMMU group 14
+        Memory at fce00000 (64-bit, non-prefetchable) [size=16K]
+        Memory at fce04000 (64-bit, non-prefetchable) [size=256]
+        Kernel driver in use: nvme
+</code></pre></div>
+<p>Same three things: a <strong>bus master</strong> flag, an <strong>IRQ</strong>, and <strong>register windows</strong>. Only the sizes differ — 16 KB of registers instead of 1 MB, and no data aperture at all, because a disk never exposes its storage as address space. This is the device that moved 512 MB for 0.059 seconds of CPU at the start of the lecture. <strong>The mechanism was never GPU-specific.</strong></p>
+<p>Two BARs, two purposes: <strong>commands vs data.</strong> The split we derived from a movie file is sitting right there in <code>lspci</code> output.</p>
+<p>The driver <code>ioremap</code>s the register BAR. The user-mode CUDA/HIP driver gets some of those pages mapped into <em>your process</em> — which is why a kernel launch needs no syscall at all.</p>
+<h3 id="what-never-gets-an-address-the-pendrive">What never gets an address: the pendrive</h3>
+<p>The address map was handed out at boot, by firmware, before you sat down. So there is an obvious objection to everything above.</p>
+<div class="admonition question">
+<p class="admonition-title">💬 You plug in a USB drive an hour after boot. Which address range does it get?</p>
+<details class="hint">
+<summary>Answer</summary>
+<p><strong>None. It never gets one.</strong> Nothing in the physical address map changes when you insert it.</p>
+<p>What is memory-mapped is the <strong>USB host controller</strong> — one more PCIe endpoint, with a register BAR assigned at boot exactly like the GPU and the NVMe drive above. The pendrive sits on the far side of it, on a <strong>packet-switched serial bus</strong>:</p>
+<div class="highlight"><pre><span></span><code>   physical address space
+   ┌──────────────────────────┐
+   │  ...                     │
+   │  xHCI registers (BAR)  ◄─┼── assigned at boot, before anything was plugged in
+   │  ...                     │
+   └──────────────────────────┘
+            │ MMIO      ▲ DMA
+            ▼           │
+      [ xHCI controller ]
+            │ USB packets
+            ▼
+      [ hub ] ─── [ pendrive ]      ← no address here. ever.
+</code></pre></div>
+<p>Insertion is then handled entirely by machinery this lecture has already built:</p>
+<ol>
+<li><strong>Detect.</strong> The port's electrical state changes. The controller sets a port-status-change bit in <em>its own</em> registers and raises MSI-X — which, from the TLP section, is itself just a posted memory write.</li>
+<li><strong>Notice.</strong> The driver reads the event ring <strong>in DRAM</strong>. No new mapping is created; the BAR <code>ioremap</code>ped at boot already covers every register involved.</li>
+<li><strong>Address it.</strong> usbcore issues <code>SET_ADDRESS</code>, giving the device a number 1–127. That is an address <strong>on the USB wire</strong>, in a namespace disjoint from physical memory. The CPU cannot load or store from it.</li>
+<li><strong>Bind.</strong> Descriptors say mass storage → <code>usb-storage</code>/<code>uas</code> → SCSI → <code>/dev/sdb</code> appears.</li>
+<li><strong>Move data.</strong> The driver builds transfer descriptors in RAM, performs <strong>one MMIO write to a doorbell</strong>, and the controller DMAs the sectors into RAM by itself.</li>
+</ol>
+<p>Step 5 is this lecture's entire protocol, on a third device. The CPU never reads flash through a memory window.</p>
+</details>
+</div>
+<p>Stated carefully: <strong>the host controller is memory-mapped; a device behind USB is reached through the USB protocol, not by being exposed as a range of CPU physical addresses.</strong> It is the same fact the NVMe <code>lspci</code> output showed by having no data aperture, pushed one step further — here not just the storage but the <em>whole device</em> sits outside the address space. Other buses arrange this their own way, so check each on its own terms rather than assuming; what generalises is the question to ask: <em>is this thing addressed, or is it spoken to?</em></p>
+<div class="admonition note">
+<p class="admonition-title">Where hot-plug <em>does</em> rewrite the address map</p>
+<p><strong>PCIe</strong> hot-plug — a Thunderbolt/USB4 dock, a hot-added NVMe drive. There the kernel must assign real BARs at plug time, and it can only do so if the bridge above reserved a large enough window up front (<code>pci=hpmemsize=</code>). Exhaust that window and the device enumerates but gets no BAR, so it is unusable. That failure mode cannot happen to a pendrive, because a pendrive was never going to consume address space in the first place.</p>
+<p>And the one sense in which a pendrive <em>does</em> reach memory is pure software: its sectors land in the <strong>page cache</strong>, and <code>mmap()</code>ing a file on the mounted filesystem points your PTEs at those pages. A fault there triggers a block read → USB transfer → DMA → page filled. Demand paging, not MMIO — the two meanings of "mapped" are unrelated.</p>
+</div>
+<h3 id="the-cost-asymmetry-priced">The cost asymmetry, priced</h3>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>What triggers it</th>
+<th>Cost</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1 hit</td>
+<td><code>s += A[i]</code> in last lecture's tiled matmul — the line is already in cache</td>
+<td>~1 ns</td>
+<td>for scale</td>
+</tr>
+<tr>
+<td>DRAM read</td>
+<td>the same line at N=2048, once <code>B</code> stops fitting in L3</td>
+<td>~80 ns</td>
+<td>for scale</td>
+</tr>
+<tr>
+<td>MMIO <strong>write</strong></td>
+<td><code>writel(tail, doorbell)</code> — the driver telling the GPU <em>"new work is queued"</em></td>
+<td>~100 ns to retire</td>
+<td><strong>posted</strong> — fire and forget, write-combinable</td>
+</tr>
+<tr>
+<td>MMIO <strong>read</strong></td>
+<td><code>readl(status)</code> — the driver asking the GPU <em>"are you finished?"</em></td>
+<td><strong>~1–2 µs</strong></td>
+<td><strong>non-posted</strong> — synchronous PCIe round trip, uncacheable, serializing</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rule: never ask the device anything; make the device tell you.</strong></p>
+<p>Every design choice in the rest of the lecture follows from that one line. A polling loop over an MMIO status register is catastrophic — a million polls is a second of stalled core. So status is instead written <em>by the device into DRAM</em>, where the CPU polls a cache line in its own memory for ~1 ns.</p>
+<div class="admonition note">
+<p class="admonition-title">The one analogy for this lecture — the kitchen order rail</p>
+<p>The waiter (<strong>CPU</strong>) writes tickets onto a rail (<strong>ring buffer in DRAM</strong>), rings the bell <strong>once</strong> (<strong>doorbell register, one MMIO write</strong>), and watches the pass for finished plates (<strong>fence value in host memory</strong>).</p>
+<p>Walking into the kitchen to ask "done yet?" is the <strong>MMIO read</strong> — and it is the slow thing. A good waiter never does it.</p>
+</div>
+<h3 id="try-it-on-your-own-machine">Try it on your own machine</h3>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>cat<span class="w"> </span>/proc/iomem<span class="w">                  </span><span class="c1"># the physical address map, devices interleaved with RAM</span>
+lspci<span class="w"> </span>-v<span class="w"> </span>-s<span class="w"> </span>&lt;gpu-bdf&gt;<span class="w">                 </span><span class="c1"># the GPU&#39;s BAR windows and their sizes</span>
+lspci<span class="w"> </span>-v<span class="w"> </span>-s<span class="w"> </span>&lt;nvme-bdf&gt;<span class="w">                </span><span class="c1"># ...and the disk&#39;s, from the demo. Same mechanism, smaller window.</span>
+cat<span class="w"> </span>/sys/bus/pci/devices/*/resource<span class="w">   </span><span class="c1"># the same BAR table, as text</span>
+lsusb<span class="w"> </span>-t<span class="w">                              </span><span class="c1"># ...and the devices that own no address at all</span>
+</code></pre></div>
+<p><code>/proc/iomem</code> is where "the address space is not RAM" stops being a claim and becomes a listing you can scroll. Run the GPU/disk pair on your own hardware: the window sizes will differ, the structure will not.</p>
+<p>Then plug in a pendrive and re-run <code>lspci</code> and <code>/proc/iomem</code>: <strong>nothing changes.</strong> It shows up under <code>lsusb -t</code>, hanging off a controller whose BARs were fixed at boot — two different addressing worlds, visible in two commands.</p>
+<hr />
+<h2 id="how-the-device-moves-the-bulk-dma">How the device moves the bulk: DMA</h2>
+<p><em>The data plane — now the larger half: the 4 GB itself.</em></p>
+<p><img alt="DMA" src="../../images/ai_acceleration/dma_contrast.png" />
+Pic credits: ChatGPT</p>
+<p>From demo A: someone other than the CPU must move these bytes, and it must not cost one round trip per word.</p>
+<p><strong>DMA lets a device read and write main memory by itself, with the CPU executing no instructions for the transfer.</strong> The CPU describes the job once — source, destination, length — and the device then issues its own memory transactions until it is done. A device permitted to do this is a <strong>bus master</strong> (that flag in <code>lspci</code>), and "issues memory transactions" means exactly what it did in the PCIe section:</p>
+<div class="highlight"><pre><span></span><code>GPU / NVMe ──▶ Memory Write TLPs ──▶ PCIe fabric ──▶ memory controller ──▶ DRAM
+</code></pre></div>
+<p>The mental correction it forces: <strong>data is not <em>pushed to</em> a device by the CPU. The device comes to RAM and takes it.</strong></p>
+<div class="highlight"><pre><span></span><code>CPU  (a few hundred ns of work, once):
+       write a descriptor — &quot;read 1 GB from sector N into physical 0x8A000000&quot;
+       one MMIO write to a doorbell
+       context-switch away; run something else entirely
+
+DEVICE (autonomously, for seconds):
+       issues memory writes of its own, landing bytes straight in DRAM
+       zero CPU instructions executed for this
+
+DEVICE (on completion):
+       raises an MSI-X interrupt → driver ISR runs → the blocked process is marked runnable
+</code></pre></div>
+<p>That middle phase is what Demo A measured. <strong>One control-plane transaction buys 128 KB of data-plane movement</strong> — the <code>KB/IRQ</code> column, and that ratio is the entire reason the two planes exist as separate mechanisms.</p>
+<h3 id="three-complications-each-with-a-practical-consequence">Three complications, each with a practical consequence</h3>
+<ol>
+<li>
+<p><strong>Virtual vs physical addresses.</strong> The DMA engine has no MMU and cannot take a page fault. Your array's virtual address is meaningless to it. A 40 MB user buffer is virtually contiguous but physically scattered across ~10,000 arbitrary 4 KB pages, so the driver builds a <strong>scatter-gather list</strong> — an array of (physical address, length) pairs — and the engine walks it.</p>
+</li>
+<li>
+<p><strong>Pageable vs pinned (page-locked) memory.</strong> The kernel may swap or migrate a page mid-transfer, which would corrupt memory. So DMA target pages must be <strong>pinned</strong> first. A copy from ordinary pageable memory therefore secretly does <em>CPU memcpy → driver-owned pinned staging buffer → DMA</em>: an extra full copy.</p>
+<div class="admonition question">
+<p class="admonition-title">💬 This is exactly why two flags exist in every PyTorch training loop. Which ones?</p>
+<details class="hint">
+<summary>Answer</summary>
+<div class="highlight"><pre><span></span><code><span class="n">loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">train_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">loader</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li><strong><code>pin_memory=True</code></strong> allocates each batch in page-locked memory, so the DMA engine can read it where it lies — no hidden staging copy. How large the win is depends on your hardware and transfer size, so measure it rather than quoting a number — it is a twenty-line experiment.</li>
+<li><strong><code>non_blocking=True</code></strong> lets <code>.to()</code> return as soon as the copy is <em>queued</em>, so the CPU runs ahead and prepares the next batch while the copy engine works.</li>
+</ul>
+<p>They are one mechanism, not two independent optimizations. <code>non_blocking=True</code> can only buy you the full overlap when the source buffer is already fit for asynchronous DMA — in practice, pinned. From pageable memory the runtime must first make the data DMA-safe (a staging copy, possibly temporary pinning), and that work is not free to overlap. Setting it without <code>pin_memory=True</code> is the most common way to leave the benefit on the table.</p>
+</details>
+</div>
+</li>
+</ol>
+<!--### The IOMMU
+
+An IOMMU is an MMU for devices: it translates device-issued addresses through per-device page tables before they reach memory. (That `IOMMU group 11` in the `lspci` output above.)
+
+- **Protection** — without it, *any* bus-mastering device can write *any* physical address. A malicious or buggy peripheral — or a hostile Thunderbolt dongle — is a total system compromise. This is the DMA-attack class.
+- **Convenience** — a physically scattered buffer can be mapped to a contiguous *device* address range.
+- **Virtualization** — a VM can be handed a real device safely.
+
+It costs translation latency; it buys isolation.-->
+
+<h3 id="the-movie-question-closed">The movie question, closed</h3>
+<p>This is what was happening during the <code>dd</code> demo: the CPU issued a handful of descriptors, the SSD's DMA engine moved the bytes, and Demo A measured ~20% of one core.</p>
+<p><strong>18 minutes → 3 seconds</strong> — and the difference is not a faster CPU. It is <em>taking the CPU out of the data path.</em></p>
+<hr />
+<h2 id="putting-it-together-ring-doorbell-fence">Putting it together: ring, doorbell, fence</h2>
+<p>Both columns of the table are now filled in: <strong>MMIO for control (small, expensive), DMA for data (large, cheap per byte).</strong> The GPU submission protocol is simply what you get when you compose them under PCIe's latency asymmetry — and the disk demo already measured its signature: <strong>128 KB of data per notification.</strong></p>
+<p>The GPU is never called. It consumes a queue.</p>
+<ol>
+<li>A ring buffer lives in memory. The CPU owns the tail and writes there; the GPU owns the head and consumes from it.</li>
+<li>The driver fills free slots at the tail with command packets using ordinary memory stores — cheap, cached, batched.</li>
+<li>It then issues a store fence (and flushes any write-combining buffers) so those packets are globally visible, and only then performs exactly one small MMIO write to a doorbell register in the GPU's BAR: "tail moved to X."</li>
+<li>The GPU front end DMAs the packets from the ring, decodes them, and dispatches work to the compute units, advancing the head as it goes.</li>
+<li>On completion the GPU DMA-writes a monotonically increasing fence value into host memory, and/or raises an MSI-X interrupt. The driver either polls the fence or sleeps until the interrupt tells it the value has advanced.</li>
+</ol>
+<div class="admonition question">
+<p class="admonition-title">💬 Why a ring plus one doorbell, instead of one MMIO write per command?</p>
+<details class="hint">
+<summary>Answer</summary>
+<p>PCIe's posted/non-posted asymmetry. Command packets are hundreds of bytes; pushing them through MMIO would be hundreds of posted writes, each unbatched and uncacheable, plus ordering fences. Writing them to DRAM costs ~1 ns each and the <em>device</em> fetches them in one burst.</p>
+<p>So the expensive channel carries <strong>one</strong> transaction — an integer — and the cheap channel carries everything else. That is the same trade as <code>KB/IRQ = 128</code> on the disk, arrived at from the other direction.</p>
+</details>
+</div>
+<p>And completion cannot be a poll over PCIe, for the same reason. The CPU polls the <strong>fence value in its own DRAM</strong> (~1 ns, from cache) or sleeps on the interrupt. That distinction is exactly spin-wait vs blocking synchronization (<code>cudaEventQuery</code> vs <code>cudaEventSynchronize</code>).</p>
+<h3 id="why-the-gpu-appeared-to-beat-its-own-peak">Why the GPU appeared to beat its own peak</h3>
+<p>Last lecture we timed a matmul at 314 µs and got an implied <strong>55 TFLOP/s on a GPU whose spec sheet says 10.6</strong>. We now have the mechanism to say exactly what was measured.</p>
+<p><code>C = A_g @ B_g</code> does three things: append command packets to the ring, write one doorbell, return. A few microseconds of CPU work — <strong>and the GPU may not have started.</strong> The stopwatch stopped when the work was <em>queued</em>.</p>
+<div class="highlight"><pre><span></span><code><span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">A_g</span> <span class="o">@</span> <span class="n">B_g</span>                 <span class="c1"># returns once the doorbell is rung</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>      <span class="c1"># ← wait until the fence value reaches my ticket</span>
+<span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+</code></pre></div>
+<p><code>torch.cuda.synchronize()</code> is not a formality. It means <em>block until the fence value the GPU DMA-writes into host memory is at least my ticket number.</em> Without it you time the waiter writing the ticket, not the kitchen cooking.</p>
+<p><strong>If a measured throughput comfortably exceeds the hardware's advertised peak, check first whether you measured execution or merely submission.</strong> Other explanations exist — a different precision mode, sparsity, boost clocks, a vendor counting FLOPs its own way — but timing an enqueue is the one that manufactures impossible numbers this cheaply, and it costs one line to rule out.</p>
+<h3 id="what-else-falls-out-of-the-ring">What else falls out of the ring</h3>
+<ul>
+<li><strong>A CUDA stream behaves like an ordered command queue.</strong> Work within one stream is ordered; separate streams are independently schedulable, which is what makes overlap possible. <strong>Copy engines are separate queues from compute engines</strong> — that is the mechanism behind prefetching batch <em>n+1</em> while computing batch <em>n</em>. Events are fences <em>between</em> streams. (How streams map onto actual hardware queues is a driver decision, not one ring per stream — take the queue as the mental model, not as the implementation.)</li>
+<li><strong>Launch overhead is a first-class cost.</strong> ~3–10 µs per launch means a 2 µs kernel is <strong>launch-bound</strong>: the machine is spending more time being told what to do than doing it. This is the honest, mechanical reason for three things you have heard of and never had a reason for:<ul>
+<li><strong>kernel fusion</strong> — one launch instead of five, and the intermediates never leave the chip;</li>
+<li><strong><code>torch.compile</code></strong> — an automatic fuser;</li>
+<li><strong>CUDA Graphs</strong> — pre-record a whole sequence of submissions once, so it can be replayed with a fraction of the per-launch CPU work.</li>
+</ul>
+</li>
+</ul>
+<h3 id="the-callback-it-was-never-a-gpu-idea">The callback — it was never a GPU idea</h3>
+<p>Go back to Demo A's table. Those <code>requests</code> and <code>IRQs</code> columns were <strong>NVMe submission and completion rings</strong> all along, with <strong>doorbell registers</strong> in the disk's BAR and <strong>completion entries DMA'd back to host memory</strong>. <code>KB/IRQ = 128</code> was the amortization we have just spent twenty minutes re-deriving for GPUs.</p>
+<p>Identical structure. The same pattern is RDMA NICs, and <code>io_uring</code>, and every high-performance device interface of the last fifteen years. It is not a GPU idea; it is <strong>the</strong> device idea — and you measured it on a disk before you believed it about a GPU.</p>
+<p>(Mapping a doorbell page directly into user space, skipping the kernel on the submission path, is precisely what <strong>"kernel bypass"</strong> means.)</p>
+<h3 id="and-a-footnote-that-closes-the-opening-loop">And a footnote that closes the opening loop</h3>
+<p>Programmed I/O is not obsolete. It <strong>lost the data plane and kept the control plane</strong>, because for a handful of bytes, building a descriptor and taking an interrupt costs more than just writing the value:</p>
+<ul>
+<li><strong>Doorbells</strong> — one posted MMIO write. Textbook PIO, and the cheapest possible signal.</li>
+<li><strong>Device configuration</strong> — every register poke at init, every BAR write, MSI-X table setup.</li>
+<li><strong>Small-packet networking</strong> — some NICs expose a write-combining PIO path for tiny frames, where descriptor setup would dominate the payload.</li>
+</ul>
+<p>Note the survivors are almost all <strong>writes</strong>. Posted writes are cheap; non-posted reads are designed out of every hot path — which is why completion is signalled by the device DMA-ing a flag into DRAM rather than the CPU ever <em>reading</em> a device register.</p>
+<h3 id="where-every-term-belongs">Where every term belongs</h3>
+<p>The two-column board from the start of the lecture, with everything we have added since placed on it. If you can do this from memory, you have the lecture:</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Belongs to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BAR, MMIO, doorbell</td>
+<td><strong>control plane</strong> — CPU → device, small and expensive</td>
+</tr>
+<tr>
+<td>DMA, bus master, scatter-gather, pinning</td>
+<td><strong>data plane</strong> — device → RAM, bulk and cheap per byte</td>
+</tr>
+<tr>
+<td>TLP, posted vs non-posted</td>
+<td><strong>transport</strong> — how either plane crosses PCIe</td>
+</tr>
+<tr>
+<td>Ring buffer</td>
+<td>the shared structure the two planes meet in</td>
+</tr>
+<tr>
+<td>Fence value</td>
+<td>completion, reported <em>into DRAM</em></td>
+</tr>
+<tr>
+<td>MSI-X interrupt</td>
+<td>notification — and itself a memory write</td>
+</tr>
+<tr>
+<td>USB address (1–127)</td>
+<td><strong>not an address the CPU can use</strong> — a name on another bus</td>
+</tr>
+<tr>
+<td><code>mmap()</code></td>
+<td><strong>a different concept entirely</strong> — virtual memory, not device I/O</td>
+</tr>
+</tbody>
+</table>
+<p>The last two rows are the ones worth guarding. "Mapped" means one thing when the root complex routes a physical address to a device, and something unrelated when the kernel points your page tables at the page cache. The pendrive is where those two meanings get confused.</p>
+<hr />
+<!--## Labs
+
+1. **Prove the CPU is not paid per byte.** Run `code/gpu_submission/who_pays_per_byte.sh` on your own machine (drop `-q` for the full six-size sweep). Plot CPU-seconds against request size and against IRQ count, and state which of the two it is proportional to. Then answer: *why does CPU cost stop falling above `bs=256K`, even though your syscall count keeps dropping?* The number that explains it is in your own output.
+2. **Compute the two ratios** from your run — bytes per notification, and bytes per CPU-second — against the programmed-I/O estimates from the opening strawman. Then argue the limits of the evidence: what does the `MB/s` column *alone* prove about **who** moved the bytes, and why is `CPU-seconds` the column that settles it?
+3. **Show the CPU was available.** Time a CPU-bound loop alone and again underneath a 4 GB `O_DIRECT` read. Report the slowdown, then predict what it would have been under programmed I/O and justify the number.
+4. **Read your own fabric.** `lspci -t`, plus `current_link_speed`/`width` vs `max_link_*` for every device. Draw the tree by hand with BDF and link width on each edge, flag any downgraded link, and compute each link's theoretical and realistic bandwidth.
+5. **Read your own BARs.** `lspci -v`, `/proc/iomem`, `/sys/bus/pci/devices/*/resource` — for both the GPU and the NVMe device. Which window is the control plane, which is the data plane, and how big is each?
+6. **Pageable vs pinned H2D bandwidth**, swept over transfer size (~20 lines of torch). Expect pageable ≈ half of pinned, and pinned ≈ 85–90% of the link's realistic rate. Chart the ramp — small transfers are *latency*-bound, not bandwidth-bound, and the knee is worth explaining.
+7. **Launch-overhead microbenchmark.** Empty-kernel launches with and without sync; then a tiny real kernel; then the graph-captured version. Three numbers, one conclusion.
+8. **AMD bonus (root required).** `/sys/kernel/debug/dri/0/amdgpu_ring_*` and `amdgpu_fence_info` let you literally read the ring buffer and the fence counters on a live machine. It turns the ring and the fence from a diagram into an observation.-->
+
+<!--*Labs 1–5 need no GPU at all — any laptop will do.*-->
+
+<h2 id="references">References</h2>
+<ol>
+<li>Vijay Janapa Reddi, <a href="https://mlsysbook.ai"><em>Machine Learning Systems</em></a> — Ch 11: AI Acceleration</li>
+<li>Linux kernel documentation: <code>Documentation/driver-api/device-io.rst</code> and <code>Documentation/core-api/dma-api.rst</code></li>
+<li>NVMe Base Specification — the submission/completion queue model and doorbell registers. The disk-to-GPU callback in its primary source; the queue-model sections are short and readable.</li>
+<li>PCI Express Base Specification — configuration space and BAR enumeration (reference, not reading)</li>
+<li>NVIDIA, <a href="https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/"><em>CUDA C++ Best Practices Guide</em></a> — asynchronous transfers, streams, CUDA Graphs</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../Lecture3_4/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 3_4:Memory Hierarchy &amp; Roofline">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                3_4:Memory Hierarchy & Roofline
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Ankush Chander
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
