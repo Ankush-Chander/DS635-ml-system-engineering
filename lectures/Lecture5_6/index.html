@@ -631,22 +631,16 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#putting-it-together-ring-doorbell-fence" class="md-nav__link">
+          <li class="md-nav__item">
+  <a href="#putting-it-together-queue-doorbell-completion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Putting it together: ring, doorbell, fence
+        Putting it together: queue, doorbell, completion
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Putting it together: ring, doorbell, fence">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
   <a href="#why-the-gpu-appeared-to-beat-its-own-peak" class="md-nav__link">
@@ -697,6 +691,17 @@
     <span class="md-ellipsis">
       
         Where every term belongs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytorch-hardware-software-mental-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PyTorch - Hardware-Software mental model
       
     </span>
   </a>
@@ -923,22 +928,16 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#putting-it-together-ring-doorbell-fence" class="md-nav__link">
+          <li class="md-nav__item">
+  <a href="#putting-it-together-queue-doorbell-completion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Putting it together: ring, doorbell, fence
+        Putting it together: queue, doorbell, completion
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Putting it together: ring, doorbell, fence">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
   <a href="#why-the-gpu-appeared-to-beat-its-own-peak" class="md-nav__link">
@@ -989,6 +988,17 @@
     <span class="md-ellipsis">
       
         Where every term belongs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytorch-hardware-software-mental-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PyTorch - Hardware-Software mental model
       
     </span>
   </a>
@@ -1551,16 +1561,84 @@ It costs translation latency; it buys isolation.-->
 <p>This is what was happening during the <code>dd</code> demo: the CPU issued a handful of descriptors, the SSD's DMA engine moved the bytes, and Demo A measured ~20% of one core.</p>
 <p><strong>18 minutes → 3 seconds</strong> — and the difference is not a faster CPU. It is <em>taking the CPU out of the data path.</em></p>
 <hr />
-<h2 id="putting-it-together-ring-doorbell-fence">Putting it together: ring, doorbell, fence</h2>
-<p>Both columns of the table are now filled in: <strong>MMIO for control (small, expensive), DMA for data (large, cheap per byte).</strong> The GPU submission protocol is simply what you get when you compose them under PCIe's latency asymmetry — and the disk demo already measured its signature: <strong>128 KB of data per notification.</strong></p>
-<p>The GPU is never called. It consumes a queue.</p>
-<ol>
-<li>A ring buffer lives in memory. The CPU owns the tail and writes there; the GPU owns the head and consumes from it.</li>
-<li>The driver fills free slots at the tail with command packets using ordinary memory stores — cheap, cached, batched.</li>
-<li>It then issues a store fence (and flushes any write-combining buffers) so those packets are globally visible, and only then performs exactly one small MMIO write to a doorbell register in the GPU's BAR: "tail moved to X."</li>
-<li>The GPU front end DMAs the packets from the ring, decodes them, and dispatches work to the compute units, advancing the head as it goes.</li>
-<li>On completion the GPU DMA-writes a monotonically increasing fence value into host memory, and/or raises an MSI-X interrupt. The driver either polls the fence or sleeps until the interrupt tells it the value has advanced.</li>
-</ol>
+<h3 id="putting-it-together-queue-doorbell-completion">Putting it together: queue, doorbell, completion</h3>
+<p>We now have two ways for the CPU and GPU to communicate:</p>
+<ul>
+<li><strong>Ordinary memory + DMA</strong> — good for moving lots of information.</li>
+<li><strong>MMIO</strong> — good for sending a tiny message to the GPU.</li>
+</ul>
+<p>So instead of sending an entire GPU command through MMIO, the CPU does something smarter:</p>
+<div class="highlight"><pre><span></span><code>CPU                         GPU
+
+1. Write commands
+   into a queue in RAM
+
+   [ A ][ B ][ C ]
+              ↑
+          new commands
+
+2. Ring doorbell ──────────→ &quot;New work is waiting!&quot;
+      (MMIO)
+
+                             3. Read commands
+                                from the queue
+                                   ↓
+                             Execute A, B, C
+
+4. Wait for completion  ←── 5. Mark &quot;done&quot;
+</code></pre></div>
+<p>The three important pieces are:</p>
+<p><strong>1. Ring buffer — "Here is the work."</strong></p>
+<p>The CPU puts GPU commands into a queue in ordinary memory.</p>
+<div class="highlight"><pre><span></span><code>RAM
+
+┌─────┬─────┬─────┬─────┬─────┐
+│ A   │ B   │ C   │     │     │
+└─────┴─────┴─────┴─────┴─────┘
+                  ↑
+                 tail
+</code></pre></div>
+<p>Writing RAM is cheap, so the CPU can prepare many commands there.</p>
+<p><strong>2. Doorbell — "Go look at the queue."</strong></p>
+<p>Once the commands are ready, the CPU performs <strong>one small MMIO write</strong> to a GPU register:</p>
+<div class="highlight"><pre><span></span><code>CPU ─── MMIO write ───→ GPU
+
+        &quot;tail = 3&quot;
+</code></pre></div>
+<p>It doesn't send commands A, B and C through MMIO. It sends only a tiny notification:</p>
+<blockquote>
+<p><strong>"I've added work to the queue."</strong></p>
+</blockquote>
+<p>The GPU then fetches the commands and executes them.</p>
+<p><strong>3. Fence/completion — "I'm done."</strong></p>
+<p>The CPU eventually needs to know when the GPU has finished.</p>
+<p>Instead of repeatedly asking the GPU over expensive MMIO:</p>
+<div class="highlight"><pre><span></span><code>CPU → &quot;done?&quot;
+CPU → &quot;done?&quot;
+CPU → &quot;done?&quot;
+CPU → &quot;done?&quot;
+</code></pre></div>
+<p>the GPU updates a completion value in memory:</p>
+<div class="highlight"><pre><span></span><code>GPU ─── DMA write ───→ RAM
+
+                      completed = 3
+</code></pre></div>
+<p>The CPU can check that memory or sleep until the GPU raises an interrupt.</p>
+<p>So the entire protocol reduces to:</p>
+<div class="highlight"><pre><span></span><code>       COMMANDS              NOTIFY
+CPU ─────────────→ RAM ─────────────→ GPU
+        stores                MMIO
+                                │
+                                ↓
+                            executes
+                                │
+                                │ DMA
+                                ↓
+CPU ←────────────── RAM ←──── DONE
+</code></pre></div>
+<blockquote>
+<p>This ordinary-memory queue is typically implemented as a <strong>ring buffer</strong>. The MMIO notification is called a <strong>doorbell</strong>. The completion value is a <strong>fence</strong>.</p>
+</blockquote>
 <div class="admonition question">
 <p class="admonition-title">💬 Why a ring plus one doorbell, instead of one MMIO write per command?</p>
 <details class="hint">
@@ -1648,19 +1726,69 @@ It costs translation latency; it buys isolation.-->
 </table>
 <p>The last two rows are the ones worth guarding. "Mapped" means one thing when the root complex routes a physical address to a device, and something unrelated when the kernel points your page tables at the page cache. The pendrive is where those two meanings get confused.</p>
 <hr />
-<!--## Labs
-
-1. **Prove the CPU is not paid per byte.** Run `code/gpu_submission/who_pays_per_byte.sh` on your own machine (drop `-q` for the full six-size sweep). Plot CPU-seconds against request size and against IRQ count, and state which of the two it is proportional to. Then answer: *why does CPU cost stop falling above `bs=256K`, even though your syscall count keeps dropping?* The number that explains it is in your own output.
-2. **Compute the two ratios** from your run — bytes per notification, and bytes per CPU-second — against the programmed-I/O estimates from the opening strawman. Then argue the limits of the evidence: what does the `MB/s` column *alone* prove about **who** moved the bytes, and why is `CPU-seconds` the column that settles it?
-3. **Show the CPU was available.** Time a CPU-bound loop alone and again underneath a 4 GB `O_DIRECT` read. Report the slowdown, then predict what it would have been under programmed I/O and justify the number.
-4. **Read your own fabric.** `lspci -t`, plus `current_link_speed`/`width` vs `max_link_*` for every device. Draw the tree by hand with BDF and link width on each edge, flag any downgraded link, and compute each link's theoretical and realistic bandwidth.
-5. **Read your own BARs.** `lspci -v`, `/proc/iomem`, `/sys/bus/pci/devices/*/resource` — for both the GPU and the NVMe device. Which window is the control plane, which is the data plane, and how big is each?
-6. **Pageable vs pinned H2D bandwidth**, swept over transfer size (~20 lines of torch). Expect pageable ≈ half of pinned, and pinned ≈ 85–90% of the link's realistic rate. Chart the ramp — small transfers are *latency*-bound, not bandwidth-bound, and the knee is worth explaining.
-7. **Launch-overhead microbenchmark.** Empty-kernel launches with and without sync; then a tiny real kernel; then the graph-captured version. Three numbers, one conclusion.
-8. **AMD bonus (root required).** `/sys/kernel/debug/dri/0/amdgpu_ring_*` and `amdgpu_fence_info` let you literally read the ring buffer and the fence counters on a live machine. It turns the ring and the fence from a diagram into an observation.-->
-
-<!--*Labs 1–5 need no GPU at all — any laptop will do.*-->
-
+<h3 id="pytorch-hardware-software-mental-model">PyTorch - Hardware-Software mental model</h3>
+<table>
+<thead>
+<tr>
+<th>PyTorch statement</th>
+<th>Hardware-level mental model</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>torch.tensor(...)</code></td>
+<td>CPU stores → DRAM</td>
+</tr>
+<tr>
+<td><code>x.to("cuda")</code></td>
+<td>queue transfer → MMIO doorbell → GPU DMA → VRAM</td>
+</tr>
+<tr>
+<td><code>x.to("cuda", non_blocking=True)</code></td>
+<td>queue DMA → CPU continues</td>
+</tr>
+<tr>
+<td><code>DataLoader(pin_memory=True)</code></td>
+<td>DMA-safe/pinned host pages</td>
+</tr>
+<tr>
+<td><code>model.to("cuda")</code></td>
+<td>submit transfers that copy the model's CPU-resident tensors into GPU VRAM using the host→device DMA path</td>
+</tr>
+<tr>
+<td><code>model(x)</code></td>
+<td>submit GPU commands → doorbell → GPU executes</td>
+</tr>
+<tr>
+<td><code>loss.backward()</code></td>
+<td>submit backward kernels</td>
+</tr>
+<tr>
+<td><code>optimizer.step()</code></td>
+<td>submit parameter-update kernels</td>
+</tr>
+<tr>
+<td><code>torch.cuda.synchronize()</code></td>
+<td>wait for GPU completion/fence</td>
+</tr>
+<tr>
+<td><code>torch.cuda.Event</code></td>
+<td>marker placed in GPU work stream</td>
+</tr>
+<tr>
+<td><code>torch.cuda.Stream()</code></td>
+<td>ordered GPU work queue</td>
+</tr>
+<tr>
+<td><code>torch.compile()</code></td>
+<td>potentially fewer/larger GPU submissions + fusion</td>
+</tr>
+<tr>
+<td>CUDA Graph replay</td>
+<td>reuse pre-recorded submission sequence</td>
+</tr>
+</tbody>
+</table>
 <h2 id="references">References</h2>
 <ol>
 <li>Vijay Janapa Reddi, <a href="https://mlsysbook.ai"><em>Machine Learning Systems</em></a> — Ch 11: AI Acceleration</li>
