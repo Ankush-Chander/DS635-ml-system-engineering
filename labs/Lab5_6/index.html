@@ -1,0 +1,1093 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Home of DS635 - Machine Learning System Engineering, DAU">
+      
+      
+      
+        <link rel="canonical" href="https://DS635.ankushchander.com/labs/Lab5_6/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../Lab5_6_gpu_job_submission/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>5_6:GPU Job Submission - DS635 - Machine Learning System Engineering | DAU</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-56-gpu-job-submission" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-header__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DS635 - Machine Learning System Engineering | DAU
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              5_6:GPU Job Submission
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../lectures/Lecture0/" class="md-tabs__link">
+          
+  
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Labs
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-nav__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DS635 - Machine Learning System Engineering | DAU
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lectures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lectures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Lecture0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0:Course Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Lecture1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1:Machine Learning Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Lecture2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:Hardware Accelerators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Lecture3_4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3_4:Memory Hierarchy & Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Lecture5_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU job submission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Lecture7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7:Inside the GPU — Execution & Latency Hiding
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Labs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Labs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU Job Submission
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU Job Submission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What you need
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What you do
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-submit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What you submit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-is-marked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it is marked
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#academic-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Academic integrity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lab5_6_gpu_job_submission/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5/6 — The GPU submission protocol, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What you need
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What you do
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-submit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What you submit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-is-marked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it is marked
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#academic-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Academic integrity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-56-gpu-job-submission">Lab &#8538; — GPU Job Submission</h1>
+<blockquote>
+<p><strong>Lab thesis:</strong> there is no <em>call the GPU</em> instruction. Every kernel launch is a command appended to a queue, one doorbell write, and a fence that comes back later. You will measure that protocol from the outside — and watch it manufacture a throughput number that beats the hardware.</p>
+</blockquote>
+<p>This is the experimental half of <a href="../../lectures/Lecture5_6/">Lecture &#8538; — GPU Job Submission</a>. The lecture derived the mechanism from a movie file and an <code>lspci</code> listing. Here you observe its consequences on a real device.</p>
+<p><a href="https://colab.research.google.com/github/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab5_6_gpu_job_submission.ipynb"><strong>Open the notebook in Colab</strong></a> · <a href="../Lab5_6_gpu_job_submission/">read it on this site</a> · <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab5_6_gpu_job_submission.ipynb">download from GitHub</a></p>
+<hr />
+<h2 id="what-you-need">What you need</h2>
+<p><strong>Google Colab</strong> — open the notebook, then <code>Runtime &gt; Change runtime type &gt; T4 GPU</code>. Everything runs unchanged; no installs.</p>
+<p><strong>Your own machine</strong> — <strong>NVIDIA (CUDA)</strong>, <strong>AMD (ROCm)</strong> or <strong>Apple silicon (MPS)</strong>. <code>torch.cuda</code> is the correct namespace on ROCm too.</p>
+<p>Apple's Metal backend exposes no command streams, no graph capture and no pinned host memory, so three measurements are skipped there automatically. The export records what was skipped and <strong>you are not penalised</strong> — but you are still asked to explain <em>why</em> each one does not apply to a unified-memory machine, and those explanations carry the marks.</p>
+<div class="admonition warning">
+<p class="admonition-title">If you are on a laptop, plug in the charger</p>
+<p>This lab deliberately drives the GPU to sustained peak power. On battery, a discrete mobile GPU can draw more than the battery and voltage regulators can supply, and the machine <strong>hard-resets with nothing written to the logs</strong> — no error, no traceback, just an instant reboot. It is not a bug you can debug from Python.</p>
+<p>The notebook's preflight cell checks your power source and scales the workload down automatically if you are not on mains. Leave <code>SAFE_MODE</code> alone unless you are plugged in. This is a real failure that happened while the lab was being written, not a hypothetical.</p>
+</div>
+<h2 id="what-you-do">What you do</h2>
+<p>Five parts, each following the same three steps — and the order matters:</p>
+<ol>
+<li><strong>Predict</strong> — write your prediction in the cell provided <em>before</em> running anything.</li>
+<li><strong>Measure</strong> — run the cell.</li>
+<li><strong>Explain</strong> — say which mechanism from the lecture produced the number.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Question</th>
+<th style="text-align: right;">Marks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>What am I measuring on?</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td>1</td>
+<td><strong>What is my GPU's peak, and why is that hard to answer?</strong></td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Is submission the same as execution?</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr>
+<td>3</td>
+<td>What does one submission cost, and what does a fence cost?</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Why do <code>pin_memory</code> and <code>non_blocking</code> exist, and do streams really overlap?</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Can submission be amortised away? <em>(CUDA Graphs)</em></td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Place every term on the control-plane / data-plane board</td>
+<td style="text-align: right;">10</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Part 1 comes first for a reason.</strong> Everything afterwards is compared against one number — Part 2 hinges on producing a measurement that <em>exceeds</em> your GPU's peak — so that number has to mean something before it can be beaten. Establishing it is genuinely awkward: you derive it from what the hardware reports, look up what the vendor advertises, and measure what you can actually reach, and the three disagree.</p>
+<p>Each term in <code>units × lanes × 2 × clock</code> is a trap. On the course's own RX 6700M, PyTorch reports <code>multi_processor_count = 18</code> for a 36-CU card — RDNA counts work-group processors, not compute units, so the naive derivation lands at exactly half. <code>get_device_capability()</code> returns <code>(10, 3)</code> there too, meaning <em>gfx1030</em>, not compute capability 10.3. Vendors quote tensor-core, sparsity and lower-precision numbers in the same breath as the FP32 figure you actually want.</p>
+<h2 id="what-you-submit">What you submit</h2>
+<p><strong>Two files.</strong> The JSON carries your measurements; the notebook carries your reasoning. A JSON without its notebook cannot be marked.</p>
+<ol>
+<li><strong><code>submission_&lt;roll&gt;.json</code></strong> — written by the notebook's final cell. Set <code>ROLL_NUMBER</code> and <code>NAME</code> in the Part 0 setup cell first, or the export will refuse to run.</li>
+<li><strong>The executed notebook</strong> — <code>File &gt; Download &gt; .ipynb</code>, with outputs intact and every 📝 cell filled in.</li>
+</ol>
+<p>Run every cell top to bottom before exporting. The export cell reports how many experiments it recorded and warns you if any are missing.</p>
+<h2 id="how-it-is-marked">How it is marked</h2>
+<p><strong>40 marks are automatic</strong>, checked from your JSON. Every check tests a <em>relationship between your own numbers</em>, because there is no answer key — your hardware is yours:</p>
+<table>
+<thead>
+<tr>
+<th>Checked</th>
+<th>Why it holds on any GPU</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unsynchronised timer ≥10× faster than synchronised</td>
+<td>submission is not execution</td>
+</tr>
+<tr>
+<td>Implied no-sync throughput exceeds your GPU's peak</td>
+<td>that is the whole point of Part 1</td>
+</tr>
+<tr>
+<td><code>synchronize()</code> and CUDA events agree within 15%</td>
+<td>two independent mechanisms must agree</td>
+</tr>
+<tr>
+<td>Launch-bound signature present in the size sweep</td>
+<td>per-launch cost is roughly constant</td>
+</tr>
+<tr>
+<td>Syncing every op costs ≥1.5× syncing once</td>
+<td>draining the pipeline is not free</td>
+</tr>
+<tr>
+<td>Two streams beat one stream</td>
+<td>copy engines are separate queues</td>
+</tr>
+<tr>
+<td>Per-launch cost lands in 1–20 µs</td>
+<td>sanity band on the protocol</td>
+</tr>
+<tr>
+<td>Your short answers match your own recorded numbers</td>
+<td>you read your own data</td>
+</tr>
+<tr>
+<td>Peak established on every route your hardware allows, measured ≤ vendor</td>
+<td>Part 1 was done honestly</td>
+</tr>
+</tbody>
+</table>
+<p>Plus provenance (device, backend, declared peak, roll number) and completeness (all eight experiments recorded — anything skipped by your backend still counts as recorded).</p>
+<p><strong>Four things are deliberately not auto-checked</strong>, because the honest answer varies by machine: whether pinning helps at large sizes, whether CUDA Graphs improve GPU-side time, whether overlap is observable when your GPU's copy and compute times are very unbalanced, and anything your backend cannot do at all. Reporting "no benefit" or "unavailable" costs you nothing — a validated Apple-silicon submission with three skipped experiments scores full automatic marks.</p>
+<p><strong>60 marks are rubric-marked</strong> from your written cells. Predictions are marked for being <em>made</em>, not for being right. Explanations are marked on whether they name the mechanism — ring, doorbell, fence, DMA, pinning, stream. A number with no mechanism scores about half. A mechanism that contradicts your own data scores less than an honest <em>"I measured X, I expected Y, here is my best explanation for the gap."</em></p>
+<h2 id="academic-integrity">Academic integrity</h2>
+<p>Timing measurements carry several digits of run-to-run noise, so two independent runs never produce identical values. Submissions sharing a measurement vector are treated as copied outputs, and the environment fingerprint and run timestamps in each JSON are checked alongside.</p>
+<p>Discussing mechanisms with classmates is encouraged. Sharing measurement files is not — and the numbers are the one thing you cannot borrow, because they describe <em>your</em> machine.</p>
+<h2 id="related">Related</h2>
+<ul>
+<li><a href="../../lectures/Lecture5_6/">Lecture &#8538; — GPU Job Submission</a> — the mechanism this lab measures</li>
+<li><a href="../../lectures/Lecture7/">Lecture 7 — Inside the GPU: execution and latency hiding</a> — what happens after the dispatch packet lands</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../Lab5_6_gpu_job_submission/" class="md-footer__link md-footer__link--next" aria-label="Next: Lab 5/6 — The GPU submission protocol, measured">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Lab 5/6 — The GPU submission protocol, measured
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Ankush Chander
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

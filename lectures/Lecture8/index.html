@@ -1,0 +1,1539 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Home of DS635 - Machine Learning System Engineering, DAU">
+      
+      
+      
+        <link rel="canonical" href="https://DS635.ankushchander.com/lectures/Lecture8/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Inside the GPU: memory and the roofline - DS635 - Machine Learning System Engineering | DAU</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#inside-the-gpu-memory-and-the-roofline" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-header__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DS635 - Machine Learning System Engineering | DAU
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Inside the GPU: memory and the roofline
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../Lecture0/" class="md-tabs__link">
+          
+  
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../labs/" class="md-tabs__link">
+          
+  
+  
+  Labs
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-nav__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DS635 - Machine Learning System Engineering | DAU
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lectures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lectures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0:Course Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1:Machine Learning Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:Hardware Accelerators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture3_4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3_4:Memory Hierarchy & Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture5_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU job submission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7:Inside the GPU — Execution & Latency Hiding
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Labs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Labs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab5_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU Job Submission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab5_6_gpu_job_submission/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5/6 — The GPU submission protocol, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#7-feeding-the-alus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Feeding the ALUs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Feeding the ALUs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shared-memory-is-not-a-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared memory is not a cache
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpus-cache-too" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPUs cache too
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-coalescing-how-threads-access-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Coalescing: how threads access memory
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Coalescing: how threads access memory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#measure-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Measure it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-working-set-size-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does working-set size matter?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-what-actually-limits-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. What actually limits performance?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. What actually limits performance?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compute-roof" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compute roof
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-roof" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory roof
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-ridge-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The ridge point
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-where-does-matrix-multiplication-sit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Where does matrix multiplication sit?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-the-payoff-what-does-this-mean-for-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. The payoff: what does this mean for AI?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. The payoff: what does this mean for AI?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#llm-decode-one-token-at-a-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM decode: one token at a time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prefill-and-training-many-tokens-at-once" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prefill and training: many tokens at once
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#same-model-opposite-bottleneck" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Same model, opposite bottleneck
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-both-lectures-in-one-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Both lectures in one picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-it-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run it yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-c-tensor-and-matrix-units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix C — Tensor and matrix units
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-d-nvidia-and-amd-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix D — NVIDIA and AMD terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="inside-the-gpu-memory-and-the-roofline">Inside the GPU: memory and the roofline</h1>
+<blockquote>
+<p><strong>Module thesis:</strong> hiding latency is not the same as having bandwidth. What ultimately limits a GPU is how many bytes it can move per FLOP it performs — which is why the same LLM on the same silicon is memory-bound when it serves and compute-bound when it trains.</p>
+</blockquote>
+<p>This is the second of two lectures on GPU internals. <a href="../Lecture7/">Lecture 7</a> explained <strong>how a GPU keeps thousands of ALUs busy</strong>. This one asks <strong>what limits performance</strong>: the memory hierarchy, coalescing, the roofline, and what both imply for AI workloads.</p>
+<hr />
+<p><a href="../Lecture7/">Last lecture</a> we built a machine that never waits: thousands of resident threads, and a scheduler that runs somebody else whenever one warp stalls.</p>
+<div class="admonition question">
+<p class="admonition-title">💬 Three questions before we go on</p>
+<ol>
+<li>Why does a GPU have thousands of ALUs?</li>
+<li>Why does it keep thousands of threads resident?</li>
+<li>What happens when one warp waits?</li>
+</ol>
+<details class="hint">
+<summary>Answers</summary>
+<ol>
+<li><strong>Parallelism.</strong> The workload is wide, regular and independent, so the transistor budget goes to arithmetic instead of control.</li>
+<li><strong>Latency hiding.</strong> Residency is what guarantees the scheduler always has an eligible warp.</li>
+<li><strong>Run another warp.</strong> Nothing stalls, and it costs nothing, because the waiting warp's registers never left the register file.</li>
+</ol>
+</details>
+</div>
+<p>So: we have succeeded in hiding latency. Thousands of threads are ready to run.</p>
+<p>That success creates the next problem.</p>
+<blockquote>
+<p><strong>What happens when the GPU simply cannot get the bytes fast enough?</strong></p>
+</blockquote>
+<p>Latency hiding solves <em>waiting</em>. It does nothing about <strong>bandwidth</strong>. If every resident warp wants data and the memory system can only deliver 320 GB/s, no amount of scheduling cleverness invents more bytes.</p>
+<p>This lecture follows the data.</p>
+<hr />
+<h2 id="7-feeding-the-alus">7. Feeding the ALUs</h2>
+<p>The memory hierarchy is roughly:</p>
+<div class="highlight"><pre><span></span><code>             fastest
+                │
+                ▼
+           Registers
+                │
+               L1
+                │
+               L2
+                │
+          Last-level cache
+                │
+              VRAM
+                │
+                ▼
+             slowest
+</code></pre></div>
+<p>Two things about this hierarchy matter more than the list itself.</p>
+<hr />
+<h3 id="shared-memory-is-not-a-cache">Shared memory is not a cache</h3>
+<p>A cache is controlled by hardware.</p>
+<p>Shared memory is controlled by your program.</p>
+<div class="highlight"><pre><span></span><code>cache:
+    hardware decides
+
+shared memory:
+    program decides
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>L1 cache</th>
+<th>Shared memory</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Who decides what is stored?</td>
+<td>hardware</td>
+<td><strong>program</strong></td>
+</tr>
+<tr>
+<td>How do you use it?</td>
+<td>implicit</td>
+<td>explicit loads/stores</td>
+</tr>
+<tr>
+<td>When does it help?</td>
+<td>when access patterns happen to benefit</td>
+<td>when you deliberately arrange reuse</td>
+</tr>
+</tbody>
+</table>
+<p>Consider tiled matrix multiplication.</p>
+<p>A CPU may restructure its loops so that a tile remains in cache.</p>
+<p>The CPU then <em>hopes</em> the cache retains it.</p>
+<p>On a GPU, a kernel can explicitly do:</p>
+<div class="highlight"><pre><span></span><code>VRAM
+  │
+  ▼
+shared memory
+  │
+  ├── reuse
+  ├── reuse
+  └── reuse
+</code></pre></div>
+<p>Shared memory is therefore best thought of as:</p>
+<blockquote>
+<p><strong>a programmer-managed scratchpad close to the arithmetic units.</strong></p>
+</blockquote>
+<hr />
+<h3 id="gpus-cache-too">GPUs cache too</h3>
+<p>There is a common misconception:</p>
+<blockquote>
+<p>"GPUs don't have caches."</p>
+</blockquote>
+<p>This GPU has:</p>
+<div class="highlight"><pre><span></span><code>96 MB last-level cache
+</code></pre></div>
+<p>That is six times the 16 MB L3 cache of the CPU in the same machine.</p>
+<p>The difference is not that GPUs do not cache.</p>
+<p>The difference is how they combine:</p>
+<div class="highlight"><pre><span></span><code>cache
++
+high memory bandwidth
++
+massive parallelism
++
+latency hiding
+</code></pre></div>
+<p>That 96 MB number is not trivia. It is about to explain a 3× discrepancy in the next benchmark.</p>
+<hr />
+<h2 id="8-coalescing-how-threads-access-memory">8. Coalescing: how threads access memory</h2>
+<p>A warp contains many threads.</p>
+<p>Suppose all 32 threads need one float:</p>
+<div class="highlight"><pre><span></span><code>T0 → A[0]
+T1 → A[1]
+T2 → A[2]
+...
+T31 → A[31]
+</code></pre></div>
+<p>These accesses are contiguous.</p>
+<p>The memory system can service them efficiently.</p>
+<p>A simplified view:</p>
+<div class="highlight"><pre><span></span><code>T0 T1 T2 T3 ... T31
+ ↓  ↓  ↓  ↓      ↓
+┌──────────────────┐
+│ contiguous data  │
+└──────────────────┘
+</code></pre></div>
+<p>Now consider scattered accesses:</p>
+<div class="highlight"><pre><span></span><code>T0  → A[0]
+T1  → A[1024]
+T2  → A[2048]
+T3  → A[3072]
+...
+</code></pre></div>
+<p>The same number of useful bytes are requested, but many more memory lines may have to be fetched — the cache line on this GPU is 128 B, so a strided warp can touch 32 separate lines to collect 32 floats it could have got in one.</p>
+<p>This is the intuition behind <strong>coalesced memory access</strong>.</p>
+<hr />
+<h3 id="measure-it">Measure it</h3>
+<p>The benchmark reads the same elements in different orders. The only thing that changes is the access pattern.</p>
+<div class="admonition question">
+<p class="admonition-title">💬 Predict two things: how much slower is stride-1024 than contiguous — and does that ratio change when the buffer grows from 16 MB to 256 MB?</p>
+<details class="hint">
+<summary>Answer</summary>
+<p>It gets <strong>more than 3× worse</strong> on the larger buffer:</p>
+<div class="highlight"><pre><span></span><code>16 MB:
+    stride 1024 → 4.54× slower
+
+256 MB:
+    stride 1024 → 15.63× slower
+</code></pre></div>
+<p>Same kernel, same pattern, same useful bytes. Only the working-set size changed — and it crossed the 96 MB last-level cache.</p>
+</details>
+</div>
+<div class="highlight"><pre><span></span><code>Buffer: 16 MB in + 16 MB out
+
+contiguous :   0.234 ms    143.5 GB/s useful
+stride 32  :   0.267 ms    125.7 GB/s useful
+stride 128 :   0.601 ms     55.8 GB/s useful
+stride 1024:   1.062 ms     31.6 GB/s useful
+</code></pre></div>
+<p>For a larger working set:</p>
+<div class="highlight"><pre><span></span><code>Buffer: 256 MB in + 256 MB out
+
+contiguous :   2.360 ms    227.5 GB/s useful
+stride 32  :   4.750 ms    113.0 GB/s useful
+stride 128 :  24.173 ms     22.2 GB/s useful
+stride 1024:  36.882 ms     14.6 GB/s useful
+</code></pre></div>
+<p>The same useful data.</p>
+<p>The same kernel.</p>
+<p>Only the access pattern changes.</p>
+<hr />
+<h3 id="why-does-working-set-size-matter">Why does working-set size matter?</h3>
+<p>This GPU has:</p>
+<div class="highlight"><pre><span></span><code>96 MB last-level cache
+</code></pre></div>
+<p>The 16 MB working set fits inside it.</p>
+<p>The scattered access pattern still fetches whole cache lines, but later accesses can benefit from lines that remain resident. The cache quietly rescues the bad pattern.</p>
+<p>The 256 MB working set is much larger than the cache.</p>
+<p>Lines are evicted before the remaining useful data can be reused. Nothing rescues the bad pattern, and it costs what it always should have cost.</p>
+<p>The lesson:</p>
+<blockquote>
+<p><strong>Benchmark memory behavior at the size you will actually run.</strong></p>
+</blockquote>
+<p>A memory-access pattern that looks harmless on a toy dataset can become disastrous when the working set exceeds cache capacity.</p>
+<hr />
+<h2 id="9-what-actually-limits-performance">9. What actually limits performance?</h2>
+<p>We have now met two fundamentally different resources:</p>
+<div class="highlight"><pre><span></span><code>compute
+    │
+    └── arithmetic throughput
+
+memory
+    │
+    └── bytes per second
+</code></pre></div>
+<p>A workload can be limited by either.</p>
+<p>This is the basic idea behind the <strong>roofline model</strong>.</p>
+<hr />
+<h3 id="compute-roof">Compute roof</h3>
+<p>From <a href="../Lecture7/">Lecture 7</a>:</p>
+<div class="highlight"><pre><span></span><code>2,304 FP32 ALUs
+× 2 FLOPs per FMA
+× 2.3 GHz
+
+≈ 10.6 TFLOP/s
+</code></pre></div>
+<p>That is the theoretical compute roof.</p>
+<hr />
+<h3 id="memory-roof">Memory roof</h3>
+<p>The memory bus is:</p>
+<div class="highlight"><pre><span></span><code>160 bits
+</code></pre></div>
+<p>and the effective memory data rate is:</p>
+<div class="highlight"><pre><span></span><code>16 Gbps per pin
+</code></pre></div>
+<p>Therefore:</p>
+<div class="highlight"><pre><span></span><code>memory bandwidth
+=
+160 bits × 16 Gbps / 8
+=
+320 GB/s
+</code></pre></div>
+<p>The memory clock reported by the device is:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>/sys/class/drm/card*/device/pp_dpm_mclk
+</code></pre></div>
+<p>It tops out at:</p>
+<div class="highlight"><pre><span></span><code>1000 MHz
+</code></pre></div>
+<p>That is the clock frequency, not the effective transfer rate.</p>
+<p>GDDR6 transfers multiple bits per clock, so always distinguish:</p>
+<div class="highlight"><pre><span></span><code>physical clock
+</code></pre></div>
+<p>from:</p>
+<div class="highlight"><pre><span></span><code>effective data rate
+</code></pre></div>
+<hr />
+<h3 id="the-ridge-point">The ridge point</h3>
+<p>We now have:</p>
+<div class="highlight"><pre><span></span><code>compute roof  = 10.6 TFLOP/s
+memory roof   = 320 GB/s
+</code></pre></div>
+<p>Divide one by the other:</p>
+<div class="highlight"><pre><span></span><code>10.6e12 FLOP/s
+----------------
+320e9 bytes/s
+
+≈ 33 FLOP/byte
+</code></pre></div>
+<p>This is the <strong>ridge point</strong>.</p>
+<p>It tells us approximately where a workload changes from memory-bound to compute-bound.</p>
+<div class="highlight"><pre><span></span><code>performance
+    ▲
+    │                    compute roof
+    │              ─────────────────────
+    │            /
+    │          /
+    │        /
+    │      /
+    │    /
+    │  /
+    │/
+    └──────────────────────────────────►
+       arithmetic intensity
+
+             ↑
+          33 FLOP/byte
+          ridge point
+</code></pre></div>
+<p>Below roughly 33 FLOP/byte this GPU is memory-bound. Above it, compute-bound.</p>
+<p>The exact boundary is an approximation—real performance depends on the kernel, cache behavior, instruction mix, occupancy, and how closely the implementation approaches each roof.</p>
+<p>But it gives an extremely useful first diagnosis:</p>
+<blockquote>
+<p><strong>Arithmetic intensity tells us which resource we are asking too much of.</strong></p>
+</blockquote>
+<hr />
+<h2 id="10-where-does-matrix-multiplication-sit">10. Where does matrix multiplication sit?</h2>
+<p>Consider FP32 matrix multiplication:</p>
+<div class="highlight"><pre><span></span><code>C = A × B
+</code></pre></div>
+<p>for:</p>
+<div class="highlight"><pre><span></span><code>N = 2048
+</code></pre></div>
+<p>The work is approximately:</p>
+<div class="highlight"><pre><span></span><code>2N³
+=
+17.2 GFLOP
+</code></pre></div>
+<p>The input and output traffic, under the simple model, is:</p>
+<div class="highlight"><pre><span></span><code>3N² × 4 bytes
+=
+50.3 MB
+</code></pre></div>
+<p>Therefore:</p>
+<div class="highlight"><pre><span></span><code>arithmetic intensity
+=
+17.2e9 / 50.3e6
+
+≈ 341 FLOP/byte
+</code></pre></div>
+<p>Compare:</p>
+<div class="highlight"><pre><span></span><code>GPU ridge:
+    33 FLOP/byte
+
+matmul:
+    341 FLOP/byte
+</code></pre></div>
+<p>Matmul sits far to the right of the ridge.</p>
+<p>The roofline therefore predicts:</p>
+<blockquote>
+<p><strong>This matmul should be compute-bound.</strong></p>
+</blockquote>
+<p>Measured on this GPU:</p>
+<div class="highlight"><pre><span></span><code>9,047 GFLOP/s
+</code></pre></div>
+<p>compared with:</p>
+<div class="highlight"><pre><span></span><code>10,600 GFLOP/s theoretical
+</code></pre></div>
+<p>That is about:</p>
+<div class="highlight"><pre><span></span><code>85% of the FP32 compute roof
+</code></pre></div>
+<p>The prediction and the measurement agree — which is what earns the model our trust for the next question.</p>
+<hr />
+<h2 id="11-the-payoff-what-does-this-mean-for-ai">11. The payoff: what does this mean for AI?</h2>
+<p>Now we can finally answer the question that matters for ML systems:</p>
+<div class="admonition question">
+<p class="admonition-title">💬 Is running an LLM compute-bound or memory-bound?</p>
+<details class="hint">
+<summary>Answer</summary>
+<p>The question is malformed. It depends on <strong>which phase of the workload you mean</strong> — and the two phases of the <em>same model on the same GPU</em> land on opposite sides of the ridge.</p>
+</details>
+</div>
+<hr />
+<h3 id="llm-decode-one-token-at-a-time">LLM decode: one token at a time</h3>
+<p>Consider generating one token with batch size 1.</p>
+<p>The model's weights must be read from memory and used to perform relatively little computation per byte loaded.</p>
+<p>A rough estimate is:</p>
+<div class="highlight"><pre><span></span><code>≈ 2 FLOPs per parameter
+</code></pre></div>
+<p>For a model stored in 16-bit precision:</p>
+<div class="highlight"><pre><span></span><code>≈ 2 bytes per parameter
+</code></pre></div>
+<p>giving an arithmetic intensity on the order of:</p>
+<div class="highlight"><pre><span></span><code>1–2 FLOP/byte
+</code></pre></div>
+<p>Even allowing for implementation details, this is far below the GPU's:</p>
+<div class="highlight"><pre><span></span><code>≈ 33 FLOP/byte
+</code></pre></div>
+<p>ridge point.</p>
+<p>Therefore:</p>
+<blockquote>
+<p><strong>LLM decode at small batch size is typically memory-bound.</strong></p>
+</blockquote>
+<p>The GPU spends much of its time moving model weights rather than doing arithmetic.</p>
+<p>The mental model is:</p>
+<div class="highlight"><pre><span></span><code>VRAM
+ │
+ │ stream weights
+ ▼
+ALUs
+ │
+ │ tiny amount of useful computation
+ ▼
+next token
+</code></pre></div>
+<p>This is why reducing the number of <em>bytes per parameter</em> — quantization — can be more valuable than increasing raw arithmetic throughput.</p>
+<hr />
+<h3 id="prefill-and-training-many-tokens-at-once">Prefill and training: many tokens at once</h3>
+<p>Now consider training, or processing a long prompt.</p>
+<p>The same weights can be reused across many pieces of work:</p>
+<div class="highlight"><pre><span></span><code>             ┌── token 1
+weights ─────┼── token 2
+             ├── token 3
+             ├── token 4
+             └── ...
+</code></pre></div>
+<p>The same bytes loaded from memory now support much more computation.</p>
+<p>Arithmetic intensity can move into the hundreds of FLOP/byte — the matmul regime we just measured at 85% of the compute roof.</p>
+<p>That puts the workload to the right of the ridge:</p>
+<div class="highlight"><pre><span></span><code>memory-bound
+     │
+     │
+     └───────────────────► compute-bound
+                    ↑
+                batching
+</code></pre></div>
+<p>Therefore:</p>
+<blockquote>
+<p><strong>Training and sufficiently batched/large-shape matrix operations are often compute-bound.</strong></p>
+</blockquote>
+<hr />
+<h3 id="same-model-opposite-bottleneck">Same model, opposite bottleneck</h3>
+<p>This is the result worth remembering:</p>
+<div class="highlight"><pre><span></span><code>                 LLM
+                  │
+          ┌───────┴────────┐
+          │                │
+        decode           prefill
+          │              / training
+       batch 1         large batch
+          │                │
+          ▼                ▼
+    ~1–2 FLOP/byte    hundreds FLOP/byte
+          │                │
+          ▼                ▼
+    memory-bound       compute-bound
+</code></pre></div>
+<p>The silicon did not change.</p>
+<p>The model did not change.</p>
+<p>The <strong>workload shape</strong> changed.</p>
+<blockquote>
+<p><strong>Same model. Same GPU. Different bottleneck.</strong></p>
+</blockquote>
+<p>And the lever that moves it is not a hardware purchase:</p>
+<blockquote>
+<p><strong>Batching is a software decision that can move a workload across the roofline.</strong></p>
+</blockquote>
+<p>That is why a GPU can be compute-bound while training a model and memory-bound while serving the very same model.</p>
+<hr />
+<h2 id="12-both-lectures-in-one-picture">12. Both lectures in one picture</h2>
+<div class="highlight"><pre><span></span><code>GPU architecture
+      ↓
+many ALUs
+      ↓
+many resident warps
+      ↓
+latency hiding
+      ↓
+SIMT
+      ↓
+divergence / occupancy
+      ↓
+memory hierarchy
+      ↓
+coalescing / bandwidth
+      ↓
+arithmetic intensity
+      ↓
+roofline
+      ↓
+┌───────────────┬────────────────┐
+│ LLM decode    │ training       │
+│ memory-bound  │ compute-bound  │
+└───────────────┴────────────────┘
+</code></pre></div>
+<p>The GPU is a machine designed around one fundamental idea:</p>
+<blockquote>
+<p><strong>Keep the arithmetic units busy by having enough independent work available to run while other work waits.</strong></p>
+</blockquote>
+<p>Everything in this module is either that idea, the hardware that pays for it, or the bill that arrives when the memory system cannot keep up.</p>
+<hr />
+<h2 id="run-it-yourself">Run it yourself</h2>
+<p>Inspect your GPU:</p>
+<div class="highlight"><pre><span></span><code>rocminfo
+<span class="c1"># or</span>
+nvidia-smi<span class="w"> </span>-q
+</code></pre></div>
+<p>Inspect clock levels on Linux/AMD:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>/sys/class/drm/card*/device/pp_dpm_sclk
+cat<span class="w"> </span>/sys/class/drm/card*/device/pp_dpm_mclk
+</code></pre></div>
+<p>Run the benchmark:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>code/gpu_internals/warp_costs.py
+</code></pre></div>
+<p>The benchmark code:</p>
+<p><a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/tree/main/code/gpu_internals"><code>code/gpu_internals/warp_costs.py</code></a></p>
+<p>The Triton benchmark is designed to run across NVIDIA and AMD hardware and can also be run on a free Colab/Kaggle GPU.</p>
+<hr />
+<!--# Exercises
+
+## 1. Build a roofline
+
+Build the roofline for a different GPU.
+
+Calculate:
+
+<div class="highlight"><pre><span></span><code>compute roof
+memory roof
+ridge point
+</code></pre></div>
+
+Then place a:
+
+<div class="highlight"><pre><span></span><code>341 FLOP/byte
+</code></pre></div>
+
+matmul on the graph.
+
+Is it memory-bound or compute-bound?
+
+---
+
+## 2. Find when cache stops helping
+
+Sweep:
+
+<div class="highlight"><pre><span></span><code>stride
+</code></pre></div>
+
+and:
+
+<div class="highlight"><pre><span></span><code>working-set size
+</code></pre></div>
+
+on your own GPU.
+
+Find the point at which increasing the working set causes the cache to stop rescuing the scattered access pattern.
+
+---
+
+## 3. Move a workload across the ridge
+
+Estimate the arithmetic intensity of decoding one token from a model you use, at batch size 1.
+
+Then recompute it at batch size 64.
+
+At what batch size does the workload cross your GPU's ridge point?
+
+----->
+
+<h2 id="appendix-c-tensor-and-matrix-units">Appendix C — Tensor and matrix units</h2>
+<p>Modern GPUs may contain dedicated matrix-multiply hardware.</p>
+<p>NVIDIA calls these <strong>Tensor Cores</strong>.</p>
+<p>AMD uses terms such as <strong>Matrix Cores</strong> for corresponding functionality.</p>
+<p>The RX 6700M used for the measurements in this module does not have dedicated matrix cores, so the FP32 matmul result comes from ordinary FP32 arithmetic lanes.</p>
+<p>That is why:</p>
+<div class="highlight"><pre><span></span><code>9,047 GFLOP/s
+</code></pre></div>
+<p>can reach about:</p>
+<div class="highlight"><pre><span></span><code>85% of the 10.6 TFLOP/s FP32 roof
+</code></pre></div>
+<p>without dedicated matrix hardware.</p>
+<p>The important distinction is:</p>
+<blockquote>
+<p><strong>A workload's performance depends on which computational roof the hardware exposes for the requested precision and operation.</strong></p>
+</blockquote>
+<p>Dedicated matrix units raise that roof for supported matrix operations and precisions.</p>
+<hr />
+<h2 id="appendix-d-nvidia-and-amd-terminology">Appendix D — NVIDIA and AMD terminology</h2>
+<p>The terminology table for both lectures is in <a href="../Lecture7/#appendix-a-nvidia-and-amd-terminology">Lecture 7, Appendix A</a>.</p>
+<hr />
+<h2 id="references">References</h2>
+<ol>
+<li>Vijay Janapa Reddi, <a href="https://mlsysbook.ai"><em>Machine Learning Systems</em></a> — Ch. 11: AI Acceleration</li>
+<li>NVIDIA, <a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/"><em>CUDA C++ Programming Guide</em></a> — Hardware Implementation, SIMT, divergence, occupancy</li>
+<li>AMD, <a href="https://gpuopen.com/amd-gpu-architecture-programming-documentation/"><em>RDNA 2 Instruction Set Architecture Reference Guide</em></a> — compute units, wavefronts, vector register file</li>
+<li><a href="https://triton-lang.org">Triton documentation</a></li>
+<li>Course code: <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/tree/main/code/gpu_internals"><code>code/gpu_internals</code></a></li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Ankush Chander
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

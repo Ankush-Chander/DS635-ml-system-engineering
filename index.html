@@ -176,6 +176,26 @@
   
 
       
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="labs/" class="md-tabs__link">
+          
+  
+  
+  Labs
+
+        </a>
+      </li>
+    
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -311,6 +331,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#labs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Labs
+      
+    </span>
+  </a>
   
 </li>
       
@@ -514,6 +545,177 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="lectures/Lecture7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7:Inside the GPU — Execution & Latency Hiding
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Labs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Labs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="labs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="labs/Lab5_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU Job Submission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="labs/Lab5_6_gpu_job_submission/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5/6 — The GPU submission protocol, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -586,6 +788,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#labs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Labs
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -614,9 +827,16 @@
 </ul>
 <h3 id="module-2-gpu-fundamentals-hardware-software-stack">Module 2 — GPU Fundamentals &amp; Hardware-Software Stack</h3>
 <ul>
-<li><a href="docs/lectures/Lecture2.md">Lecture 2 — Why Accelerators Exist</a>: The CPU baseline · the memory wall · what the matmul workload demands · design the hardware yourself</li>
-<li><a href="docs/lectures/Lecture3_4.md">Lecture 3_4 — Memory Hierarchy &amp; Roofline</a>: Memory hierarchy · roofline model · </li>
-<li><a href="docs/lectures/Lecture5_6.md">Lecture 5_6 — GPU job submission</a></li>
+<li><a href="lectures/Lecture2/">2: Why Accelerators Exist</a> — the CPU baseline, the memory wall, what the matmul workload demands, design the hardware yourself</li>
+<li><a href="lectures/Lecture3_4/">3_4: Memory Hierarchy &amp; Roofline</a> — the matmul ladder from naive Python to GPU, SIMD, tiling, threads, arithmetic intensity, the roofline model, two GPU timing traps</li>
+<li><a href="lectures/Lecture5_6/">5_6: GPU Job Submission</a> — PCIe, MMIO and BARs, DMA, ring/doorbell/fence, why an unsynchronized kernel launch measures nothing
+<a href="lectures/Lecture7/">7: Inside the GPU — Execution &amp; Latency Hiding</a> — SMs, warps and SIMT, a CUDA core is not a core, latency hiding by oversubscription, why the register file is bigger than L1, divergence and occupancy</li>
+</ul>
+<!--- - [8: Inside the GPU — Memory & the Roofline](lectures/Lecture8.md) — the memory hierarchy, shared memory is not a cache, coalescing and the working-set cliff, building both roofline axes from `rocminfo`, why LLM decode is memory-bound and training compute-bound-->
+
+<h2 id="labs">Labs</h2>
+<ul>
+<li><a href="labs/Lab5_6/">Lab 5_6: GPU Job Submission</a> — measure the ring/doorbell/fence protocol yourself, on Colab or your own GPU (<a href="labs/Lab5_6_gpu_job_submission/">notebook</a>)</li>
 </ul>
 <hr />
 
