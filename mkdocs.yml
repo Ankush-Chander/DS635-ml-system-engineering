@@ -15,8 +15,15 @@ nav:
       - 1:Machine Learning Lifecycle: 'lectures/Lecture1.md'
       - 2:Hardware Accelerators: 'lectures/Lecture2.md'
       - 3_4:Memory Hierarchy & Roofline: 'lectures/Lecture3_4.md'
+      - 5_6:GPU job submission: 'lectures/Lecture5_6.md'
+      - 7:Inside the GPU — Execution & Latency Hiding: 'lectures/Lecture7.md'
+      # - 8:Inside the GPU — Memory & the Roofline: 'lectures/Lecture8.md'
       # - 4:Tensor Cores & Precision: 'lectures/Lecture4.md'
       # - 1:Requirements Discovery: 'lectures/Lecture1.md'
+  - Labs:
+      - Overview: 'labs/index.md'
+      - '5_6:GPU Job Submission': 'labs/Lab5_6.md'
+      - '5_6:Lab notebook': 'labs/Lab5_6_gpu_job_submission.ipynb'
   # - Code:
   #     - Storage Engines: 'code/storage_engines/README.md'
   #     - SSTable: 'https://github.com/Ankush-Chander/sorted-string-table-101'
@@ -125,6 +132,7 @@ plugins:
        - "*swagger*"
        - PULL_REQUEST_TEMPLATE.md
        - "*taxi_data/*"
+       - "plan/*"
        - "*.parquet"
        - "*.db"
 #  - mkdocstrings:
