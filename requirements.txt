@@ -1,4 +1,5 @@
 fastapi
+jupytext
 mkdocs
 mkdocs-exclude
 mkdocs-jupyter

@@ -16,7 +16,12 @@ nav:
       - 2:Hardware Accelerators: 'lectures/Lecture2.md'
       - 3_4:Memory Hierarchy & Roofline: 'lectures/Lecture3_4.md'
       - 5_6:GPU job submission: 'lectures/Lecture5_6.md'
-      - 7:Inside the GPU — Execution & Latency Hiding: 'lectures/Lecture7.md'
+      # The Markdown page is what the site publishes -- mkdocs-jupyter does not
+      # run admonitions, relative image paths or internal .md links through
+      # mkdocs, so a notebook page would lose all three. `make notebooks`
+      # generates lectures/Lecture7.ipynb from this same file as the runnable
+      # companion students open in Colab; it is excluded from the build below.
+      - 7:Matmul to Silicon — Execution & Latency Hiding: 'lectures/Lecture7.md'
       # - 8:Inside the GPU — Memory & the Roofline: 'lectures/Lecture8.md'
       # - 4:Tensor Cores & Precision: 'lectures/Lecture4.md'
       # - 1:Requirements Discovery: 'lectures/Lecture1.md'
@@ -72,7 +77,13 @@ theme:
 #
 ## Plugins
 plugins:
-  - mkdocs-jupyter
+  - mkdocs-jupyter:
+      # Default is ["*.py", "*.ipynb", "*.md"]: any Markdown file carrying a
+      # jupytext header would be claimed and rendered as a notebook, which
+      # silently drops admonitions, relative image paths and .md links.
+      # Lecture Markdown sources carry that header, so restrict the plugin
+      # to real notebooks.
+      include: ["*.ipynb"]
 #   - blog:
 #       enabled: true
 #       blog_dir: blog
@@ -133,6 +144,10 @@ plugins:
        - PULL_REQUEST_TEMPLATE.md
        - "*taxi_data/*"
        - "plan/*"
+       # Generated runnable companions to the lecture Markdown pages. They are
+       # committed for the Colab badge, not published: they would collide with
+       # the .md on the output URL and render worse than it.
+       - "lectures/*.ipynb"
        - "*.parquet"
        - "*.db"
 #  - mkdocstrings:
