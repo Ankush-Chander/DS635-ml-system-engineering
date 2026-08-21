@@ -1622,6 +1622,46 @@ asks the other half — <strong>what limits performance</strong> once the ALUs a
 <p>Every measurement on this page was produced by a cell you can re-run on your own
 GPU. If you do not have one, open the same page as a notebook on a free Colab T4:</p>
 <p><a href="https://colab.research.google.com/github/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/lectures/Lecture7.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p>On Colab, pick <strong>Runtime → Change runtime type → T4 GPU</strong> first, then run the
+cell below once. It installs only what is missing, so it is a no-op on a machine
+that already has everything.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Setup. Safe to re-run: nothing is installed if it is already importable.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ensure</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">spec</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Install `spec` only if `module` cannot already be imported.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="n">module</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="p">([</span><span class="n">spec</span><span class="p">,</span> <span class="n">module</span><span class="p">]</span> <span class="k">if</span> <span class="n">spec</span> <span class="ow">and</span> <span class="n">spec</span> <span class="o">!=</span> <span class="n">module</span> <span class="k">else</span> <span class="p">[</span><span class="n">module</span><span class="p">]):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;installing </span><span class="si">{</span><span class="n">candidate</span><span class="si">}</span><span class="s2"> ...&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="s2">&quot;pip&quot;</span><span class="p">,</span> <span class="s2">&quot;install&quot;</span><span class="p">,</span> <span class="s2">&quot;-q&quot;</span><span class="p">,</span> <span class="n">candidate</span><span class="p">])</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;could not install </span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">triton_spec</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The exact Triton this torch build was compiled against.</span>
+
+<span class="sd">    Torch declares Triton as a dependency, so we can read the pin instead of</span>
+<span class="sd">    guessing. A mismatched Triton imports fine and then fails at the first</span>
+<span class="sd">    `@triton.jit` -- much harder to diagnose than a missing package.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="w"> </span><span class="kn">import</span> <span class="n">requires</span>
+        <span class="k">for</span> <span class="n">req</span> <span class="ow">in</span> <span class="n">requires</span><span class="p">(</span><span class="s2">&quot;torch&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[]:</span>
+            <span class="n">dep</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>     <span class="c1"># drop the environment marker</span>
+            <span class="k">if</span> <span class="s2">&quot;triton&quot;</span> <span class="ow">in</span> <span class="n">dep</span><span class="p">:</span>                 <span class="c1"># `triton` on CUDA, `triton-rocm` on ROCm</span>
+                <span class="k">return</span> <span class="n">dep</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="s2">&quot;triton&quot;</span>
+
+<span class="n">ensure</span><span class="p">(</span><span class="s2">&quot;torch&quot;</span><span class="p">)</span>                  <span class="c1"># preinstalled on Colab; listed so the set is complete</span>
+<span class="n">ensure</span><span class="p">(</span><span class="s2">&quot;matplotlib&quot;</span><span class="p">)</span>
+<span class="n">ensure</span><span class="p">(</span><span class="s2">&quot;triton&quot;</span><span class="p">,</span> <span class="n">triton_spec</span><span class="p">())</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span><span class="o">,</span><span class="w"> </span><span class="nn">triton</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;torch </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2"> | triton </span><span class="si">{</span><span class="n">triton</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2"> | cuda </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
 <hr />
 <h2 id="the-birds-eye-view">The bird's-eye view</h2>
 <p>One line of Python triggers a relay race across five layers, each speaking a
@@ -1903,47 +1943,72 @@ in a moment we will see exactly where they come apart.</p>
 <p>It adds two vectors — the simplest possible thing — but every level is visible as
 an actual line of code:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@triton</span><span class="o">.</span><span class="n">jit</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">vector_add</span><span class="p">(</span><span class="n">a_ptr</span><span class="p">,</span> <span class="n">b_ptr</span><span class="p">,</span> <span class="n">c_ptr</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">BLOCK</span><span class="p">:</span> <span class="n">tl</span><span class="o">.</span><span class="n">constexpr</span><span class="p">):</span>
-    <span class="c1"># This body runs once per PROGRAM INSTANCE. There will be `grid` of them,</span>
-    <span class="c1"># and they are independent -- no ordering between them is guaranteed.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">vector_add</span><span class="p">(</span><span class="n">a_ptr</span><span class="p">,</span> <span class="n">b_ptr</span><span class="p">,</span> <span class="n">c_ptr</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">,</span> <span class="n">ELEMS_PER_PROG</span><span class="p">:</span> <span class="n">tl</span><span class="o">.</span><span class="n">constexpr</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;One execution of this body = ONE PROGRAM INSTANCE (≈ one CUDA block).</span>
 
-    <span class="n">pid</span>  <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">program_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>      <span class="c1"># which instance am I?  0, 1, 2, ... grid-1</span>
-    <span class="n">lane</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">BLOCK</span><span class="p">)</span>   <span class="c1"># [0, 1, 2, ..., BLOCK-1]: the positions in MY chunk</span>
-    <span class="n">offs</span> <span class="o">=</span> <span class="n">pid</span> <span class="o">*</span> <span class="n">BLOCK</span> <span class="o">+</span> <span class="n">lane</span>    <span class="c1"># -&gt; the global indices this instance owns:</span>
-                                 <span class="c1">#    pid=0 -&gt; [0..255], pid=1 -&gt; [256..511], ...</span>
+<span class="sd">    `grid` of them exist. They are independent and unordered: no instance may</span>
+<span class="sd">    assume another has run, is running, or will run. That independence is why</span>
+<span class="sd">    the same source scales unchanged from an 18-CU laptop to a 132-SM server part.</span>
 
-    <span class="c1"># n is rarely a multiple of BLOCK, so the LAST instance runs off the end of the</span>
-    <span class="c1"># array. `mask` marks which positions are real; masked-off ones are not loaded</span>
-    <span class="c1"># and not stored, so we never touch memory we do not own.</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">offs</span> <span class="o">&lt;</span> <span class="n">n</span>
+<span class="sd">    Everything below is a VECTOR of width ELEMS_PER_PROG. Triton is a</span>
+<span class="sd">    *block-level* language -- there is no &quot;my thread&#39;s element&quot; in this code.</span>
+<span class="sd">    Nothing here names a thread, a warp, or a lane; the compiler chooses those.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">prog_id</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">program_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>                 <span class="c1"># instance id: 0 .. grid-1</span>
 
-    <span class="c1"># These are whole-vector operations, not scalar ones. `a_ptr + offs` is BLOCK</span>
-    <span class="c1"># addresses at once, so one `tl.load` fetches BLOCK values in one go.</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">a_ptr</span> <span class="o">+</span> <span class="n">offs</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">b_ptr</span> <span class="o">+</span> <span class="n">offs</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
-    <span class="n">tl</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">c_ptr</span> <span class="o">+</span> <span class="n">offs</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>   <span class="c1"># BLOCK additions, BLOCK stores</span>
+    <span class="c1"># ELEMENT slots inside my chunk -- an index vector, NOT hardware lanes.</span>
+    <span class="c1"># Hardware lanes number num_warps*32, which is a different count entirely</span>
+    <span class="c1"># (the printout at the bottom shows the ratio).</span>
+    <span class="n">elem_in_prog</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ELEMS_PER_PROG</span><span class="p">)</span>
 
-<span class="n">n</span><span class="p">,</span> <span class="n">BLOCK</span> <span class="o">=</span> <span class="mi">1_000_000</span><span class="p">,</span> <span class="mi">256</span>
-<span class="n">a</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">);</span> <span class="n">b</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+    <span class="c1"># The global positions in a/b/c that this instance owns:</span>
+    <span class="c1">#   prog 0 -&gt; [0..255], prog 1 -&gt; [256..511], ...</span>
+    <span class="n">elem_idx</span> <span class="o">=</span> <span class="n">prog_id</span> <span class="o">*</span> <span class="n">ELEMS_PER_PROG</span> <span class="o">+</span> <span class="n">elem_in_prog</span>
+
+    <span class="c1"># n_elements is rarely a multiple of ELEMS_PER_PROG, so the LAST instance</span>
+    <span class="c1"># runs off the end. Masked-off positions are neither loaded nor stored, so</span>
+    <span class="c1"># we never touch memory we do not own.</span>
+    <span class="n">in_bounds</span> <span class="o">=</span> <span class="n">elem_idx</span> <span class="o">&lt;</span> <span class="n">n_elements</span>
+
+    <span class="c1"># Whole-vector ops, not scalar ones: `a_ptr + elem_idx` is ELEMS_PER_PROG</span>
+    <span class="c1"># addresses at once, so one tl.load fetches that many values in one go.</span>
+    <span class="n">a_vals</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">a_ptr</span> <span class="o">+</span> <span class="n">elem_idx</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">in_bounds</span><span class="p">)</span>
+    <span class="n">b_vals</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">b_ptr</span> <span class="o">+</span> <span class="n">elem_idx</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">in_bounds</span><span class="p">)</span>
+    <span class="n">tl</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">c_ptr</span> <span class="o">+</span> <span class="n">elem_idx</span><span class="p">,</span> <span class="n">a_vals</span> <span class="o">+</span> <span class="n">b_vals</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">in_bounds</span><span class="p">)</span>
+
+
+<span class="n">n_elements</span>     <span class="o">=</span> <span class="mi">1_000_000</span>
+<span class="n">ELEMS_PER_PROG</span> <span class="o">=</span> <span class="mi">256</span>               <span class="c1"># ELEMENTS per instance -- *not* a thread count</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_elements</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_elements</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
 <span class="n">c</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 
-<span class="c1"># The GRID: how many instances does it take to cover n elements, BLOCK at a time?</span>
-<span class="c1"># cdiv is ceiling division -- we round UP and let `mask` clean up the overhang.</span>
-<span class="n">grid</span> <span class="o">=</span> <span class="p">(</span><span class="n">triton</span><span class="o">.</span><span class="n">cdiv</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">BLOCK</span><span class="p">),)</span>
-<span class="n">compiled</span> <span class="o">=</span> <span class="n">vector_add</span><span class="p">[</span><span class="n">grid</span><span class="p">](</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">BLOCK</span><span class="o">=</span><span class="n">BLOCK</span><span class="p">)</span>
+<span class="c1"># THE GRID: how many instances to cover n_elements, ELEMS_PER_PROG at a time?</span>
+<span class="c1"># cdiv rounds UP; `in_bounds` cleans up the overhang in the final instance.</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="p">(</span><span class="n">triton</span><span class="o">.</span><span class="n">cdiv</span><span class="p">(</span><span class="n">n_elements</span><span class="p">,</span> <span class="n">ELEMS_PER_PROG</span><span class="p">),)</span>
+<span class="n">compiled</span> <span class="o">=</span> <span class="n">vector_add</span><span class="p">[</span><span class="n">grid</span><span class="p">](</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">,</span> <span class="n">ELEMS_PER_PROG</span><span class="o">=</span><span class="n">ELEMS_PER_PROG</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
 
-<span class="c1"># What we asked for (the programming model):</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;grid           : </span><span class="si">{</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> program instances&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BLOCK          : </span><span class="si">{</span><span class="n">BLOCK</span><span class="si">}</span><span class="s2"> elements each&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;covered        : </span><span class="si">{</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">BLOCK</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> slots for </span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> elements&quot;</span>
-      <span class="sa">f</span><span class="s2">&quot;  (</span><span class="si">{</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">BLOCK</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">n</span><span class="si">}</span><span class="s2"> masked off in the last instance)&quot;</span><span class="p">)</span>
+<span class="c1"># ---- Level 1: what YOU specified (the programming model) --------------------</span>
+<span class="n">n_progs</span>   <span class="o">=</span> <span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">slots</span>     <span class="o">=</span> <span class="n">n_progs</span> <span class="o">*</span> <span class="n">ELEMS_PER_PROG</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PROGRAMMING MODEL  (every number below came from your source)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  program instances : </span><span class="si">{</span><span class="n">n_progs</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  elements/instance : </span><span class="si">{</span><span class="n">ELEMS_PER_PROG</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  slots covered     : </span><span class="si">{</span><span class="n">slots</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="n">n_elements</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> elements&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;   (</span><span class="si">{</span><span class="n">slots</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">n_elements</span><span class="si">}</span><span class="s2"> masked off in the last instance)&quot;</span><span class="p">)</span>
 
-<span class="c1"># What Triton actually built (the hardware mapping) -- note it is NOT BLOCK/32:</span>
-<span class="n">nw</span> <span class="o">=</span> <span class="n">compiled</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">num_warps</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">num_warps      : </span><span class="si">{</span><span class="n">nw</span><span class="si">}</span><span class="s2">   &lt;- Triton chose this, you did not&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;hardware lanes : </span><span class="si">{</span><span class="n">nw</span><span class="si">}</span><span class="s2"> x </span><span class="si">{</span><span class="n">WARP</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">nw</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">WARP</span><span class="si">}</span><span class="s2"> per instance&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;elements/lane  : </span><span class="si">{</span><span class="n">BLOCK</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">nw</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">WARP</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">BLOCK</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="p">(</span><span class="n">nw</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">WARP</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># ---- Level 2: what the COMPILER built (the hardware mapping) ----------------</span>
+<span class="c1"># None of these appear anywhere in the kernel above.</span>
+<span class="n">warps_per_prog</span> <span class="o">=</span> <span class="n">compiled</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">num_warps</span>
+<span class="n">lanes_per_prog</span> <span class="o">=</span> <span class="n">warps_per_prog</span> <span class="o">*</span> <span class="n">WARP</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">HARDWARE MAPPING   (none of this appears in your source)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  warps/instance    : </span><span class="si">{</span><span class="n">warps_per_prog</span><span class="si">}</span><span class="s2">   &lt;- Triton chose this, you did not&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  lanes/instance    : </span><span class="si">{</span><span class="n">warps_per_prog</span><span class="si">}</span><span class="s2"> x </span><span class="si">{</span><span class="n">WARP</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">lanes_per_prog</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  elements/LANE     : </span><span class="si">{</span><span class="n">ELEMS_PER_PROG</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">lanes_per_prog</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot; = </span><span class="si">{</span><span class="n">ELEMS_PER_PROG</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">lanes_per_prog</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;   &lt;- &gt;1 means `elem_in_prog` indexes ELEMENTS, not lanes&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>On the course laptop that prints a grid of 3,907 instances covering 1,000,192
 slots — 192 of them masked off — and then the part that matters:</p>
@@ -2048,73 +2113,28 @@ machine shaped so strangely?</p>
 <p><strong>Spend silicon on arithmetic lanes and keep many independent pieces of work in flight.</strong></p>
 </blockquote>
 <p>The two machines are solving the same problem—execute instructions—but they use very different strategies for dealing with latency. The CPU makes <em>one</em> thread fast. The GPU keeps <em>many</em> threads in flight and hides latency with parallelism.</p>
+<p>That figure is drawn in the abstract: <em>SM 0 … SM M-1</em>, <em>32 lanes</em>, <em>multiple
+warps per SM</em>. The rest of this section puts a number from one real card into
+every one of those boxes, so keep the figure in view while you read it.</p>
 <h3 id="the-gpu-in-this-laptop">The GPU in this laptop</h3>
-<p>Zooming in on the discrete GPU:</p>
+<p>Zooming in on the discrete GPU — the same boxes the figure draws, with this
+laptop's numbers in them:</p>
 <div class="highlight"><pre><span></span><code>GPU
 │
-├── VRAM  10.7 GB
+├── VRAM  10.7 GB                     &lt;- &quot;HBM / GDDR Memory (GPU Global Memory)&quot;
 │
-└── 36 × Compute Unit
+└── 36 × Compute Unit                 &lt;- &quot;SM 0 ... SM M-1&quot;, so M = 36
        │
-       ├── 2 × SIMD
-       │     ├── 32 ALU lanes
-       │     ├── register file
-       │     └── scheduler
+       ├── 2 × SIMD                   &lt;- &quot;Execution Units (ALU Lanes)&quot;
+       │     ├── 32 ALU lanes         &lt;- &quot;Lane 0 ... Lane 31&quot;, one warp wide
+       │     ├── register file        &lt;- &quot;Register File (per SM)&quot;
+       │     └── scheduler            &lt;- &quot;Warp Scheduler (Instruction Issue)&quot;
        │
-       ├── L1
-       └── shared memory / LDS
+       ├── L1                         ┐  &quot;L1 Cache / Shared Memory (per SM)&quot;
+       └── shared memory / LDS        ┘  -- one box in the figure, two jobs
 </code></pre></div>
-<p>The important question is not yet what every box is called.</p>
-<p>It is:</p>
-<blockquote>
-<p><strong>Why does the GPU need all of these boxes?</strong></p>
-</blockquote>
-<p>The answer emerges as we follow one piece of work down to the hardware. For now
-we need just enough vocabulary to describe execution — the cache hierarchy can
-wait for <a href="../Lecture8/">Lecture 8</a>.</p>
-<table>
-<thead>
-<tr>
-<th>Term</th>
-<th>What it is</th>
-<th>Why it exists</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>ALU lane</strong></td>
-<td>one arithmetic unit — multiply, add, fused multiply-add</td>
-<td>the thing we are trying to never leave idle</td>
-</tr>
-<tr>
-<td><strong>SIMD</strong></td>
-<td>a group of lanes executing the same instruction together</td>
-<td>one instruction fetch amortized over many lanes</td>
-</tr>
-<tr>
-<td><strong>Compute Unit</strong> (NVIDIA: <strong>SM</strong>)</td>
-<td>the repeating execution block: lanes, registers, scheduler, cache, shared memory</td>
-<td>the unit a block is scheduled onto</td>
-</tr>
-<tr>
-<td><strong>Register file</strong></td>
-<td>fast per-thread storage holding the live state of resident threads</td>
-<td>unusually large, so many threads can stay resident at once</td>
-</tr>
-<tr>
-<td><strong>Shared memory</strong> (AMD: <strong>LDS</strong>)</td>
-<td>small explicitly-managed scratchpad shared by a block</td>
-<td>lets threads in a block cooperate without going to DRAM</td>
-</tr>
-<tr>
-<td><strong>VRAM</strong></td>
-<td>the GPU's own DRAM</td>
-<td>high bandwidth, but still hundreds of cycles away</td>
-</tr>
-</tbody>
-</table>
-<p>Most literature uses NVIDIA's vocabulary; <code>rocminfo</code> reports AMD's. This module uses <strong>warp</strong>, <strong>SM</strong>, and <strong>shared memory</strong> for the general programming model, and points out AMD terminology where it matters. The full correspondence is in <a href="#appendix-a-nvidia-and-amd-terminology">Appendix A</a>.</p>
-<h3 id="read-your-own-gpu">Read your own GPU</h3>
+<p>None of those numbers are invented. Every one of them comes out of a vendor
+tool:</p>
 <div class="highlight"><pre><span></span><code>rocminfo<span class="w">                 </span><span class="c1"># AMD</span>
 nvidia-smi<span class="w"> </span>-q<span class="w">            </span><span class="c1"># NVIDIA</span>
 </code></pre></div>
@@ -2132,6 +2152,87 @@ LDS (shared memory):      64 KB
 Cacheline Size:           128 B
 VRAM:                     10.7 GB
 </code></pre></div>
+<p>Now read that dump and the figure side by side. Almost every line is a box, and
+almost every box is a line:</p>
+<table>
+<thead>
+<tr>
+<th>Box in the figure</th>
+<th>What it is</th>
+<th>This laptop's value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Lane 0 … Lane 31</strong>, inside <em>Execution Units</em></td>
+<td>one <strong>ALU lane</strong>: an arithmetic unit doing multiply, add, fused multiply-add — the thing we are trying to never leave idle</td>
+<td><code>Wavefront Size: 32</code>, so 32 lanes step together, exactly as drawn</td>
+</tr>
+<tr>
+<td><strong>Execution Units (ALU Lanes) SIMD</strong></td>
+<td>a group of lanes executing the same instruction together, so one instruction fetch is amortized over all of them</td>
+<td><code>SIMDs per CU: 2</code> — the figure draws one per SM, this card has two</td>
+</tr>
+<tr>
+<td><strong>SM 0 … SM M-1</strong> (AMD: <strong>Compute Unit</strong>)</td>
+<td>the repeating execution block — lanes, registers, scheduler, cache, shared memory. The unit a block is scheduled onto</td>
+<td><code>Compute Unit: 36</code>, so M = 36</td>
+</tr>
+<tr>
+<td><strong>Warps (multiple per SM)</strong></td>
+<td>the work sitting resident on the SM, for the scheduler to choose between</td>
+<td><code>Max Waves Per CU: 32</code> — the figure draws 4 to stay legible; the real ceiling is 32</td>
+</tr>
+<tr>
+<td><strong>Warp Scheduler (Instruction Issue)</strong></td>
+<td>picks a ready warp each cycle and issues one instruction for it — this is where latency hiding physically happens</td>
+<td>no line in the dump; we measure its effect two sections below</td>
+</tr>
+<tr>
+<td><strong>Register File (per SM)</strong></td>
+<td>fast per-thread storage holding the live state of every resident thread; unusually large, so many threads can stay resident at once</td>
+<td>not reported by <code>rocminfo</code> either — occupancy is what exposes its size</td>
+</tr>
+<tr>
+<td><strong>L1 Cache / Shared Memory (per SM)</strong> (AMD: <strong>LDS</strong>)</td>
+<td>one box, two jobs: an automatic cache, plus a small explicitly-managed scratchpad that lets threads in a block cooperate without going to DRAM</td>
+<td><code>L1: 16 KB</code> and <code>LDS: 64 KB</code></td>
+</tr>
+<tr>
+<td><strong>Load/Store Units</strong></td>
+<td>the path from the lanes to memory; it moves whole cache lines, never single floats</td>
+<td><code>Cacheline Size: 128 B</code></td>
+</tr>
+<tr>
+<td><strong>L2 Cache (GPU-wide)</strong></td>
+<td>the last stop shared by every SM</td>
+<td><code>L2: 3 MB</code></td>
+</tr>
+<tr>
+<td><strong>HBM / GDDR Memory</strong></td>
+<td>the GPU's own DRAM — high bandwidth, but still hundreds of cycles away</td>
+<td><code>VRAM: 10.7 GB</code></td>
+</tr>
+<tr>
+<td><em>no box</em></td>
+<td>RDNA puts a large Infinity Cache between L2 and VRAM. Most GPUs have no equivalent, so the figure has none — but it is why some measurements later in this module bend where you would not expect</td>
+<td><code>L3: 96 MB</code></td>
+</tr>
+</tbody>
+</table>
+<p>One line resists the exercise entirely. <code>Workgroup Max Size: 1024</code> constrains the
+<em>programming model</em> — the largest block you are allowed to launch — rather than
+any piece of silicon, so no box can hold it.</p>
+<p>The important question is not yet what every box is called.</p>
+<p>It is:</p>
+<blockquote>
+<p><strong>Why does the GPU need all of these boxes?</strong></p>
+</blockquote>
+<p>The answer emerges as we follow one piece of work down to the hardware. For now
+we need just enough vocabulary to describe execution — the cache hierarchy can
+wait for <a href="../Lecture8/">Lecture 8</a>.</p>
+<p>Most literature uses NVIDIA's vocabulary; <code>rocminfo</code> reports AMD's. This module uses <strong>warp</strong>, <strong>SM</strong>, and <strong>shared memory</strong> for the general programming model, and points out AMD terminology where it matters. The full correspondence is in <a href="#appendix-a-nvidia-and-amd-terminology">Appendix A</a>.</p>
+<h3 id="read-your-own-gpu">Read your own GPU</h3>
 <p>Those tools are vendor-specific. PyTorch will tell you the same things on any of
 them, which is what the cells below use:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;name          : </span><span class="si">{</span><span class="n">dev</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
