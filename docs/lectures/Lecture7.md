@@ -393,47 +393,72 @@ an actual line of code:
 
 ```python
 @triton.jit
-def vector_add(a_ptr, b_ptr, c_ptr, n, BLOCK: tl.constexpr):
-    # This body runs once per PROGRAM INSTANCE. There will be `grid` of them,
-    # and they are independent -- no ordering between them is guaranteed.
+def vector_add(a_ptr, b_ptr, c_ptr, n_elements, ELEMS_PER_PROG: tl.constexpr):
+    """One execution of this body = ONE PROGRAM INSTANCE (≈ one CUDA block).
 
-    pid  = tl.program_id(0)      # which instance am I?  0, 1, 2, ... grid-1
-    lane = tl.arange(0, BLOCK)   # [0, 1, 2, ..., BLOCK-1]: the positions in MY chunk
-    offs = pid * BLOCK + lane    # -> the global indices this instance owns:
-                                 #    pid=0 -> [0..255], pid=1 -> [256..511], ...
+    `grid` of them exist. They are independent and unordered: no instance may
+    assume another has run, is running, or will run. That independence is why
+    the same source scales unchanged from an 18-CU laptop to a 132-SM server part.
 
-    # n is rarely a multiple of BLOCK, so the LAST instance runs off the end of the
-    # array. `mask` marks which positions are real; masked-off ones are not loaded
-    # and not stored, so we never touch memory we do not own.
-    mask = offs < n
+    Everything below is a VECTOR of width ELEMS_PER_PROG. Triton is a
+    *block-level* language -- there is no "my thread's element" in this code.
+    Nothing here names a thread, a warp, or a lane; the compiler chooses those.
+    """
+    prog_id = tl.program_id(0)                 # instance id: 0 .. grid-1
 
-    # These are whole-vector operations, not scalar ones. `a_ptr + offs` is BLOCK
-    # addresses at once, so one `tl.load` fetches BLOCK values in one go.
-    a = tl.load(a_ptr + offs, mask=mask)
-    b = tl.load(b_ptr + offs, mask=mask)
-    tl.store(c_ptr + offs, a + b, mask=mask)   # BLOCK additions, BLOCK stores
+    # ELEMENT slots inside my chunk -- an index vector, NOT hardware lanes.
+    # Hardware lanes number num_warps*32, which is a different count entirely
+    # (the printout at the bottom shows the ratio).
+    elem_in_prog = tl.arange(0, ELEMS_PER_PROG)
 
-n, BLOCK = 1_000_000, 256
-a = torch.randn(n, device="cuda"); b = torch.randn(n, device="cuda")
+    # The global positions in a/b/c that this instance owns:
+    #   prog 0 -> [0..255], prog 1 -> [256..511], ...
+    elem_idx = prog_id * ELEMS_PER_PROG + elem_in_prog
+
+    # n_elements is rarely a multiple of ELEMS_PER_PROG, so the LAST instance
+    # runs off the end. Masked-off positions are neither loaded nor stored, so
+    # we never touch memory we do not own.
+    in_bounds = elem_idx < n_elements
+
+    # Whole-vector ops, not scalar ones: `a_ptr + elem_idx` is ELEMS_PER_PROG
+    # addresses at once, so one tl.load fetches that many values in one go.
+    a_vals = tl.load(a_ptr + elem_idx, mask=in_bounds)
+    b_vals = tl.load(b_ptr + elem_idx, mask=in_bounds)
+    tl.store(c_ptr + elem_idx, a_vals + b_vals, mask=in_bounds)
+
+
+n_elements     = 1_000_000
+ELEMS_PER_PROG = 256               # ELEMENTS per instance -- *not* a thread count
+
+a = torch.randn(n_elements, device="cuda")
+b = torch.randn(n_elements, device="cuda")
 c = torch.empty_like(a)
 
-# The GRID: how many instances does it take to cover n elements, BLOCK at a time?
-# cdiv is ceiling division -- we round UP and let `mask` clean up the overhang.
-grid = (triton.cdiv(n, BLOCK),)
-compiled = vector_add[grid](a, b, c, n, BLOCK=BLOCK)
+# THE GRID: how many instances to cover n_elements, ELEMS_PER_PROG at a time?
+# cdiv rounds UP; `in_bounds` cleans up the overhang in the final instance.
+grid = (triton.cdiv(n_elements, ELEMS_PER_PROG),)
+compiled = vector_add[grid](a, b, c, n_elements, ELEMS_PER_PROG=ELEMS_PER_PROG)
 assert torch.allclose(c, a + b)
 
-# What we asked for (the programming model):
-print(f"grid           : {grid[0]:,} program instances")
-print(f"BLOCK          : {BLOCK} elements each")
-print(f"covered        : {grid[0] * BLOCK:,} slots for {n:,} elements"
-      f"  ({grid[0]*BLOCK - n} masked off in the last instance)")
+# ---- Level 1: what YOU specified (the programming model) --------------------
+n_progs   = grid[0]
+slots     = n_progs * ELEMS_PER_PROG
+print("PROGRAMMING MODEL  (every number below came from your source)")
+print(f"  program instances : {n_progs:,}")
+print(f"  elements/instance : {ELEMS_PER_PROG}")
+print(f"  slots covered     : {slots:,} for {n_elements:,} elements"
+    f"   ({slots - n_elements} masked off in the last instance)")
 
-# What Triton actually built (the hardware mapping) -- note it is NOT BLOCK/32:
-nw = compiled.metadata.num_warps
-print(f"\nnum_warps      : {nw}   <- Triton chose this, you did not")
-print(f"hardware lanes : {nw} x {WARP} = {nw * WARP} per instance")
-print(f"elements/lane  : {BLOCK} / {nw * WARP} = {BLOCK // (nw * WARP)}")
+# ---- Level 2: what the COMPILER built (the hardware mapping) ----------------
+# None of these appear anywhere in the kernel above.
+warps_per_prog = compiled.metadata.num_warps
+lanes_per_prog = warps_per_prog * WARP
+print("\nHARDWARE MAPPING   (none of this appears in your source)")
+print(f"  warps/instance    : {warps_per_prog}   <- Triton chose this, you did not")
+print(f"  lanes/instance    : {warps_per_prog} x {WARP} = {lanes_per_prog}")
+print(f"  elements/LANE     : {ELEMS_PER_PROG} / {lanes_per_prog}"
+    f" = {ELEMS_PER_PROG // lanes_per_prog}"
+    f"   <- >1 means `elem_in_prog` indexes ELEMENTS, not lanes")
 ```
 
 On the course laptop that prints a grid of 3,907 instances covering 1,000,192
@@ -517,48 +542,33 @@ A GPU makes a different trade:
 
 The two machines are solving the same problem—execute instructions—but they use very different strategies for dealing with latency. The CPU makes *one* thread fast. The GPU keeps *many* threads in flight and hides latency with parallelism.
 
+That figure is drawn in the abstract: *SM 0 … SM M-1*, *32 lanes*, *multiple
+warps per SM*. The rest of this section puts a number from one real card into
+every one of those boxes, so keep the figure in view while you read it.
+
 ### The GPU in this laptop
 
-Zooming in on the discrete GPU:
+Zooming in on the discrete GPU — the same boxes the figure draws, with this
+laptop's numbers in them:
 
 ```text
 GPU
 │
-├── VRAM  10.7 GB
+├── VRAM  10.7 GB                     <- "HBM / GDDR Memory (GPU Global Memory)"
 │
-└── 36 × Compute Unit
+└── 36 × Compute Unit                 <- "SM 0 ... SM M-1", so M = 36
        │
-       ├── 2 × SIMD
-       │     ├── 32 ALU lanes
-       │     ├── register file
-       │     └── scheduler
+       ├── 2 × SIMD                   <- "Execution Units (ALU Lanes)"
+       │     ├── 32 ALU lanes         <- "Lane 0 ... Lane 31", one warp wide
+       │     ├── register file        <- "Register File (per SM)"
+       │     └── scheduler            <- "Warp Scheduler (Instruction Issue)"
        │
-       ├── L1
-       └── shared memory / LDS
+       ├── L1                         ┐  "L1 Cache / Shared Memory (per SM)"
+       └── shared memory / LDS        ┘  -- one box in the figure, two jobs
 ```
 
-The important question is not yet what every box is called.
-
-It is:
-
-> **Why does the GPU need all of these boxes?**
-
-The answer emerges as we follow one piece of work down to the hardware. For now
-we need just enough vocabulary to describe execution — the cache hierarchy can
-wait for [Lecture 8](Lecture8.md).
-
-| Term | What it is | Why it exists |
-| ---- | ---------- | ------------- |
-| **ALU lane** | one arithmetic unit — multiply, add, fused multiply-add | the thing we are trying to never leave idle |
-| **SIMD** | a group of lanes executing the same instruction together | one instruction fetch amortized over many lanes |
-| **Compute Unit** (NVIDIA: **SM**) | the repeating execution block: lanes, registers, scheduler, cache, shared memory | the unit a block is scheduled onto |
-| **Register file** | fast per-thread storage holding the live state of resident threads | unusually large, so many threads can stay resident at once |
-| **Shared memory** (AMD: **LDS**) | small explicitly-managed scratchpad shared by a block | lets threads in a block cooperate without going to DRAM |
-| **VRAM** | the GPU's own DRAM | high bandwidth, but still hundreds of cycles away |
-
-Most literature uses NVIDIA's vocabulary; `rocminfo` reports AMD's. This module uses **warp**, **SM**, and **shared memory** for the general programming model, and points out AMD terminology where it matters. The full correspondence is in [Appendix A](#appendix-a-nvidia-and-amd-terminology).
-
-### Read your own GPU
+None of those numbers are invented. Every one of them comes out of a vendor
+tool:
 
 ```shell
 rocminfo                 # AMD
@@ -581,6 +591,41 @@ LDS (shared memory):      64 KB
 Cacheline Size:           128 B
 VRAM:                     10.7 GB
 ```
+
+Now read that dump and the figure side by side. Almost every line is a box, and
+almost every box is a line:
+
+| Box in the figure | What it is | This laptop's value |
+| ----------------- | ---------- | ------------------- |
+| **Lane 0 … Lane 31**, inside *Execution Units* | one **ALU lane**: an arithmetic unit doing multiply, add, fused multiply-add — the thing we are trying to never leave idle | `Wavefront Size: 32`, so 32 lanes step together, exactly as drawn |
+| **Execution Units (ALU Lanes) SIMD** | a group of lanes executing the same instruction together, so one instruction fetch is amortized over all of them | `SIMDs per CU: 2` — the figure draws one per SM, this card has two |
+| **SM 0 … SM M-1** (AMD: **Compute Unit**) | the repeating execution block — lanes, registers, scheduler, cache, shared memory. The unit a block is scheduled onto | `Compute Unit: 36`, so M = 36 |
+| **Warps (multiple per SM)** | the work sitting resident on the SM, for the scheduler to choose between | `Max Waves Per CU: 32` — the figure draws 4 to stay legible; the real ceiling is 32 |
+| **Warp Scheduler (Instruction Issue)** | picks a ready warp each cycle and issues one instruction for it — this is where latency hiding physically happens | no line in the dump; we measure its effect two sections below |
+| **Register File (per SM)** | fast per-thread storage holding the live state of every resident thread; unusually large, so many threads can stay resident at once | not reported by `rocminfo` either — occupancy is what exposes its size |
+| **L1 Cache / Shared Memory (per SM)** (AMD: **LDS**) | one box, two jobs: an automatic cache, plus a small explicitly-managed scratchpad that lets threads in a block cooperate without going to DRAM | `L1: 16 KB` and `LDS: 64 KB` |
+| **Load/Store Units** | the path from the lanes to memory; it moves whole cache lines, never single floats | `Cacheline Size: 128 B` |
+| **L2 Cache (GPU-wide)** | the last stop shared by every SM | `L2: 3 MB` |
+| **HBM / GDDR Memory** | the GPU's own DRAM — high bandwidth, but still hundreds of cycles away | `VRAM: 10.7 GB` |
+| *no box* | RDNA puts a large Infinity Cache between L2 and VRAM. Most GPUs have no equivalent, so the figure has none — but it is why some measurements later in this module bend where you would not expect | `L3: 96 MB` |
+
+One line resists the exercise entirely. `Workgroup Max Size: 1024` constrains the
+*programming model* — the largest block you are allowed to launch — rather than
+any piece of silicon, so no box can hold it.
+
+The important question is not yet what every box is called.
+
+It is:
+
+> **Why does the GPU need all of these boxes?**
+
+The answer emerges as we follow one piece of work down to the hardware. For now
+we need just enough vocabulary to describe execution — the cache hierarchy can
+wait for [Lecture 8](Lecture8.md).
+
+Most literature uses NVIDIA's vocabulary; `rocminfo` reports AMD's. This module uses **warp**, **SM**, and **shared memory** for the general programming model, and points out AMD terminology where it matters. The full correspondence is in [Appendix A](#appendix-a-nvidia-and-amd-terminology).
+
+### Read your own GPU
 
 Those tools are vendor-specific. PyTorch will tell you the same things on any of
 them, which is what the cells below use:
