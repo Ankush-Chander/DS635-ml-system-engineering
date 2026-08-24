@@ -15,7 +15,7 @@
 # read rather than run must use ```shell or ```console -- jupytext turns ```bash
 # and ```sh into code cells, which would then execute as Python.
 
-NB_LECTURES := docs/lectures/Lecture7
+NB_LECTURES := docs/lectures/Lecture7a docs/lectures/Lecture7b docs/lectures/Lecture7c
 
 PY        := .venv/bin/python
 JUPYTEXT  := .venv/bin/jupytext

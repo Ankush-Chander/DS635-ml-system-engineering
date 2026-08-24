@@ -16,12 +16,16 @@ nav:
       - 2:Hardware Accelerators: 'lectures/Lecture2.md'
       - 3_4:Memory Hierarchy & Roofline: 'lectures/Lecture3_4.md'
       - 5_6:GPU job submission: 'lectures/Lecture5_6.md'
-      # The Markdown page is what the site publishes -- mkdocs-jupyter does not
-      # run admonitions, relative image paths or internal .md links through
-      # mkdocs, so a notebook page would lose all three. `make notebooks`
-      # generates lectures/Lecture7.ipynb from this same file as the runnable
-      # companion students open in Colab; it is excluded from the build below.
-      - 7:Matmul to Silicon — Execution & Latency Hiding: 'lectures/Lecture7.md'
+      # The Markdown pages are what the site publishes -- mkdocs-jupyter does
+      # not run admonitions, relative image paths or internal .md links through
+      # mkdocs, so notebook pages would lose all three. `make notebooks`
+      # generates lectures/Lecture7{a,b,c}.ipynb from these same files as the
+      # runnable companions students open in Colab; they are excluded from the
+      # build below.
+      - 7:Matmul to Silicon — Overview: 'lectures/Lecture7.md'
+      - 7a:From Python to a Kernel Launch: 'lectures/Lecture7a.md'
+      - 7b:The Throughput Machine: 'lectures/Lecture7b.md'
+      - 7c:SIMT, Tiles & Occupancy: 'lectures/Lecture7c.md'
       # - 8:Inside the GPU — Memory & the Roofline: 'lectures/Lecture8.md'
       # - 4:Tensor Cores & Precision: 'lectures/Lecture4.md'
       # - 1:Requirements Discovery: 'lectures/Lecture1.md'
