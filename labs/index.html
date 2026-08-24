@@ -693,6 +693,62 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Lab2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:The Concurrency Budget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Lab2_concurrency_budget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2 — The concurrency budget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -768,6 +824,7 @@
 <h1 id="labs">Labs</h1>
 <p>Labs are where the course's claims get tested against hardware you control. Each one pairs with a lecture: the lecture derives a mechanism, the lab measures its consequences.</p>
 <p>Every lab runs on <strong>Google Colab</strong> (free GPU) or <strong>your own machine</strong>. Nothing requires lab hardware, and nothing requires a particular vendor: <strong>NVIDIA (CUDA)</strong>, <strong>AMD (ROCm)</strong> and <strong>Apple silicon (MPS)</strong> are all supported. Where a backend genuinely cannot run an experiment, it is skipped and recorded rather than failed, and you are marked on explaining why it does not apply.</p>
+<p>The one exception is <strong>Lab 2</strong>, whose experiments are all Triton kernels: Triton has no Metal backend, so that lab needs CUDA or ROCm — a free Colab T4 is enough.</p>
 <table>
 <thead>
 <tr>
@@ -782,6 +839,12 @@
 <td><a href="Lab5_6/">Lab &#8538; — GPU Job Submission</a></td>
 <td><a href="../lectures/Lecture5_6/">Lecture &#8538;</a></td>
 <td>Establishing theoretical peak · submission vs execution · launch cost · fences · pinned memory · stream overlap · CUDA Graphs</td>
+<td style="text-align: right;">100</td>
+</tr>
+<tr>
+<td><a href="Lab2/">Lab 2 — The Concurrency Budget</a></td>
+<td><a href="../lectures/Lecture7/">Lecture 7</a></td>
+<td>Memory latency by pointer chase · achieved bandwidth · Little's Law · wave quantisation · the tail effect</td>
 <td style="text-align: right;">100</td>
 </tr>
 </tbody>

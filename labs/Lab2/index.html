@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://DS635.ankushchander.com/labs/Lab5_6/">
+        <link rel="canonical" href="https://DS635.ankushchander.com/labs/Lab2/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../Lab5_6_gpu_job_submission/">
       
       
-        <link rel="next" href="../Lab5_6_gpu_job_submission/">
+        <link rel="next" href="../Lab2_concurrency_budget/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>5_6:GPU Job Submission - DS635 - Machine Learning System Engineering | DAU</title>
+        <title>2:The Concurrency Budget - DS635 - Machine Learning System Engineering | DAU</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#lab-56-gpu-job-submission" class="md-skip">
+        <a href="#lab-2-the-concurrency-budget" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              5_6:GPU Job Submission
+              2:The Concurrency Budget
             
           </span>
         </div>
@@ -572,6 +572,62 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lab5_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU Job Submission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lab5_6_gpu_job_submission/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5/6 — The GPU submission protocol, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -591,7 +647,7 @@
   <span class="md-ellipsis">
     
   
-    5_6:GPU Job Submission
+    2:The Concurrency Budget
   
 
     
@@ -609,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    5_6:GPU Job Submission
+    2:The Concurrency Budget
   
 
     
@@ -635,6 +691,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#what-this-is-not" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What this is not
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-you-need" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -653,6 +720,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="What you do">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#measuring-latency-is-the-hard-part" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Measuring latency is the hard part
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -704,62 +788,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Lab5_6_gpu_job_submission/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Lab 5/6 — The GPU submission protocol, measured
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Lab2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2:The Concurrency Budget
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -827,6 +855,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#what-this-is-not" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What this is not
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-you-need" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -845,6 +884,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="What you do">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#measuring-latency-is-the-hard-part" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Measuring latency is the hard part
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -909,24 +965,55 @@
 
 
 
-<h1 id="lab-56-gpu-job-submission">Lab &#8538; — GPU Job Submission</h1>
+<h1 id="lab-2-the-concurrency-budget">Lab 2 — The concurrency budget</h1>
 <blockquote>
-<p><strong>Lab thesis:</strong> there is no <em>call the GPU</em> instruction. Every kernel launch is a command appended to a queue, one doorbell write, and a fence that comes back later. You will measure that protocol from the outside — and watch it manufacture a throughput number that beats the hardware.</p>
+<p><strong>Lab thesis:</strong> a GPU is not fast because its threads are fast. It is fast because thousands of them are in flight at once. This lab makes you <em>derive</em> how much work your GPU must have in flight to run at full speed — from two numbers you measure yourself — and then find the exact grid size at which it stops being able to.</p>
 </blockquote>
-<p>This is the experimental half of <a href="../../lectures/Lecture5_6/">Lecture &#8538; — GPU Job Submission</a>. The lecture derived the mechanism from a movie file and an <code>lspci</code> listing. Here you observe its consequences on a real device.</p>
-<p><a href="https://colab.research.google.com/github/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab5_6_gpu_job_submission.ipynb"><strong>Open the notebook in Colab</strong></a> · <a href="../Lab5_6_gpu_job_submission/">read it on this site</a> · <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab5_6_gpu_job_submission.ipynb">download from GitHub</a></p>
+<p>This is the experimental half of <a href="../../lectures/Lecture7/">Lecture 7 — Matmul to silicon</a>. The lecture argued latency hiding qualitatively: over-subscribe the machine and memory latency disappears behind other warps' arithmetic. It never put a number on <em>how much</em> over-subscription is enough. Here you produce that number, and then test it.</p>
+<p><a href="https://colab.research.google.com/github/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab2_concurrency_budget.ipynb"><strong>Open the notebook in Colab</strong></a> · <a href="../Lab2_concurrency_budget/">read it on this site</a> · <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab2_concurrency_budget.ipynb">download from GitHub</a></p>
 <hr />
+<h2 id="what-this-is-not">What this is not</h2>
+<p>It is not the lecture notebook with the answers removed. Nothing you run here appears in <a href="../../lectures/Lecture7/">Lecture 7</a>:</p>
+<table>
+<thead>
+<tr>
+<th>The lecture showed you</th>
+<th>This lab makes you produce</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>that a copy kernel speeds up as you add blocks</td>
+<td><em>why it stops speeding up exactly where it does</em> — predicted before you look</td>
+</tr>
+<tr>
+<td>that the GPU holds ~16× more threads than it can execute</td>
+<td>your GPU's own concurrency requirement, in bytes, derived from latency × bandwidth</td>
+</tr>
+<tr>
+<td>that <code>multi_processor_count</code> is ambiguous on RDNA</td>
+<td>that same count <strong>measured from outside</strong>, with no driver query, from where a staircase steps</td>
+</tr>
+<tr>
+<td>a warp-width sweep and a divergence cost</td>
+<td>neither — Part 4 is about the <em>block</em> scheduler, not the warp scheduler</td>
+</tr>
+</tbody>
+</table>
+<p>Three of the four kernels here — a pointer chase, a fixed-work grid sweep, a bandwidth ramp — do not exist anywhere in the course material. You write them.</p>
 <h2 id="what-you-need">What you need</h2>
-<p><strong>Google Colab</strong> — open the notebook, then <code>Runtime &gt; Change runtime type &gt; T4 GPU</code>. Everything runs unchanged; no installs.</p>
-<p><strong>Your own machine</strong> — <strong>NVIDIA (CUDA)</strong>, <strong>AMD (ROCm)</strong> or <strong>Apple silicon (MPS)</strong>. <code>torch.cuda</code> is the correct namespace on ROCm too.</p>
-<p>Apple's Metal backend exposes no command streams, no graph capture and no pinned host memory, so three measurements are skipped there automatically. The export records what was skipped and <strong>you are not penalised</strong> — but you are still asked to explain <em>why</em> each one does not apply to a unified-memory machine, and those explanations carry the marks.</p>
+<p><strong>Google Colab</strong> — open the notebook, then <code>Runtime &gt; Change runtime type &gt; T4 GPU</code>. The first cell installs Triton if the runtime does not have it.</p>
+<p><strong>Your own machine</strong> — <strong>NVIDIA (CUDA)</strong> or <strong>AMD (ROCm)</strong>. <code>torch.cuda</code> is the correct namespace on ROCm.</p>
+<div class="admonition warning">
+<p class="admonition-title">Apple silicon cannot run this lab</p>
+<p>Every experiment is a Triton kernel, and Triton has no Metal backend. Unlike Lab &#8538;, there is no degraded path: MPS is not a supported target here. Use Colab.</p>
+</div>
 <div class="admonition warning">
 <p class="admonition-title">If you are on a laptop, plug in the charger</p>
-<p>This lab deliberately drives the GPU to sustained peak power. On battery, a discrete mobile GPU can draw more than the battery and voltage regulators can supply, and the machine <strong>hard-resets with nothing written to the logs</strong> — no error, no traceback, just an instant reboot. It is not a bug you can debug from Python.</p>
-<p>The notebook's preflight cell checks your power source and scales the workload down automatically if you are not on mains. Leave <code>SAFE_MODE</code> alone unless you are plugged in. This is a real failure that happened while the lab was being written, not a hypothetical.</p>
+<p>Part 4 holds the GPU at sustained peak arithmetic for seconds at a time. On battery, a discrete mobile GPU can draw more than the battery and its regulators can supply, and the machine <strong>hard-resets with nothing in the logs</strong>. The notebook's preflight cell detects your power source and scales every sweep down automatically if you are not on mains. Leave <code>SAFE_MODE</code> alone unless you are plugged in.</p>
 </div>
 <h2 id="what-you-do">What you do</h2>
-<p>Five parts, each following the same three steps — and the order matters:</p>
+<p>Five parts. Each follows the same three steps, and the order matters:</p>
 <ol>
 <li><strong>Predict</strong> — write your prediction in the cell provided <em>before</em> running anything.</li>
 <li><strong>Measure</strong> — run the cell.</li>
@@ -943,52 +1030,53 @@
 <tbody>
 <tr>
 <td>0</td>
-<td>What am I measuring on?</td>
+<td>What does my GPU claim to be?</td>
 <td style="text-align: right;">5</td>
 </tr>
 <tr>
 <td>1</td>
-<td><strong>What is my GPU's peak, and why is that hard to answer?</strong></td>
+<td><strong>How long is one memory access?</strong> <em>(pointer chase)</em></td>
 <td style="text-align: right;">20</td>
 </tr>
 <tr>
 <td>2</td>
-<td>Is submission the same as execution?</td>
-<td style="text-align: right;">20</td>
+<td>How many bytes per second can I actually move?</td>
+<td style="text-align: right;">15</td>
 </tr>
 <tr>
 <td>3</td>
-<td>What does one submission cost, and what does a fence cost?</td>
-<td style="text-align: right;">20</td>
+<td><strong>Little's Law — how much must be in flight?</strong></td>
+<td style="text-align: right;">25</td>
 </tr>
 <tr>
 <td>4</td>
-<td>Why do <code>pin_memory</code> and <code>non_blocking</code> exist, and do streams really overlap?</td>
-<td style="text-align: right;">20</td>
+<td><strong>The staircase — what is my scheduling quantum?</strong></td>
+<td style="text-align: right;">25</td>
 </tr>
 <tr>
 <td>5</td>
-<td>Can submission be amortised away? <em>(CUDA Graphs)</em></td>
-<td style="text-align: right;">5</td>
-</tr>
-<tr>
-<td>6</td>
-<td>Place every term on the control-plane / data-plane board</td>
+<td>Spend the budget: the tail effect, and a design rule</td>
 <td style="text-align: right;">10</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Part 1 comes first for a reason.</strong> Everything afterwards is compared against one number — Part 2 hinges on producing a measurement that <em>exceeds</em> your GPU's peak — so that number has to mean something before it can be beaten. Establishing it is genuinely awkward: you derive it from what the hardware reports, look up what the vendor advertises, and measure what you can actually reach, and the three disagree.</p>
-<p>Each term in <code>units × lanes × 2 × clock</code> is a trap. On the course's own RX 6700M, PyTorch reports <code>multi_processor_count = 18</code> for a 36-CU card — RDNA counts work-group processors, not compute units, so the naive derivation lands at exactly half. <code>get_device_capability()</code> returns <code>(10, 3)</code> there too, meaning <em>gfx1030</em>, not compute capability 10.3. Vendors quote tensor-core, sparsity and lower-precision numbers in the same breath as the FP32 figure you actually want.</p>
+<p><strong>Parts 1 and 2 exist to feed Part 3.</strong> Latency and bandwidth are the two terms of a queueing identity that has nothing to do with GPUs — Little's Law, which is equally true of supermarket checkouts:</p>
+<div class="highlight"><pre><span></span><code>bytes in flight  =  bandwidth  x  latency
+</code></pre></div>
+<p>Multiply your own two measurements and you get the amount of data your GPU must have <em>requested but not yet received</em>, at every instant, to run at full speed. Divide by the bytes one block has outstanding and you have predicted the knee of your Part 2 curve — before looking at it. On the course's RX 6700M the prediction was 67.7 KB and the measurement 72.0 KB.</p>
+<p><strong>Part 4 is the sharpest result in the lab, and the one that settles an argument from Part 0.</strong> Give every block identical work and no memory traffic, then sweep the block count one at a time. Runtime cannot depend on how much data there is, so it can depend only on how many <em>rounds</em> of blocks the scheduler needs — and the plot comes out as a staircase with perfectly flat treads. The width of a tread is a hardware property the vendor does not print on the box, and you get it without asking the driver anything. On the course laptop the steps land at 37, 55, 73, 91, 109 blocks: a period of exactly 18, from a card whose <code>multi_processor_count</code> is 18 and whose CU count is 36. Part 4 asks you to decide which of those two numbers you would size a grid with, and defend it.</p>
+<h3 id="measuring-latency-is-the-hard-part">Measuring latency is the hard part</h3>
+<p>The GPU is built specifically to stop you seeing latency. Issue a hundred independent loads and the memory system overlaps them, and you measure throughput instead. So Part 1 makes you build a load the machine <em>cannot</em> overlap: a buffer holding one permutation cycle, where each access's <strong>address</strong> is the previous access's <strong>value</strong>. One thread, one block, the rest of the GPU idle — which is the point. You are measuring the unhidden cost of one access, the exact quantity that latency hiding exists to conceal.</p>
+<p>Two traps are marked in the notebook and both have bitten this course's own code: a stride of 1 measures the cache line rather than the memory, and an arithmetic chain without a clamp gets closed-formed away by the compiler, leaving you timing an empty loop.</p>
 <h2 id="what-you-submit">What you submit</h2>
 <p><strong>Two files.</strong> The JSON carries your measurements; the notebook carries your reasoning. A JSON without its notebook cannot be marked.</p>
 <ol>
-<li><strong><code>submission_&lt;roll&gt;.json</code></strong> — written by the notebook's final cell. Set <code>ROLL_NUMBER</code> and <code>NAME</code> in the Part 0 setup cell first, or the export will refuse to run.</li>
-<li><strong>The executed notebook</strong> — <code>File &gt; Download &gt; .ipynb</code>, with outputs intact and every 📝 cell filled in.</li>
+<li><strong><code>submission_lab2_&lt;roll&gt;.json</code></strong> — written by the notebook's final cell. Set <code>ROLL_NUMBER</code> and <code>NAME</code> in the setup cell first, or the export refuses to run.</li>
+<li><strong>The executed notebook</strong> — <code>File &gt; Download &gt; .ipynb</code>, outputs intact, every 📝 cell filled in.</li>
 </ol>
-<p>Run every cell top to bottom before exporting. The export cell reports how many experiments it recorded and warns you if any are missing.</p>
+<p>Run every cell top to bottom before exporting. The export cell reports how many measurements it recorded and names any that are missing.</p>
 <h2 id="how-it-is-marked">How it is marked</h2>
-<p><strong>40 marks are automatic</strong>, checked from your JSON. Every check tests a <em>relationship between your own numbers</em>, because there is no answer key — your hardware is yours:</p>
+<p><strong>35 marks are automatic</strong>, checked from your JSON. Every check tests a <em>relationship between your own numbers</em>, because there is no answer key — your hardware is yours:</p>
 <table>
 <thead>
 <tr>
@@ -998,53 +1086,55 @@
 </thead>
 <tbody>
 <tr>
-<td>Unsynchronised timer ≥10× faster than synchronised</td>
-<td>submission is not execution</td>
+<td>Latency rises with footprint and never falls</td>
+<td>you cannot get faster by using more memory</td>
 </tr>
 <tr>
-<td>Implied no-sync throughput exceeds your GPU's peak</td>
-<td>that is the whole point of Part 1</td>
+<td>Slowest latency ≥ 2× the fastest</td>
+<td>there is a memory hierarchy, and you found it</td>
 </tr>
 <tr>
-<td><code>synchronize()</code> and CUDA events agree within 15%</td>
-<td>two independent mechanisms must agree</td>
+<td>Memory latency lands in 100–2000 ns</td>
+<td>sanity band; outside it, the chase was broken</td>
 </tr>
 <tr>
-<td>Launch-bound signature present in the size sweep</td>
-<td>per-launch cost is roughly constant</td>
+<td>Peak bandwidth ≥ 3× the one-block bandwidth</td>
+<td>one block cannot saturate a GPU</td>
 </tr>
 <tr>
-<td>Syncing every op costs ≥1.5× syncing once</td>
-<td>draining the pipeline is not free</td>
+<td>Little's Law ratio within 8× either way</td>
+<td>the identity holds; the residue is what Task 3.2 explains</td>
 </tr>
 <tr>
-<td>Two streams beat one stream</td>
-<td>copy engines are separate queues</td>
+<td>A staircase exists — at least one step ≥ 10%</td>
+<td>block scheduling is quantised</td>
 </tr>
 <tr>
-<td>Per-launch cost lands in 1–20 µs</td>
-<td>sanity band on the protocol</td>
+<td>Treads are flat: spread within a tread &lt; 10%</td>
+<td>that is what "quantised" means</td>
+</tr>
+<tr>
+<td>Step period is within a factor of 2 of the reported unit count</td>
+<td>period 18 or 36 both pass; 5 does not</td>
 </tr>
 <tr>
 <td>Your short answers match your own recorded numbers</td>
 <td>you read your own data</td>
 </tr>
-<tr>
-<td>Peak established on every route your hardware allows, measured ≤ vendor</td>
-<td>Part 1 was done honestly</td>
-</tr>
 </tbody>
 </table>
-<p>Plus provenance (device, backend, declared peak, roll number) and completeness (all eight experiments recorded — anything skipped by your backend still counts as recorded).</p>
-<p><strong>Four things are deliberately not auto-checked</strong>, because the honest answer varies by machine: whether pinning helps at large sizes, whether CUDA Graphs improve GPU-side time, whether overlap is observable when your GPU's copy and compute times are very unbalanced, and anything your backend cannot do at all. Reporting "no benefit" or "unavailable" costs you nothing — a validated Apple-silicon submission with three skipped experiments scores full automatic marks.</p>
-<p><strong>60 marks are rubric-marked</strong> from your written cells. Predictions are marked for being <em>made</em>, not for being right. Explanations are marked on whether they name the mechanism — ring, doorbell, fence, DMA, pinning, stream. A number with no mechanism scores about half. A mechanism that contradicts your own data scores less than an honest <em>"I measured X, I expected Y, here is my best explanation for the gap."</em></p>
+<p>Plus provenance (device, backend, Triton version, roll number) and completeness.</p>
+<p><strong>Three things are deliberately not auto-checked</strong>, because the honest answer varies by machine: how many plateaus your latency staircase has (some GPUs show two, some four, and two levels can share a latency), whether your step period equals <code>multi_processor_count</code> or twice it, and how close your Little's Law ratio lands. Reporting "I expected an L2 step and there isn't one" costs you nothing.</p>
+<p><strong>65 marks are rubric-marked</strong> from your written cells. Predictions are marked for being <em>made</em>, not for being right. Explanations are marked on whether they name the mechanism — dependent load, prefetch, residency, occupancy, wave, tail. A number with no mechanism scores about half. A mechanism that contradicts your own data scores less than an honest <em>"I measured X, I expected Y, here is my best explanation for the gap."</em></p>
+<p>The heaviest single task is <strong>3.2</strong>, which asks you to explain why your predicted and measured bytes-in-flight disagree. It is worth 19 marks on its own, and a ratio of 1.0 does not earn them — the explanation does.</p>
 <h2 id="academic-integrity">Academic integrity</h2>
 <p>Timing measurements carry several digits of run-to-run noise, so two independent runs never produce identical values. Submissions sharing a measurement vector are treated as copied outputs, and the environment fingerprint and run timestamps in each JSON are checked alongside.</p>
 <p>Discussing mechanisms with classmates is encouraged. Sharing measurement files is not — and the numbers are the one thing you cannot borrow, because they describe <em>your</em> machine.</p>
 <h2 id="related">Related</h2>
 <ul>
-<li><a href="../../lectures/Lecture5_6/">Lecture &#8538; — GPU Job Submission</a> — the mechanism this lab measures</li>
-<li><a href="../../lectures/Lecture7/">Lecture 7 — Inside the GPU: execution and latency hiding</a> — what happens after the dispatch packet lands</li>
+<li><a href="../../lectures/Lecture7/">Lecture 7 — Matmul to silicon</a> — the execution model this lab puts numbers on</li>
+<li><a href="../Lab5_6/">Lab &#8538; — GPU Job Submission</a> — the submission protocol, one layer above</li>
+<li><code>code/gpu_internals/warp_costs.py</code> — divergence and coalescing microbenchmarks, deliberately <em>not</em> reused here</li>
 </ul>
 
 
@@ -1075,7 +1165,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview">
+          <a href="../Lab5_6_gpu_job_submission/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lab 5/6 — The GPU submission protocol, measured">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1085,20 +1175,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Overview
+                Lab 5/6 — The GPU submission protocol, measured
               </div>
             </div>
           </a>
         
         
           
-          <a href="../Lab5_6_gpu_job_submission/" class="md-footer__link md-footer__link--next" aria-label="Next: Lab 5/6 — The GPU submission protocol, measured">
+          <a href="../Lab2_concurrency_budget/" class="md-footer__link md-footer__link--next" aria-label="Next: Lab 2 — The concurrency budget">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Lab 5/6 — The GPU submission protocol, measured
+                Lab 2 — The concurrency budget
               </div>
             </div>
             <div class="md-footer__button md-icon">
