@@ -559,7 +559,91 @@
   <span class="md-ellipsis">
     
   
-    7:Matmul to Silicon — Execution & Latency Hiding
+    7:Matmul to Silicon — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="lectures/Lecture7a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7a:From Python to a Kernel Launch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="lectures/Lecture7b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7b:The Throughput Machine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="lectures/Lecture7c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7c:SIMT, Tiles & Occupancy
   
 
     
@@ -885,8 +969,8 @@
 <ul>
 <li><a href="lectures/Lecture2/">2: Why Accelerators Exist</a> — the CPU baseline, the memory wall, what the matmul workload demands, design the hardware yourself</li>
 <li><a href="lectures/Lecture3_4/">3_4: Memory Hierarchy &amp; Roofline</a> — the matmul ladder from naive Python to GPU, SIMD, tiling, threads, arithmetic intensity, the roofline model, two GPU timing traps</li>
-<li><a href="lectures/Lecture5_6/">5_6: GPU Job Submission</a> — PCIe, MMIO and BARs, DMA, ring/doorbell/fence, why an unsynchronized kernel launch measures nothing
-<a href="lectures/Lecture7/">7: Inside the GPU — Execution &amp; Latency Hiding</a> — SMs, warps and SIMT, a CUDA core is not a core, latency hiding by oversubscription, why the register file is bigger than L1, divergence and occupancy</li>
+<li><a href="lectures/Lecture5_6/">5_6: GPU Job Submission</a> — PCIe, MMIO and BARs, DMA, ring/doorbell/fence, why an unsynchronized kernel launch measures nothing<br />
+<a href="lectures/Lecture7/">7: Inside the GPU — Execution &amp; Latency Hiding</a> (in three parts: <a href="lectures/Lecture7a/">7a</a>, <a href="lectures/Lecture7b/">7b</a>, <a href="lectures/Lecture7c/">7c</a>) — SMs, warps and SIMT, a CUDA core is not a core, latency hiding by oversubscription, why the register file is bigger than L1, divergence and occupancy</li>
 </ul>
 <!--- - [8: Inside the GPU — Memory & the Roofline](lectures/Lecture8.md) — the memory hierarchy, shared memory is not a cache, coalescing and the working-set cliff, building both roofline axes from `rocminfo`, why LLM decode is memory-bound and training compute-bound-->
 

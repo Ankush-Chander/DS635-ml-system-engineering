@@ -1,0 +1,2164 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Home of DS635 - Machine Learning System Engineering, DAU">
+      
+      
+      
+        <link rel="canonical" href="https://DS635.ankushchander.com/lectures/Lecture7c/">
+      
+      
+        <link rel="prev" href="../Lecture7b/">
+      
+      
+        <link rel="next" href="../../labs/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>7c:SIMT, Tiles & Occupancy - DS635 - Machine Learning System Engineering | DAU</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#matmul-to-silicon-7c-simt-tiles-and-occupancy" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-header__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DS635 - Machine Learning System Engineering | DAU
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              7c:SIMT, Tiles & Occupancy
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Lecture0/" class="md-tabs__link">
+          
+  
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../labs/" class="md-tabs__link">
+          
+  
+  
+  Labs
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-nav__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DS635 - Machine Learning System Engineering | DAU
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lectures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lectures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0:Course Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1:Machine Learning Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:Hardware Accelerators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture3_4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3_4:Memory Hierarchy & Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture5_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU job submission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7:Matmul to Silicon — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7a:From Python to a Kernel Launch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7b:The Throughput Machine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7c:SIMT, Tiles & Occupancy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7c:SIMT, Tiles & Occupancy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#depth-4-simt-the-shape-of-the-thread-army" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Depth 4 — SIMT: the shape of the thread army
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Depth 4 — SIMT: the shape of the thread army">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#seeing-the-hierarchy-instead-of-believing-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Seeing the hierarchy instead of believing it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simt-simd-with-the-vector-hidden" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SIMT: SIMD with the vector hidden
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-cuda-core-is-not-a-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A CUDA core is not a core
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#measure-the-warp-width-instead-of-looking-it-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Measure the warp width instead of looking it up
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-price-of-simt-divergence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The price of SIMT: divergence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The price of SIMT: divergence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#divergence-is-per-warp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Divergence is per warp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#but-divergence-does-not-automatically-mean-slower" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        But divergence does not automatically mean slower
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#depth-5-one-block-one-tile-of-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Depth 5 — One block, one tile of C
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#occupancy-the-budget-on-residency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Occupancy: the budget on residency
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Occupancy: the budget on residency">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#is-low-occupancy-bad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is low occupancy bad?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-lies-below" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What lies below
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synthesis-the-whole-descent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synthesis: the whole descent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capstone-exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capstone exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-it-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run it yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-a-nvidia-and-amd-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix A — NVIDIA and AMD terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-b-this-laptops-gpus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix B — This laptop's GPUs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-and-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References and further reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Labs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Labs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab5_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU Job Submission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab5_6_gpu_job_submission/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5/6 — The GPU submission protocol, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:The Concurrency Budget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab2_concurrency_budget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2 — The concurrency budget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#depth-4-simt-the-shape-of-the-thread-army" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Depth 4 — SIMT: the shape of the thread army
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Depth 4 — SIMT: the shape of the thread army">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#seeing-the-hierarchy-instead-of-believing-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Seeing the hierarchy instead of believing it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simt-simd-with-the-vector-hidden" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SIMT: SIMD with the vector hidden
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-cuda-core-is-not-a-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A CUDA core is not a core
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#measure-the-warp-width-instead-of-looking-it-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Measure the warp width instead of looking it up
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-price-of-simt-divergence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The price of SIMT: divergence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The price of SIMT: divergence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#divergence-is-per-warp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Divergence is per warp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#but-divergence-does-not-automatically-mean-slower" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        But divergence does not automatically mean slower
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#depth-5-one-block-one-tile-of-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Depth 5 — One block, one tile of C
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#occupancy-the-budget-on-residency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Occupancy: the budget on residency
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Occupancy: the budget on residency">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#is-low-occupancy-bad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is low occupancy bad?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-lies-below" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What lies below
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synthesis-the-whole-descent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synthesis: the whole descent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capstone-exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capstone exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-it-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run it yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-a-nvidia-and-amd-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix A — NVIDIA and AMD terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-b-this-laptops-gpus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix B — This laptop's GPUs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-and-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References and further reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="matmul-to-silicon-7c-simt-tiles-and-occupancy">Matmul to silicon 7c: SIMT, tiles, and occupancy</h1>
+<blockquote>
+<p><strong>Module thesis:</strong> a GPU is not built to make one thread fast — it is built to
+never have an idle ALU. This part is where the descent reaches the warp itself.</p>
+</blockquote>
+<p>In <a href="../Lecture7a/">7a</a> one line of PyTorch became a kernel launch; in
+<a href="../Lecture7b/">7b</a> we met the throughput machine that runs it — thousands of
+resident threads, and a scheduler that runs somebody else whenever one warp
+stalls. This part looks at the shape of that thread army: the warp and the price
+of lockstep <em>(Depth 4)</em>, the tile of <code>C</code> each block owns — which finally decodes
+the kernel name from 7a <em>(Depth 5)</em> — and occupancy, the budget residency lives
+on. It closes with the synthesis, the capstone, and the appendices and
+references for all of Lecture 7.</p>
+<p>Every measurement on this page was produced by a cell you can re-run on your own
+GPU. If you do not have one, open the same page as a notebook on a free Colab T4:</p>
+<p><a href="https://colab.research.google.com/github/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/lectures/Lecture7c.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p>On Colab, pick <strong>Runtime → Change runtime type → T4 GPU</strong> first, then run the
+cell below once. It installs only what is missing, so it is a no-op on a machine
+that already has everything.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Setup. Safe to re-run: nothing is installed if it is already importable.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ensure</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">spec</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Install `spec` only if `module` cannot already be imported.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="n">module</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="p">([</span><span class="n">spec</span><span class="p">,</span> <span class="n">module</span><span class="p">]</span> <span class="k">if</span> <span class="n">spec</span> <span class="ow">and</span> <span class="n">spec</span> <span class="o">!=</span> <span class="n">module</span> <span class="k">else</span> <span class="p">[</span><span class="n">module</span><span class="p">]):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;installing </span><span class="si">{</span><span class="n">candidate</span><span class="si">}</span><span class="s2"> ...&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="s2">&quot;pip&quot;</span><span class="p">,</span> <span class="s2">&quot;install&quot;</span><span class="p">,</span> <span class="s2">&quot;-q&quot;</span><span class="p">,</span> <span class="n">candidate</span><span class="p">])</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;could not install </span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">triton_spec</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The exact Triton this torch build was compiled against.</span>
+
+<span class="sd">    Torch declares Triton as a dependency, so we can read the pin instead of</span>
+<span class="sd">    guessing. A mismatched Triton imports fine and then fails at the first</span>
+<span class="sd">    `@triton.jit` -- much harder to diagnose than a missing package.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="w"> </span><span class="kn">import</span> <span class="n">requires</span>
+        <span class="k">for</span> <span class="n">req</span> <span class="ow">in</span> <span class="n">requires</span><span class="p">(</span><span class="s2">&quot;torch&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[]:</span>
+            <span class="n">dep</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>     <span class="c1"># drop the environment marker</span>
+            <span class="k">if</span> <span class="s2">&quot;triton&quot;</span> <span class="ow">in</span> <span class="n">dep</span><span class="p">:</span>                 <span class="c1"># `triton` on CUDA, `triton-rocm` on ROCm</span>
+                <span class="k">return</span> <span class="n">dep</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="s2">&quot;triton&quot;</span>
+
+<span class="n">ensure</span><span class="p">(</span><span class="s2">&quot;torch&quot;</span><span class="p">)</span>                  <span class="c1"># preinstalled on Colab; listed so the set is complete</span>
+<span class="n">ensure</span><span class="p">(</span><span class="s2">&quot;matplotlib&quot;</span><span class="p">)</span>
+<span class="n">ensure</span><span class="p">(</span><span class="s2">&quot;triton&quot;</span><span class="p">,</span> <span class="n">triton_spec</span><span class="p">())</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span><span class="o">,</span><span class="w"> </span><span class="nn">triton</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;torch </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2"> | triton </span><span class="si">{</span><span class="n">triton</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2"> | cuda </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Re-establish the handles every cell below uses. Lecture 7a builds these up</span>
+<span class="c1"># step by step; here they are just plumbing.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span><span class="o">,</span><span class="w"> </span><span class="nn">triton</span><span class="o">,</span><span class="w"> </span><span class="nn">triton.language</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tl</span>
+
+<span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">(),</span> <span class="s2">&quot;these cells need an NVIDIA or AMD GPU (or a free Colab T4)&quot;</span>
+<span class="n">dev</span>  <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">get_device_properties</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">WARP</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span> <span class="s2">&quot;warp_size&quot;</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dev</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">dev</span><span class="o">.</span><span class="n">multi_processor_count</span><span class="si">}</span><span class="s2"> units | warp </span><span class="si">{</span><span class="n">WARP</span><span class="si">}</span><span class="s2"> | torch </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="depth-4-simt-the-shape-of-the-thread-army">Depth 4 — SIMT: the shape of the thread army</h2>
+<p>We have been saying "warp" for a while. Now we look at it directly, because it is
+the level where the programming model and the hardware finally disagree.</p>
+<p>The launch hierarchy maps onto physical hardware like this:</p>
+<div class="highlight"><pre><span></span><code>SOFTWARE                         HARDWARE
+grid   (all the threads)   ←→    the whole GPU (a work distributor hands out blocks)
+block  (e.g. 128 threads)  ←→    ONE compute unit — never split, lives and dies there
+warp   (32 threads)        ←→    one scheduler slot on that compute unit
+thread                     ←→    one ALU lane
+</code></pre></div>
+<p>The block→CU pinning is what makes a block meaningful: threads in a block can
+cooperate through shared memory and barriers precisely <em>because</em> they are
+guaranteed to share one physical unit. Blocks cannot talk to each other — and that
+independence is why the same code scales unchanged from an 18-unit laptop chip to
+a 132-SM datacentre part.</p>
+<blockquote>
+<p><strong>The warp bargain.</strong> The 32 threads of a warp share <strong>one instruction
+fetch/decode unit</strong>. Every cycle, all 32 lanes execute the same instruction on
+different data, in lockstep. Fetch and decode circuitry is expensive; paying for
+it once per 32 lanes is how the GPU affords thousands of ALUs. It is
+throughput-over-latency applied to the floor plan.</p>
+</blockquote>
+<h3 id="seeing-the-hierarchy-instead-of-believing-it">Seeing the hierarchy instead of believing it</h3>
+<p>The table above is a claim. Make the GPU draw it for you.</p>
+<p>The kernel below computes nothing useful. Every position simply writes down <em>who it
+was</em> — which program owned it, which warp inside that program, which lane inside
+that warp. Reshape the output into a rectangle and the execution hierarchy becomes
+a picture.</p>
+<p>One deliberate choice makes the picture honest. We saw that Triton normally picks
+<code>num_warps</code> for you, and for <code>BLOCK = 64</code> it picks 4 — 128 hardware lanes for 64
+elements. Under that mapping "which warp am I" would be a label we invented, not
+something real. So we <strong>pin</strong> <code>num_warps = BLOCK // 32</code>, giving exactly one element
+per hardware lane. Only then does <code>lane // 32</code> genuinely name the warp a value
+lives in.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@triton</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">who_am_i</span><span class="p">(</span><span class="n">out_ptr</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">WHAT</span><span class="p">:</span> <span class="n">tl</span><span class="o">.</span><span class="n">constexpr</span><span class="p">,</span> <span class="n">BLOCK</span><span class="p">:</span> <span class="n">tl</span><span class="o">.</span><span class="n">constexpr</span><span class="p">):</span>
+    <span class="c1"># WHAT is tl.constexpr, so it is known at COMPILE time. Triton compiles a</span>
+    <span class="c1"># separate kernel per value and the `if` below disappears entirely -- it is not</span>
+    <span class="c1"># a branch the GPU evaluates, and it costs nothing at runtime. (Contrast this</span>
+    <span class="c1"># with a branch on data, which is this section&#39;s closing subject.)</span>
+    <span class="n">pid</span>  <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">program_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>          <span class="c1"># which program instance am I?</span>
+    <span class="n">lane</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">BLOCK</span><span class="p">)</span>       <span class="c1"># [0 .. BLOCK-1]: my positions</span>
+    <span class="n">offs</span> <span class="o">=</span> <span class="n">pid</span> <span class="o">*</span> <span class="n">BLOCK</span> <span class="o">+</span> <span class="n">lane</span>        <span class="c1"># the global elements I own</span>
+
+    <span class="k">if</span> <span class="n">WHAT</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># `pid` is one scalar, but we must store BLOCK values. Adding a zero vector</span>
+        <span class="c1"># broadcasts it: pid -&gt; [pid, pid, ..., pid].</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">pid</span> <span class="o">+</span> <span class="n">tl</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">BLOCK</span><span class="p">],</span> <span class="n">tl</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">WHAT</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">lane</span> <span class="o">//</span> <span class="mi">32</span>               <span class="c1"># 0..31 -&gt; 0, 32..63 -&gt; 1 : which warp</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">lane</span> <span class="o">%</span> <span class="mi">32</span>                <span class="c1"># 0..31, then 0..31 again : position in the warp</span>
+
+    <span class="n">tl</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">out_ptr</span> <span class="o">+</span> <span class="n">offs</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">tl</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">mask</span><span class="o">=</span><span class="n">offs</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># H rows x W columns, with BLOCK == W, so ONE IMAGE ROW IS EXACTLY ONE PROGRAM.</span>
+<span class="c1"># That is the whole trick behind reading the picture.</span>
+<span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">BLOCK</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span>
+<span class="n">NUM_WARPS</span>   <span class="o">=</span> <span class="n">BLOCK</span> <span class="o">//</span> <span class="mi">32</span>                          <span class="c1"># pin it: 1 element per hardware lane</span>
+<span class="n">out</span>  <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">H</span> <span class="o">*</span> <span class="n">W</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="p">(</span><span class="n">triton</span><span class="o">.</span><span class="n">cdiv</span><span class="p">(</span><span class="n">H</span> <span class="o">*</span> <span class="n">W</span><span class="p">,</span> <span class="n">BLOCK</span><span class="p">),)</span>                <span class="c1"># 1024 / 64 = 16 program instances</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;grid </span><span class="si">{</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> programs x BLOCK </span><span class="si">{</span><span class="n">BLOCK</span><span class="si">}</span><span class="s2"> elements&quot;</span>
+      <span class="sa">f</span><span class="s2">&quot; = </span><span class="si">{</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">BLOCK</span><span class="si">}</span><span class="s2"> elements, drawn as </span><span class="si">{</span><span class="n">H</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">W</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;num_warps pinned to </span><span class="si">{</span><span class="n">NUM_WARPS</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">NUM_WARPS</span><span class="o">*</span><span class="mi">32</span><span class="si">}</span><span class="s2"> lanes for </span><span class="si">{</span><span class="n">BLOCK</span><span class="si">}</span><span class="s2"> elements&quot;</span>
+      <span class="sa">f</span><span class="s2">&quot; -&gt; </span><span class="si">{</span><span class="n">BLOCK</span><span class="o">//</span><span class="p">(</span><span class="n">NUM_WARPS</span><span class="o">*</span><span class="mi">32</span><span class="p">)</span><span class="si">}</span><span class="s2"> element per lane&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                           <span class="p">(</span><span class="s2">&quot;block id  (one row = one program)&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;warp id   (within the program)&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;lane id   (within the warp)&quot;</span><span class="p">)):</span>
+    <span class="n">who_am_i</span><span class="p">[</span><span class="n">grid</span><span class="p">](</span><span class="n">out</span><span class="p">,</span> <span class="n">H</span> <span class="o">*</span> <span class="n">W</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">BLOCK</span><span class="o">=</span><span class="n">BLOCK</span><span class="p">,</span> <span class="n">num_warps</span><span class="o">=</span><span class="n">NUM_WARPS</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;tab20&quot;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([]);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p>Read the three panels together. Each is the same 1,024 elements, labelled at a
+different level:</p>
+<ul>
+<li><strong>block id</strong> — sixteen solid horizontal bands, one per row. Each program owns one
+  contiguous run of 64 elements. This is the grid.</li>
+<li><strong>warp id</strong> — every band splits into two halves. <code>BLOCK = 64</code> at 32 lanes per warp
+  is two warps, so the left half of every row is warp 0 and the right half warp 1.</li>
+<li><strong>lane id</strong> — a 0…31 ramp that restarts halfway across every row. That restart is
+  the warp boundary, and the period of the ramp is the warp width.</li>
+</ul>
+<p>Stacked up, the machine your 16-program launch produced is:</p>
+<div class="highlight"><pre><span></span><code>grid: 16 programs
+ ├── program 0
+ │     ├── warp 0 → lanes 0..31   → elements 0..31
+ │     └── warp 1 → lanes 0..31   → elements 32..63
+ ├── program 1  … same structure, elements 64..127
+ └── … 14 more
+</code></pre></div>
+<p>Change <code>BLOCK</code> and re-run. The bands get wider or narrower and the number of warps
+per row changes with them — but the lane ramp keeps its period of 32 whatever you
+choose. <strong>You pick the block size. You do not pick that number.</strong></p>
+<div class="admonition question">
+<p class="admonition-title">💬 The kernel contains an <code>if</code>. Divergence, below, will show that branches inside a warp can cost real time. Why is this one free?</p>
+<details class="hint">
+<summary>Answer</summary>
+<p>Because <code>WHAT</code> is declared <code>tl.constexpr</code> — a <strong>compile-time</strong> constant. Triton
+compiles three separate kernels, one per value, and in each of them the <code>if</code> has
+already been resolved and removed. No branch survives to run on the GPU. The
+expensive case below is the opposite: a branch on <em>data</em>, whose value
+differs between lanes of the same warp and therefore cannot be resolved until
+the kernel is executing.</p>
+</details>
+</div>
+<h3 id="simt-simd-with-the-vector-hidden">SIMT: SIMD with the vector hidden</h3>
+<p>An AVX2 instruction on a CPU operates on eight float lanes at once:</p>
+<div class="highlight"><pre><span></span><code>one instruction
+      │
+      ▼
+┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐
+│ f32 │ f32 │ f32 │ f32 │ f32 │ f32 │ f32 │ f32 │
+└─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘
+</code></pre></div>
+<p>You explicitly program vectors, or rely on the compiler to generate them.</p>
+<p>GPU programming hides the vector. You write scalar code:</p>
+<div class="highlight"><pre><span></span><code>thread 0: C[0] = A[0] + B[0]
+thread 1: C[1] = A[1] + B[1]
+thread 2: C[2] = A[2] + B[2]
+...
+</code></pre></div>
+<p>The hardware groups the threads:</p>
+<div class="highlight"><pre><span></span><code>32 threads
+      │
+      ▼
+one instruction
+      │
+      ▼
+32 lanes execute together
+</code></pre></div>
+<p>This is <strong>SIMT — Single Instruction, Multiple Threads</strong>. The programming interface
+looks like independent scalar threads. The hardware executes them in groups.</p>
+<blockquote>
+<p><strong>SIMT is SIMD with the vector hidden.</strong></p>
+</blockquote>
+<p>That gap between the programming model and the hardware is responsible for several
+important GPU performance effects — and for the correction that follows.</p>
+<h3 id="a-cuda-core-is-not-a-core">A CUDA core is not a core</h3>
+<p>"2,304 cores" invites a misleading picture:</p>
+<div class="highlight"><pre><span></span><code>2,304 tiny CPUs
+</code></pre></div>
+<p>That is not what the GPU contains. There are compute units that contain scheduling
+and control machinery, and thousands of arithmetic lanes that those units drive.</p>
+<p>A CUDA core / shader ALU is therefore better thought of as:</p>
+<blockquote>
+<p><strong>one arithmetic lane, not one independent processor.</strong></p>
+</blockquote>
+<p>It has no independent program counter and cannot fetch and execute an independent
+program. Prefer <code>2,304 FP32 ALUs</code> over <code>2,304 cores</code> when describing what the
+silicon actually contains.</p>
+<div class="admonition question">
+<p class="admonition-title">💬 If a CUDA core is not a core, what <em>is</em> the smallest thing on a GPU that has its own program counter?</p>
+<details class="hint">
+<summary>Answer</summary>
+<p>The <strong>warp</strong>, not the thread and certainly not the lane. A warp has one instruction stream and one program counter shared by its 32 lanes. That single fact is the source of both of the effects in this lecture: divergence (when lanes disagree about where the program counter should go) and the cheapness of warp switching (when the scheduler picks a different warp's program counter).</p>
+</details>
+</div>
+<h3 id="measure-the-warp-width-instead-of-looking-it-up">Measure the warp width instead of looking it up</h3>
+<p>You can ask the driver for the warp size — <code>torch.cuda.get_device_properties(0).warp_size</code>.
+That is looking up the answer. You can also make the hardware confess it.</p>
+<p>Give each block exactly <strong>one warp</strong> (<code>num_warps=1</code>) and then vary how many
+elements that block is asked to process. If threads were independent, halving the
+block size should halve the work per block and cost half the time. If the hardware
+really issues in groups of 32, then any block with 32 or fewer elements occupies a
+whole warp anyway — and the unused lanes cost nothing, because they were never
+free to begin with.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@triton</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fixed_work</span><span class="p">(</span><span class="n">x_ptr</span><span class="p">,</span> <span class="n">o_ptr</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">BLOCK</span><span class="p">:</span> <span class="n">tl</span><span class="o">.</span><span class="n">constexpr</span><span class="p">,</span> <span class="n">ITERS</span><span class="p">:</span> <span class="n">tl</span><span class="o">.</span><span class="n">constexpr</span><span class="p">):</span>
+    <span class="n">offs</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">program_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">BLOCK</span> <span class="o">+</span> <span class="n">tl</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">BLOCK</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">offs</span> <span class="o">&lt;</span> <span class="n">n</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">x_ptr</span> <span class="o">+</span> <span class="n">offs</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">m</span><span class="p">,</span> <span class="n">other</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ITERS</span><span class="p">):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="mf">1.0000001</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.9999</span>   <span class="c1"># not an affine recurrence:</span>
+    <span class="n">tl</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">o_ptr</span> <span class="o">+</span> <span class="n">offs</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">m</span><span class="p">)</span>                        <span class="c1"># the compiler cannot close-form it</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">18</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">);</span> <span class="n">o</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;BLOCK&#39;</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;blocks&#39;</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;ms&#39;</span><span class="si">:</span><span class="s2">&gt;9</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Melem/s&#39;</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;speedup&#39;</span><span class="si">:</span><span class="s2">&gt;9</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">base</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">for</span> <span class="n">blk</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">):</span>          <span class="c1"># not `B` -- that is one of our matrices</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="p">(</span><span class="n">triton</span><span class="o">.</span><span class="n">cdiv</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">blk</span><span class="p">),)</span>
+    <span class="n">ms</span> <span class="o">=</span> <span class="n">triton</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">do_bench</span><span class="p">(</span>
+        <span class="k">lambda</span><span class="p">:</span> <span class="n">fixed_work</span><span class="p">[</span><span class="n">g</span><span class="p">](</span><span class="n">x</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">BLOCK</span><span class="o">=</span><span class="n">blk</span><span class="p">,</span> <span class="n">ITERS</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">num_warps</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">warmup</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">rep</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">return_mode</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">)</span>
+    <span class="n">thr</span> <span class="o">=</span> <span class="n">n</span> <span class="o">/</span> <span class="p">(</span><span class="n">ms</span> <span class="o">*</span> <span class="mf">1e-3</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1e6</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="n">base</span> <span class="ow">or</span> <span class="n">thr</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">blk</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">g</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">ms</span><span class="si">:</span><span class="s2">&gt;9.3f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">thr</span><span class="si">:</span><span class="s2">&gt;10.1f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">thr</span><span class="o">/</span><span class="n">base</span><span class="si">:</span><span class="s2">&gt;8.1f</span><span class="si">}</span><span class="s2">x&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Measured on the course laptop (RX 6700M, wave32, ROCm 7.2, Triton 3.7.1):</p>
+<div class="highlight"><pre><span></span><code>BLOCK   blocks        ms    Melem/s   speedup
+      1   262144     1.309      200.2      1.0x
+      2   131072     0.652      402.2      2.0x
+      4    65536     0.321      815.6      4.1x
+      8    32768     0.166     1575.0      7.9x
+     16    16384     0.092     2851.8     14.2x
+     32     8192     0.052     5033.4     25.1x
+     64     4096     0.052     5064.6     25.3x
+    128     2048     0.052     5033.4     25.1x
+</code></pre></div>
+<p>Two regimes, and the boundary between them is the whole point.</p>
+<p>Below 32, <strong>each extra thread is free</strong>: every doubling of <code>BLOCK</code> doubles the
+throughput, because those lanes were sitting in the warp doing nothing. From 32
+onward the throughput stops improving entirely — 32, 64 and 128 land within 1% of
+each other — because the warp is now full and any further work has to be issued as
+extra instructions.</p>
+<blockquote>
+<p><strong>The knee is the warp width. You just measured it without asking the vendor.</strong></p>
+</blockquote>
+<div class="admonition question">
+<p class="admonition-title">💬 A colleague launches blocks of 8 threads because their problem has 8 lanes of work and they want to 'use less of the GPU'. What fraction of the machine are they actually paying for?</p>
+<details class="hint">
+<summary>Answer</summary>
+<p><strong>All of it.</strong> A block of 8 threads still occupies a full 32-lane warp — the
+table shows a block of 8 running at 7.9× the throughput of a block of 1, while a
+block of 32 reaches 25.1×. They are being billed for 32 lanes and using 8. This
+is also why the wavefront width in <a href="#appendix-b-this-laptops-gpus">Appendix B</a>
+matters: the same code on this laptop's integrated GPU is billed in units of 64.</p>
+</details>
+</div>
+<h3 id="the-price-of-simt-divergence">The price of SIMT: divergence</h3>
+<p>The warp bargain sends you a bill. Consider:</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="n">a</span><span class="p">();</span>
+<span class="k">else</span>
+<span class="w">    </span><span class="n">b</span><span class="p">();</span>
+</code></pre></div>
+<p>Suppose exactly half of a 32-thread warp takes each branch. The hardware cannot
+execute both paths simultaneously, because the warp shares one instruction stream
+and one program counter. Instead:</p>
+<div class="highlight"><pre><span></span><code>if (x[i] &gt; 0) { A; } else { B; }        time →
+  lanes with x&gt;0 :  ██ A ██  ░░ idle ░░
+  lanes with x≤0 :  ░░ idle ░░  ██ B ██     ← ½ speed here; 1/32 worst case
+</code></pre></div>
+<p>Both paths execute. Every lane is occupied during both passes, but half of the
+lanes are inactive during each pass. This is <strong>warp divergence</strong>.</p>
+<p>Matmul, incidentally, is beloved by the hardware partly because every thread runs
+the identical multiply-add sequence — <strong>zero divergence, ever</strong>.</p>
+<h4 id="divergence-is-per-warp">Divergence is per warp</h4>
+<p>Divergence is not determined by whether a branch exists. It depends on whether
+threads <strong>within the same warp</strong> disagree. For example:</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tid</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
+</code></pre></div>
+<p>If the warp is aligned with those 32 threads, every thread in the warp agrees. No
+divergence. But:</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tid</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div>
+<p>splits every warp into two groups, and both paths execute. Same branch syntax.
+Very different hardware cost. The extreme case is a 32-way split:</p>
+<div class="highlight"><pre><span></span><code>32 different paths
+        ↓
+32 sequential executions
+</code></pre></div>
+<h4 id="but-divergence-does-not-automatically-mean-slower">But divergence does not automatically mean slower</h4>
+<div class="admonition question">
+<p class="admonition-title">💬 A divergent kernel issues roughly twice the instructions of the non-divergent one. Predict the slowdown.</p>
+<details class="hint">
+<summary>Answer</summary>
+<p><strong>About 1.08×</strong>, not 2×. Measured on the RX 6700M:</p>
+<div class="highlight"><pre><span></span><code>warp agrees, one path runs           :   1.200 ms
+warp splits on (lane % 2)            :   1.297 ms
+2x instructions, one dependent chain :   2.543 ms
+</code></pre></div>
+<p>Doubling the instructions <em>along a dependent chain</em> costs 2.12×. Doubling them <em>across two independent paths</em> costs 1.08×. The instruction count is identical in both cases — so instruction count is not what you are being billed for.</p>
+</details>
+</div>
+<p>The single-path kernel was a long dependent chain: each operation depended on the
+result of the previous one, so many issue opportunities were already going unused.
+The divergent kernel added another <em>independent</em> path, whose extra instructions
+could occupy those otherwise-empty slots.</p>
+<div class="highlight"><pre><span></span><code>single path:              divergent:
+    useful instruction        path A instruction
+    wait                      path B instruction
+    useful instruction        path A instruction
+    wait                      path B instruction
+    ...                       ...
+</code></pre></div>
+<blockquote>
+<p><strong>Divergence bills you in issue slots. Whether that costs you time depends on
+whether the machine had spare slots.</strong></p>
+</blockquote>
+<p>Stated more generally, and worth carrying beyond GPUs:</p>
+<blockquote>
+<p><strong>Instruction count is not execution time.</strong></p>
+</blockquote>
+<p>This is why "avoid all branches on GPUs" is bad advice. Measure the kernel.</p>
+<hr />
+<h2 id="depth-5-one-block-one-tile-of-c">Depth 5 — One block, one tile of C</h2>
+<p>We can now cash in the kernel name from Depth 1 (<a href="../Lecture7a/">Lecture 7a</a>).</p>
+<p>The vector add was one-dimensional and each element was independent. A matmul is
+neither: every element of <code>C</code> is a dot product over a whole row and column. The
+decomposition is the same idea in two dimensions, and it requires one change of
+mental model:</p>
+<blockquote>
+<p><strong>Stop thinking "one thread = one element of C". Think "one block = one tile of
+C".</strong></p>
+</blockquote>
+<p>That is not a stylistic preference. A block is pinned to one compute unit, which
+is what makes its shared memory and barriers usable — so a block is the largest
+group of threads that can <em>cooperate</em> on a piece of <code>C</code>. Cutting <code>C</code> into tiles
+and giving one block to each tile is the decomposition the hardware is shaped for.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@triton</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">tile_map</span><span class="p">(</span><span class="n">out_ptr</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">BM</span><span class="p">:</span> <span class="n">tl</span><span class="o">.</span><span class="n">constexpr</span><span class="p">,</span> <span class="n">BN</span><span class="p">:</span> <span class="n">tl</span><span class="o">.</span><span class="n">constexpr</span><span class="p">):</span>
+    <span class="n">pid_m</span><span class="p">,</span> <span class="n">pid_n</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">program_id</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">tl</span><span class="o">.</span><span class="n">program_id</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>      <span class="c1"># a 2-D grid, one block per tile</span>
+    <span class="n">rm</span> <span class="o">=</span> <span class="n">pid_m</span> <span class="o">*</span> <span class="n">BM</span> <span class="o">+</span> <span class="n">tl</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">BM</span><span class="p">)</span>
+    <span class="n">rn</span> <span class="o">=</span> <span class="n">pid_n</span> <span class="o">*</span> <span class="n">BN</span> <span class="o">+</span> <span class="n">tl</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">BN</span><span class="p">)</span>
+    <span class="n">v</span>  <span class="o">=</span> <span class="n">pid_m</span> <span class="o">*</span> <span class="n">tl</span><span class="o">.</span><span class="n">cdiv</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">BN</span><span class="p">)</span> <span class="o">+</span> <span class="n">pid_n</span>                    <span class="c1"># this block&#39;s id</span>
+    <span class="n">tl</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">out_ptr</span> <span class="o">+</span> <span class="n">rm</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">rn</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:],</span>
+             <span class="p">(</span><span class="n">v</span> <span class="o">+</span> <span class="n">tl</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">BM</span><span class="p">,</span> <span class="n">BN</span><span class="p">],</span> <span class="n">tl</span><span class="o">.</span><span class="n">int32</span><span class="p">))</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">tl</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+             <span class="n">mask</span><span class="o">=</span><span class="p">(</span><span class="n">rm</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">rn</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">))</span>
+
+<span class="n">M</span> <span class="o">=</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">512</span>
+<span class="n">BM</span><span class="p">,</span> <span class="n">BN</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">64</span>                                           <span class="c1"># the tile the library chose, below</span>
+<span class="n">out</span>  <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="p">(</span><span class="n">triton</span><span class="o">.</span><span class="n">cdiv</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">BM</span><span class="p">),</span> <span class="n">triton</span><span class="o">.</span><span class="n">cdiv</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">BN</span><span class="p">))</span>
+<span class="n">tile_map</span><span class="p">[</span><span class="n">grid</span><span class="p">](</span><span class="n">out</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">BM</span><span class="o">=</span><span class="n">BM</span><span class="p">,</span> <span class="n">BN</span><span class="o">=</span><span class="n">BN</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;C is </span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2">, tile </span><span class="si">{</span><span class="n">BM</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">BN</span><span class="si">}</span><span class="s2">  -&gt;  grid </span><span class="si">{</span><span class="n">grid</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> blocks&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;tab20&quot;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;which block computes which part of C  (</span><span class="si">{</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> tiles)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;N&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;M&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p>That picture is the grid. Now read the real one off the kernel name we captured
+in <a href="../Lecture7a/">7a</a> — it tells you the tile the vendor's library picked for
+your matmul. This part is its own notebook, so first re-capture that name
+(condensed from 7a's Depth 1, fallback included):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">torch.profiler</span><span class="w"> </span><span class="kn">import</span> <span class="n">profile</span><span class="p">,</span> <span class="n">ProfilerActivity</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">gpu_kernel_name</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">warmup</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Name of the GPU kernel `fn` spends the most DEVICE time in (see 7a).&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">warmup</span><span class="p">):</span>
+        <span class="n">fn</span><span class="p">()</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">profile</span><span class="p">(</span><span class="n">activities</span><span class="o">=</span><span class="p">[</span><span class="n">ProfilerActivity</span><span class="o">.</span><span class="n">CUDA</span><span class="p">])</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
+        <span class="n">fn</span><span class="p">()</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
+    <span class="n">on_device</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">prof</span><span class="o">.</span><span class="n">key_averages</span><span class="p">()</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">self_device_time_total</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">on_device</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">self_device_time_total</span><span class="p">)</span><span class="o">.</span><span class="n">key</span> <span class="k">if</span> <span class="n">on_device</span> <span class="k">else</span> <span class="kc">None</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+<span class="n">MATMUL_SHAPE</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">B</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Verbatim from a real run on the course laptop -- the stand-in for machines</span>
+<span class="c1"># whose profiler cannot report kernel names (see 7a, Depth 1).</span>
+<span class="n">COURSE_LAPTOP_KERNEL</span> <span class="o">=</span> <span class="s2">&quot;Cijk_Ailk_Bljk_SB_MT128x64x8_SN_1LDSB0_..._TT8_8_..._WS32_WG16_8_1_WGM4&quot;</span>
+
+<span class="n">MATMUL_KERNEL</span> <span class="o">=</span> <span class="n">gpu_kernel_name</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">A</span> <span class="o">@</span> <span class="n">B</span><span class="p">)</span> <span class="ow">or</span> <span class="n">COURSE_LAPTOP_KERNEL</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;decoding:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">MATMUL_KERNEL</span><span class="p">)</span>
+</code></pre></div>
+<p>Now decode it:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">warp</span><span class="o">=</span><span class="n">WARP</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pull the decomposition out of a vendor GEMM kernel name.</span>
+
+<span class="sd">    ROCm/Tensile spells it out: MT&lt;m&gt;x&lt;n&gt;x&lt;k&gt; macro tile, WG&lt;x&gt;_&lt;y&gt;_&lt;z&gt; workgroup,</span>
+<span class="sd">    TT&lt;m&gt;_&lt;n&gt; per-thread tile, WS&lt;w&gt; wave size. cuBLAS is terser -- `sgemm_128x64`</span>
+<span class="sd">    -- and gives only the tile. Anything else, we say so rather than guess.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mt</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;MT(\d+)x(\d+)x(\d+)&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="ow">or</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;gemm_(\d+)x(\d+)&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">wg</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;WG(\d+)_(\d+)_(\d+)&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">tt</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;TT(\d+)_(\d+)&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">ws</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;WS(\d+)&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mt</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;could not find a tile shape in this kernel name -- print it and look yourself&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">bm</span><span class="p">,</span> <span class="n">bn</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">mt</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">mt</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">M</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="n">MATMUL_SHAPE</span>
+    <span class="n">gm</span><span class="p">,</span> <span class="n">gn</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="o">-</span><span class="n">M</span> <span class="o">//</span> <span class="n">bm</span><span class="p">),</span> <span class="o">-</span><span class="p">(</span><span class="o">-</span><span class="n">N</span> <span class="o">//</span> <span class="n">bn</span><span class="p">)</span>              <span class="c1"># ceiling division</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tile of C per block   : </span><span class="si">{</span><span class="n">bm</span><span class="si">}</span><span class="s2"> x </span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">   = </span><span class="si">{</span><span class="n">bm</span><span class="o">*</span><span class="n">bn</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> outputs&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;grid                  : </span><span class="si">{</span><span class="n">gm</span><span class="si">}</span><span class="s2"> x </span><span class="si">{</span><span class="n">gn</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">gm</span><span class="o">*</span><span class="n">gn</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> blocks&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ws</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;wave size (hardware)  : </span><span class="si">{</span><span class="n">ws</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">wg</span><span class="p">:</span>
+        <span class="n">thr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;threads per block     : </span><span class="si">{</span><span class="n">wg</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">wg</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">wg</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">thr</span><span class="si">}</span><span class="s2">&quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;  -&gt; </span><span class="si">{</span><span class="n">thr</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">ws</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">ws</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">warp</span><span class="p">)</span><span class="si">}</span><span class="s2"> warps per block&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tt</span><span class="p">:</span>
+            <span class="n">tm</span><span class="p">,</span> <span class="n">tn</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;outputs per thread    : </span><span class="si">{</span><span class="n">tm</span><span class="si">}</span><span class="s2"> x </span><span class="si">{</span><span class="n">tn</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">tm</span><span class="o">*</span><span class="n">tn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;check                 : </span><span class="si">{</span><span class="n">thr</span><span class="si">}</span><span class="s2"> threads x </span><span class="si">{</span><span class="n">tm</span><span class="o">*</span><span class="n">tn</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">thr</span><span class="o">*</span><span class="n">tm</span><span class="o">*</span><span class="n">tn</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span>
+                  <span class="sa">f</span><span class="s2">&quot;  vs tile </span><span class="si">{</span><span class="n">bm</span><span class="o">*</span><span class="n">bn</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">  -&gt; </span><span class="si">{</span><span class="s1">&#39;consistent&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">thr</span><span class="o">*</span><span class="n">tm</span><span class="o">*</span><span class="n">tn</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">bm</span><span class="o">*</span><span class="n">bn</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;MISMATCH&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">decode</span><span class="p">(</span><span class="n">MATMUL_KERNEL</span><span class="p">)</span>
+</code></pre></div>
+<p>On the course laptop, for the 2048×2048 matmul at the top of this lecture:</p>
+<div class="highlight"><pre><span></span><code>tile of C per block   : 128 x 64   = 8,192 outputs
+grid                  : 16 x 32 = 512 blocks
+wave size (hardware)  : 32
+threads per block     : 16x8x1 = 128  -&gt; 4 warps per block
+outputs per thread    : 8 x 8 = 64
+check                 : 128 threads x 64 = 8,192  vs tile 8,192  -&gt; consistent
+</code></pre></div>
+<p>That is the complete answer to the question this lecture opened with. One line of
+PyTorch became <strong>512 blocks × 4 warps = 2,048 warps, 65,536 threads</strong>, each thread
+responsible for an 8×8 patch of <code>C</code>, and the arithmetic closes exactly.</p>
+<p>Nothing here was a slide. Every one of those numbers came out of the string the
+profiler printed for the line <em>you</em> wrote.</p>
+<p>Notice the last two lines especially. Each thread does not compute one output — it
+computes <strong>64</strong>, an 8×8 patch it keeps in registers. That is a second level of
+tiling below the block, and it is the reason the register file has to be as large
+as it is. Depth 3's budget and Depth 5's decomposition are the same constraint seen
+from two ends.</p>
+<div class="admonition question">
+<p class="admonition-title">💬 Re-run the profiler on a much smaller matmul — say 256×256. Does the library pick the same tile?</p>
+<details class="hint">
+<summary>Answer</summary>
+<p>No. On the course laptop a two-layer MLP's <code>nn.Linear</code> calls select
+<code>MT64x64x8</code> with <code>WG16_16_1</code> (256 threads = 8 warps) and <code>TT4_4</code>, and the check
+still closes: 256 × 16 = 4,096 = 64 × 64. The library keeps a library of tilings
+and picks one per problem shape, because the best decomposition depends on
+whether you have enough tiles to fill every CU and enough work per tile to be
+worth the launch. That trade-off is the subject of <a href="../Lecture8/">Lecture 8</a>.</p>
+</details>
+</div>
+<hr />
+<h2 id="occupancy-the-budget-on-residency">Occupancy: the budget on residency</h2>
+<p>Latency hiding needs resident warps. Resident warps consume resources. Occupancy
+is the name of that trade.</p>
+<p>The main budgets are registers, shared memory, maximum resident waves, maximum
+threads, and architectural limits per block. They interact in one direction:</p>
+<div class="highlight"><pre><span></span><code>more registers per thread          more shared memory per block
+        ↓                                  ↓
+fewer threads fit                  fewer blocks fit on a CU
+        ↓                                  ↓
+fewer resident warps               fewer resident warps
+        ↓
+fewer candidates for the scheduler
+        ↓
+less latency hiding
+</code></pre></div>
+<p>On this GPU:</p>
+<div class="highlight"><pre><span></span><code>32 waves per CU
+64 KB LDS per workgroup
+</code></pre></div>
+<p>A block requesting 32 KB of shared memory is therefore limited to <code>64 / 32 = 2</code>
+blocks resident per CU, even if registers would allow more.</p>
+<h3 id="is-low-occupancy-bad">Is low occupancy bad?</h3>
+<p>Suppose a profiler reports <strong>25% occupancy</strong>. Is that automatically a problem?</p>
+<p>No. Occupancy is only one ingredient in latency hiding. The real goal is:</p>
+<blockquote>
+<p><strong>Have enough independent work in flight to cover the latency generated by this
+kernel.</strong></p>
+</blockquote>
+<p>A kernel with high arithmetic intensity, lots of instruction-level parallelism and
+many registers per thread may run very well at low occupancy. Reducing register
+usage simply to raise occupancy can even make things worse, if it causes register
+spills to memory.</p>
+<blockquote>
+<p><strong>Occupancy is a diagnostic to read when something is slow, not a score to
+maximize.</strong></p>
+</blockquote>
+<p>This is also the trade-off that produced the hundreds of pre-compiled BLAS kernels
+we met in Depth 1. Fatter tiles mean more reuse per byte fetched, but fewer
+resident warps to hide latency with. They compete for the same silicon, the best
+compromise depends on the shape, and so the vendor ships one kernel per point on
+that curve and picks between them at call time.</p>
+<hr />
+<h2 id="what-lies-below">What lies below</h2>
+<p>The descent has three depths left, and all of them are about <em>feeding</em> the machine
+we just built. They are <a href="../Lecture8/">Lecture 8</a>:</p>
+<ul>
+<li><strong>Depth 6 — coalescing and broadcast.</strong> DRAM cannot hand out single floats; it
+  serves 128-byte lines. So the memory system inspects a warp's 32 lockstep
+  addresses <em>as a group</em>. Neat and adjacent → one transaction. Scattered → up to 32
+  transactions for the same instruction. This is the same warp we just met, seen
+  from the memory side.</li>
+<li><strong>Depth 7 — the hierarchy and the FLOPs/byte wall.</strong> Registers, shared memory,
+  L2, DRAM. Arithmetic capacity has outgrown bandwidth so far that a modern GPU
+  needs <em>hundreds</em> of floating-point operations per byte fetched to stay busy — and
+  a naive matmul manages about one. Latency hiding cannot help here: it hides
+  <em>latency</em>, not missing <em>bandwidth</em>. Tiling is what breaks that wall, and the
+  tile you decoded in Depth 5 is the tool.</li>
+<li><strong>Depth 8 — tensor cores and <code>torch.compile</code>.</strong> Casting matmul into dedicated
+  wiring, and removing the round-trips to slow memory between kernels.</li>
+</ul>
+<p>One organizing principle sits underneath all three, and it is worth carrying out of
+this lecture even before you meet the evidence:</p>
+<blockquote>
+<p><strong>Arithmetic is nearly free; moving data is expensive. Every layer of this stack
+is an arrangement for touching slow memory as rarely as possible</strong> — coalescing
+per instruction, tiling per block, register micro-tiles per thread, fusion per
+graph.</p>
+</blockquote>
+<hr />
+<h2 id="synthesis-the-whole-descent">Synthesis: the whole descent</h2>
+<div class="highlight"><pre><span></span><code>C = A @ B
+   │
+   │  CPU-side, ~159 µs of paperwork (measured, Depth 1)
+   │  dispatcher (keys: CUDA, fp32) → BLAS heuristic → kernel pick
+   ▼
+launch → command queue → doorbell (MMIO write) → CPU RETURNS
+   │                              …async: the math has not happened yet
+   ▼
+the work distributor drops 512 blocks onto 18 units, in waves
+   │
+   ▼  on each compute unit:
+block = one 128×64 tile of C, pinned here, 4 warps
+   each thread owns an 8×8 patch of C, held in registers
+   │
+   ├── warps issue in lockstep, 32 lanes per instruction fetch   (Depth 4)
+   ├── a warp that stalls on DRAM simply becomes ineligible      (Depth 3)
+   └── the scheduler picks another resident warp — free, because
+       its registers never left the register file
+   │
+   ▼
+tile written back · block retires · next block in the wave
+   │
+   ▼
+torch.cuda.synchronize() — the CPU finally looks at the finish line
+</code></pre></div>
+<p>The GPU keeps thousands of ALUs busy by keeping thousands of threads <em>resident</em> and
+switching between them for free whenever one stalls. Everything else in this
+lecture followed from that: the enormous register file, the warp as the unit of
+scheduling, the divergence bill, the occupancy budget.</p>
+<div class="highlight"><pre><span></span><code>many ALUs
+    ↓
+many resident warps
+    ↓
+cheap warp switching
+    ↓
+latency hiding
+</code></pre></div>
+<p>But we have only solved half of the problem. We have explained what the GPU does
+<strong>while it waits for data</strong>. We have not asked where that data comes from, or
+whether the memory system can supply it fast enough to keep this machine fed.</p>
+<blockquote>
+<p><strong>Next — <a href="../Lecture8/">Lecture 8</a>: memory, bandwidth, and the roofline — and why
+LLM decode is memory-bound while training on the same GPU is compute-bound.</strong></p>
+</blockquote>
+<hr />
+<h2 id="capstone-exercise">Capstone exercise</h2>
+<p>You are running <code>y = torch.relu(A @ B + bias)</code>, with M = N = K = 4096. Predict
+each result <strong>first</strong>, then verify it with <code>torch.profiler</code> and the cells across
+parts 7a–7c — and name the layer of the descent that explains it.</p>
+<ol>
+<li><strong>Time it with and without <code>torch.cuda.synchronize()</code>.</strong> Explain the two
+   numbers to someone who has never heard the word "asynchronous". <em>(Depth 1: the
+   doorbell.)</em></li>
+<li><strong>Shrink M from 4096 to 8.</strong> The FLOPs drop by 512×. Does the runtime?
+   <em>(Depth 3: waves, residency, launch overhead — the GPU cannot fill itself.)</em></li>
+<li><strong>Profile it and decode the kernel name.</strong> How many blocks, warps and threads
+   did your <code>@</code> actually launch, and does <code>threads × outputs-per-thread</code> equal the
+   tile? <em>(Depth 5.)</em></li>
+<li><strong>Switch fp32 → fp16.</strong> How much faster, and is the speed-up more or less than
+   2×? Explain which part of your answer this lecture can account for and which
+   part needs <a href="../Lecture8/">Lecture 8</a>. <em>(Depths 5 and 8 — bytes per element meets
+   the bandwidth wall.)</em></li>
+</ol>
+<p>If you can predict all four and be roughly right, you own this part of the stack.</p>
+<hr />
+<h2 id="run-it-yourself">Run it yourself</h2>
+<p>Inspect your GPU:</p>
+<div class="highlight"><pre><span></span><code>rocminfo
+<span class="c1"># or</span>
+nvidia-smi<span class="w"> </span>-q
+</code></pre></div>
+<p>Inspect clock levels on Linux/AMD:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>/sys/class/drm/card*/device/pp_dpm_sclk
+cat<span class="w"> </span>/sys/class/drm/card*/device/pp_dpm_mclk
+</code></pre></div>
+<p>Run the divergence and coalescing benchmark:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>code/gpu_internals/warp_costs.py
+</code></pre></div>
+<p>The benchmark code:
+<a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/tree/main/code/gpu_internals"><code>code/gpu_internals/warp_costs.py</code></a>.
+It is written in Triton so it runs across NVIDIA and AMD hardware, and on a free
+Colab or Kaggle GPU.</p>
+<p>Every code cell on this page runs the same way. If you would rather execute them
+than read them, open the notebook built from this page with the Colab badge at the
+top, or generate it locally:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>notebooks<span class="w">        </span><span class="c1"># jupytext: these pages -&gt; docs/lectures/Lecture7{a,b,c}.ipynb</span>
+make<span class="w"> </span>notebooks-exec<span class="w">   </span><span class="c1"># ...and run every cell on your own GPU</span>
+</code></pre></div>
+<p>On an AMD RDNA2 laptop GPU you may need <code>HSA_OVERRIDE_GFX_VERSION=10.3.0</code> in the
+environment before PyTorch will see the card.</p>
+<hr />
+<h2 id="appendix-a-nvidia-and-amd-terminology">Appendix A — NVIDIA and AMD terminology</h2>
+<table>
+<thead>
+<tr>
+<th>NVIDIA</th>
+<th>AMD / ROCm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SM — Streaming Multiprocessor</td>
+<td>CU — Compute Unit</td>
+</tr>
+<tr>
+<td>warp</td>
+<td>wavefront</td>
+</tr>
+<tr>
+<td>CUDA core</td>
+<td>stream processor / shader ALU</td>
+</tr>
+<tr>
+<td>shared memory</td>
+<td>LDS — Local Data Share</td>
+</tr>
+<tr>
+<td>thread block</td>
+<td>workgroup</td>
+</tr>
+<tr>
+<td>warp scheduler</td>
+<td>SIMD scheduler</td>
+</tr>
+<tr>
+<td>tensor core</td>
+<td>matrix core</td>
+</tr>
+</tbody>
+</table>
+<p>The exact internal organization differs between architectures, so these should be treated as corresponding concepts rather than literally identical hardware.</p>
+<p>The names differ, but the important concepts are:</p>
+<div class="highlight"><pre><span></span><code>many arithmetic lanes
+        +
+thread groups
+        +
+resident state
+        +
+scheduler
+        +
+fast local memory
+        +
+large-bandwidth memory
+</code></pre></div>
+<hr />
+<h2 id="appendix-b-this-laptops-gpus">Appendix B — This laptop's GPUs</h2>
+<p><code>rocminfo</code> reports two GPUs in the same machine:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">RX 6700M</th>
+<th style="text-align: right;">Integrated Radeon Graphics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compute Units</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr>
+<td>SIMDs per CU</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td>Wavefront size</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">64</td>
+</tr>
+<tr>
+<td>Max waves per CU</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">40</td>
+</tr>
+</tbody>
+</table>
+<p>The same laptop therefore contains two AMD GPUs with different wavefront widths.</p>
+<p>This is a useful reminder:</p>
+<blockquote>
+<p><strong>A warp/wavefront width is an architectural design choice, not a universal law.</strong></p>
+</blockquote>
+<p>Code that blindly assumes one particular width is making a hardware assumption.</p>
+<hr />
+<h2 id="references-and-further-reading">References and further reading</h2>
+<p><strong>The descent, made runnable</strong></p>
+<ol>
+<li>Simon Boehm, <a href="https://siboehm.com/articles/22/CUDA-MMM"><em>How to Optimize a CUDA Matmul Kernel</em></a> — the classic worklog: from the naive kernel to near-cuBLAS speed in ten steps. Everything on this page, as code.</li>
+<li>Horace He, <a href="https://horace.io/brrr_intro.html"><em>Making Deep Learning Go Brrrr From First Principles</em></a> — the compute-bound / memory-bound / overhead-bound trichotomy, from a PyTorch compiler author.</li>
+<li>Edward Yang, <a href="http://blog.ezyang.com/2020/09/lets-talk-about-the-pytorch-dispatcher/"><em>Let's Talk About the PyTorch Dispatcher</em></a> — the authoritative walkthrough of Depth 1: dispatch keys, and how one op name finds its implementation.</li>
+</ol>
+<p><strong>The execution model</strong></p>
+<ol>
+<li>NVIDIA, <a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/"><em>CUDA C++ Programming Guide</em></a> — the primary source for grids, warps, shared memory, divergence and occupancy.</li>
+<li>AMD, <a href="https://gpuopen.com/amd-gpu-architecture-programming-documentation/"><em>RDNA 2 Instruction Set Architecture Reference Guide</em></a> — compute units, wavefronts, vector register file.</li>
+<li>Hwu, Kirk &amp; El Hajj, <em>Programming Massively Parallel Processors</em> — the standard textbook; chapters 4–6 cover SIMT, memory and tiling in full rigor.</li>
+<li><a href="https://triton-lang.org">Triton documentation</a></li>
+<li><a href="https://github.com/gpu-mode/lectures">GPU MODE lecture series</a> — community lectures from practitioners: profiling, Triton, and modern kernel work.</li>
+</ol>
+<p><strong>Course material</strong></p>
+<ol>
+<li>Vijay Janapa Reddi, <a href="https://mlsysbook.ai"><em>Machine Learning Systems</em></a> — Ch. 11: AI Acceleration</li>
+<li>Course code: <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/tree/main/code/gpu_internals"><code>code/gpu_internals</code></a></li>
+</ol>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../Lecture7b/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 7b:The Throughput Machine">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                7b:The Throughput Machine
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../labs/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Ankush Chander
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

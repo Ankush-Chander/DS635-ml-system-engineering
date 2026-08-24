@@ -1,0 +1,1714 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Home of DS635 - Machine Learning System Engineering, DAU">
+      
+      
+      
+        <link rel="canonical" href="https://DS635.ankushchander.com/lectures/Lecture7a/">
+      
+      
+        <link rel="prev" href="../Lecture7/">
+      
+      
+        <link rel="next" href="../Lecture7b/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>7a:From Python to a Kernel Launch - DS635 - Machine Learning System Engineering | DAU</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#matmul-to-silicon-7a-from-python-to-a-kernel-launch" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-header__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DS635 - Machine Learning System Engineering | DAU
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              7a:From Python to a Kernel Launch
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Lecture0/" class="md-tabs__link">
+          
+  
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../labs/" class="md-tabs__link">
+          
+  
+  
+  Labs
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-nav__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DS635 - Machine Learning System Engineering | DAU
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lectures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lectures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0:Course Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1:Machine Learning Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:Hardware Accelerators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture3_4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3_4:Memory Hierarchy & Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture5_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU job submission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7:Matmul to Silicon — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7a:From Python to a Kernel Launch
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7a:From Python to a Kernel Launch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-birds-eye-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The bird's-eye view
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-descent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The descent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#depth-1-the-first-ten-microseconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Depth 1 — The first ten microseconds
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Depth 1 — The first ten microseconds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proof-by-stopwatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proof by stopwatch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-did-it-actually-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What did it actually order?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-a-kernel-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a kernel is
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#depth-2-the-kernel-inversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Depth 2 — The kernel inversion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Depth 2 — The kernel inversion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-detour-what-triton-is-and-why-we-use-it-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A detour: what Triton is, and why we use it here
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-hierarchy-in-one-runnable-kernel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The hierarchy in one runnable kernel
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7b:The Throughput Machine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7c:SIMT, Tiles & Occupancy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Labs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Labs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab5_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU Job Submission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab5_6_gpu_job_submission/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5/6 — The GPU submission protocol, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:The Concurrency Budget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab2_concurrency_budget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2 — The concurrency budget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-birds-eye-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The bird's-eye view
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-descent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The descent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#depth-1-the-first-ten-microseconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Depth 1 — The first ten microseconds
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Depth 1 — The first ten microseconds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proof-by-stopwatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proof by stopwatch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-did-it-actually-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What did it actually order?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-a-kernel-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a kernel is
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#depth-2-the-kernel-inversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Depth 2 — The kernel inversion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Depth 2 — The kernel inversion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-detour-what-triton-is-and-why-we-use-it-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A detour: what Triton is, and why we use it here
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-hierarchy-in-one-runnable-kernel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The hierarchy in one runnable kernel
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="matmul-to-silicon-7a-from-python-to-a-kernel-launch">Matmul to silicon 7a: from Python to a kernel launch</h1>
+<blockquote>
+<p><strong>Module thesis:</strong> a GPU is not built to make one thread fast — it is built to
+never have an idle ALU. Lecture 7 is the machinery that achieves that.</p>
+</blockquote>
+<p>This is a guided descent. We start at one line of Python and go down until we
+reach the lanes that do the arithmetic, stopping at every layer that makes a
+decision on your behalf. The descent spans three parts, one session each, and
+the depth numbering runs continuously across them:</p>
+<ul>
+<li><strong>7a (this part)</strong> — the software stack: what <code>C = A @ B</code> does before any math
+  happens, and what a kernel really is <em>(Depths 1–2)</em>.</li>
+<li><strong><a href="../Lecture7b/">7b — The throughput machine</a></strong> — the hardware hierarchy, and
+  the latency hiding everything else is built around <em>(Depth 3)</em>.</li>
+<li><strong><a href="../Lecture7c/">7c — SIMT, tiles, and occupancy</a></strong> — warps, divergence, the
+  tile of <code>C</code> each block owns, and the residency budget <em>(Depths 4–5)</em>.</li>
+</ul>
+<p>Together they answer <strong>how a GPU keeps thousands of ALUs busy</strong>.
+<a href="../Lecture8/">Lecture 8</a> asks the other half — <strong>what limits performance</strong> once
+the ALUs are busy.</p>
+<p>Every measurement on this page was produced by a cell you can re-run on your own
+GPU. If you do not have one, open the same page as a notebook on a free Colab T4:</p>
+<p><a href="https://colab.research.google.com/github/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/lectures/Lecture7a.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p>On Colab, pick <strong>Runtime → Change runtime type → T4 GPU</strong> first, then run the
+cell below once. It installs only what is missing, so it is a no-op on a machine
+that already has everything.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Setup. Safe to re-run: nothing is installed if it is already importable.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ensure</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">spec</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Install `spec` only if `module` cannot already be imported.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="n">module</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="p">([</span><span class="n">spec</span><span class="p">,</span> <span class="n">module</span><span class="p">]</span> <span class="k">if</span> <span class="n">spec</span> <span class="ow">and</span> <span class="n">spec</span> <span class="o">!=</span> <span class="n">module</span> <span class="k">else</span> <span class="p">[</span><span class="n">module</span><span class="p">]):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;installing </span><span class="si">{</span><span class="n">candidate</span><span class="si">}</span><span class="s2"> ...&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="s2">&quot;pip&quot;</span><span class="p">,</span> <span class="s2">&quot;install&quot;</span><span class="p">,</span> <span class="s2">&quot;-q&quot;</span><span class="p">,</span> <span class="n">candidate</span><span class="p">])</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;could not install </span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">triton_spec</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The exact Triton this torch build was compiled against.</span>
+
+<span class="sd">    Torch declares Triton as a dependency, so we can read the pin instead of</span>
+<span class="sd">    guessing. A mismatched Triton imports fine and then fails at the first</span>
+<span class="sd">    `@triton.jit` -- much harder to diagnose than a missing package.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="w"> </span><span class="kn">import</span> <span class="n">requires</span>
+        <span class="k">for</span> <span class="n">req</span> <span class="ow">in</span> <span class="n">requires</span><span class="p">(</span><span class="s2">&quot;torch&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[]:</span>
+            <span class="n">dep</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>     <span class="c1"># drop the environment marker</span>
+            <span class="k">if</span> <span class="s2">&quot;triton&quot;</span> <span class="ow">in</span> <span class="n">dep</span><span class="p">:</span>                 <span class="c1"># `triton` on CUDA, `triton-rocm` on ROCm</span>
+                <span class="k">return</span> <span class="n">dep</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="s2">&quot;triton&quot;</span>
+
+<span class="n">ensure</span><span class="p">(</span><span class="s2">&quot;torch&quot;</span><span class="p">)</span>                  <span class="c1"># preinstalled on Colab; listed so the set is complete</span>
+<span class="n">ensure</span><span class="p">(</span><span class="s2">&quot;matplotlib&quot;</span><span class="p">)</span>
+<span class="n">ensure</span><span class="p">(</span><span class="s2">&quot;triton&quot;</span><span class="p">,</span> <span class="n">triton_spec</span><span class="p">())</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span><span class="o">,</span><span class="w"> </span><span class="nn">triton</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;torch </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2"> | triton </span><span class="si">{</span><span class="n">triton</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2"> | cuda </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="the-birds-eye-view">The bird's-eye view</h2>
+<p>One line of Python triggers a relay race across five layers, each speaking a
+different language:</p>
+<div class="highlight"><pre><span></span><code> YOUR CODE           C = A @ B                             Python
+     │
+     ▼
+ FRAMEWORK           dispatcher asks: &quot;CUDA + fp32 →        C++
+ (PyTorch / ATen)     which implementation?&quot; → picks a
+                      GEMM routine
+     │
+     ▼
+ GPU LIBRARIES       cuBLAS / rocBLAS picks a PRE-BUILT     CUDA / HIP
+ (cuBLAS, rocBLAS)    kernel tuned for this shape,
+                      dtype and chip
+     │
+     ▼
+ DRIVER + RUNTIME    &quot;launch kernel X with 512 blocks&quot;      command queues,
+ (CUDA / ROCm)        queued, doorbell rung, CPU moves on   MMIO, DMA
+     │
+     ▼
+ SILICON             thousands of threads, in warps of      SASS / GCN ISA
+ (the GPU)            32, each compute a tile of C          (GPU machine code)
+</code></pre></div>
+<p>Two ideas are worth having in hand before the descent begins, because everything
+below is a consequence of one or the other.</p>
+<blockquote>
+<p><strong>Intuition 1 — the CPU never multiplies anything.</strong> It is a <em>manager</em>: it
+fills out a work order and drops it in the GPU's queue. Your Python line
+returns <strong>before the math happens</strong>.</p>
+<p><strong>Intuition 2 — the GPU wins by being wide and by hiding waiting</strong>, not by
+being fast per thread. While one group of threads waits on memory, the
+hardware instantly swaps in another. Matmul is the ideal workload because
+every value loaded gets reused many times.</p>
+</blockquote>
+<hr />
+<h2 id="the-descent">The descent</h2>
+<div class="highlight"><pre><span></span><code>&quot;how C = A @ B reaches the GPU and gets executed&quot;
+├── ✗ what matmul computes (O(n³) work on O(n²) data)     — assumed
+├── ✗ latency machines vs throughput machines             — assumed
+├── 1. the software stack: dispatcher → BLAS → launch       ◀ this part (7a)
+├── 2. what a kernel really is (the SPMD inversion)         ◀ this part (7a)
+├── 3. the throughput machine: residency &amp; the free switch  → Lecture 7b
+├── 4. SIMT: grids, blocks, warps of 32, divergence         → Lecture 7c
+├── 5. one block = one tile of C                            → Lecture 7c
+├── 6. coalescing &amp; broadcast                               → Lecture 8
+├── 7. the memory hierarchy and the FLOPs/byte wall         → Lecture 8
+└── 8. tensor cores &amp; torch.compile                         → Lecture 8
+</code></pre></div>
+<p>Depths 1–5 are the execution model: how work is created, named, scheduled and
+kept flowing — this part covers Depths 1–2, <a href="../Lecture7b/">Lecture 7b</a> is
+Depth 3, and <a href="../Lecture7c/">Lecture 7c</a> is Depths 4–5. Depths 6–8 are about
+<em>feeding</em> that machine, and they are <a href="../Lecture8/">Lecture 8</a>.</p>
+<hr />
+<h2 id="depth-1-the-first-ten-microseconds">Depth 1 — The first ten microseconds</h2>
+<p>Everything in this lecture is a consequence of one line of PyTorch:</p>
+<div class="highlight"><pre><span></span><code>C = A @ B
+</code></pre></div>
+<p>You did not say how many threads to make, how to split <code>C</code>, or which arithmetic
+lane should compute which element. Something made all of those decisions for you
+— and it made them <strong>on the CPU, before any math happened</strong>:</p>
+<div class="highlight"><pre><span></span><code>C = A @ B                                          Python
+  │
+  ▼
+ATen DISPATCHER                                    ~1–2 µs
+  reads the &quot;dispatch keys&quot; stamped on the tensors:
+  {CUDA, float32, autograd needed?}
+  a routing table: (op=&quot;matmul&quot;) × (keys) → one
+  concrete function. here: matmul_cuda.
+  same Python, CPU tensors → different code path.
+  │
+  ▼
+BLAS HEURISTICS                                    ~1 µs
+  the vendor ships hundreds of PRE-COMPILED matmul
+  kernels, each tuned for (shape, dtype, chip).
+  a lookup picks one.
+  nothing is compiled at runtime.
+  │
+  ▼
+launch(kernel, grid=(16,32), block=128, args…)
+  work order written into a command queue,
+  doorbell register rung (an MMIO write), CPU returns.
+</code></pre></div>
+<h3 id="proof-by-stopwatch">Proof by stopwatch</h3>
+<p>The gap between "the line returned" and "the work happened" is not a detail —
+it is why a naive <code>time.time()</code> around GPU code lies to you, and why every
+benchmark in this lecture calls <code>torch.cuda.synchronize()</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span><span class="o">,</span><span class="w"> </span><span class="nn">triton</span><span class="o">,</span><span class="w"> </span><span class="nn">triton.language</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.profiler</span><span class="w"> </span><span class="kn">import</span> <span class="n">profile</span><span class="p">,</span> <span class="n">ProfilerActivity</span>
+
+<span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">(),</span> <span class="s2">&quot;these cells need an NVIDIA or AMD GPU (or a free Colab T4)&quot;</span>
+<span class="n">dev</span>  <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">get_device_properties</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">WARP</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span> <span class="s2">&quot;warp_size&quot;</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dev</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">dev</span><span class="o">.</span><span class="n">multi_processor_count</span><span class="si">}</span><span class="s2"> units | warp </span><span class="si">{</span><span class="n">WARP</span><span class="si">}</span><span class="s2"> | torch </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">Ah</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">4096</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+<span class="n">Bh</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">4096</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">Ah</span><span class="p">,</span> <span class="n">Bh</span><span class="p">);</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>      <span class="c1"># warm up, and drain the queue</span>
+
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="n">Ch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">Ah</span><span class="p">,</span> <span class="n">Bh</span><span class="p">)</span>     <span class="c1"># dispatcher + BLAS pick + doorbell. that is ALL.</span>
+<span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>      <span class="c1"># the CPU actually waits for the GPU here</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+
+<span class="n">flop</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">4096</span><span class="o">**</span><span class="mi">3</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">python call returned in : </span><span class="si">{</span><span class="p">(</span><span class="n">t1</span><span class="o">-</span><span class="n">t0</span><span class="p">)</span><span class="o">*</span><span class="mf">1e6</span><span class="si">:</span><span class="s2">8.0f</span><span class="si">}</span><span class="s2"> us   &lt;- just the paperwork&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;math actually done after: </span><span class="si">{</span><span class="p">(</span><span class="n">t2</span><span class="o">-</span><span class="n">t0</span><span class="p">)</span><span class="o">*</span><span class="mf">1e6</span><span class="si">:</span><span class="s2">8.0f</span><span class="si">}</span><span class="s2"> us   &lt;- </span><span class="si">{</span><span class="n">flop</span><span class="o">/</span><span class="mf">1e9</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> billion FLOPs&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;                    gap : </span><span class="si">{</span><span class="p">(</span><span class="n">t2</span><span class="o">-</span><span class="n">t0</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">t1</span><span class="o">-</span><span class="n">t0</span><span class="p">)</span><span class="si">:</span><span class="s2">8.0f</span><span class="si">}</span><span class="s2">x&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>On the course laptop:</p>
+<div class="highlight"><pre><span></span><code>python call returned in :      159 us   &lt;- just the paperwork
+math actually done after:     8054 us   &lt;- 137 billion FLOPs
+                    gap :       51x
+</code></pre></div>
+<p>The Python call returned in 159 microseconds having computed nothing. The 137
+billion floating-point operations took fifty times longer, and happened entirely
+after your line of code was done. (The first number is host-side bookkeeping, so
+it is noisy — re-run the cell and it moves between roughly 70 and 200 µs. The
+second barely moves at all. That asymmetry is itself the point.)</p>
+<p><strong>This is what "asynchronous" means in practice</strong>, and it is the first thing the
+descent has to establish: the CPU is a manager filling out a work order.</p>
+<h3 id="what-did-it-actually-order">What did it actually order?</h3>
+<p>Ask the profiler which kernel the doorbell announced:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gpu_kernel_name</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">warmup</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Name of the GPU kernel that `fn` spends the most DEVICE time in.</span>
+
+<span class="sd">    Returns None when the profiler reports no device-side events. That is not a</span>
+<span class="sd">    bug in your code -- kernel-level tracing is a vendor feature, and on some</span>
+<span class="sd">    driver/runtime combinations the GPU records come back with timestamps the</span>
+<span class="sd">    profiler discards. The math still runs; we just cannot read the name here.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">warmup</span><span class="p">):</span>
+        <span class="n">fn</span><span class="p">()</span>                  <span class="c1"># warm up: the first call also selects and loads a kernel</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
+
+    <span class="k">with</span> <span class="n">profile</span><span class="p">(</span><span class="n">activities</span><span class="o">=</span><span class="p">[</span><span class="n">ProfilerActivity</span><span class="o">.</span><span class="n">CUDA</span><span class="p">])</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
+        <span class="n">fn</span><span class="p">()</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
+
+    <span class="c1"># Keep only events that really executed ON the GPU. The profiler also records</span>
+    <span class="c1"># host-side wrappers such as `aten::matmul`, which dispatch GPU work but</span>
+    <span class="c1"># execute none of it themselves -- filtering on device time is what makes</span>
+    <span class="c1"># &quot;the largest event&quot; the actual GEMM kernel rather than its wrapper.</span>
+    <span class="n">on_device</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">prof</span><span class="o">.</span><span class="n">key_averages</span><span class="p">()</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">self_device_time_total</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">on_device</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">self_device_time_total</span><span class="p">)</span><span class="o">.</span><span class="n">key</span> <span class="k">if</span> <span class="n">on_device</span> <span class="k">else</span> <span class="kc">None</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+<span class="n">MATMUL_SHAPE</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">B</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>            <span class="c1"># remember it: we decode this later</span>
+
+<span class="c1"># Abbreviated, but every field in it is verbatim from a real run on the course</span>
+<span class="c1"># laptop. Used only as a stand-in so the rest of the lecture still runs on a</span>
+<span class="c1"># machine whose profiler cannot report kernel names.</span>
+<span class="n">COURSE_LAPTOP_KERNEL</span> <span class="o">=</span> <span class="s2">&quot;Cijk_Ailk_Bljk_SB_MT128x64x8_SN_1LDSB0_..._TT8_8_..._WS32_WG16_8_1_WGM4&quot;</span>
+
+<span class="n">MATMUL_KERNEL</span> <span class="o">=</span> <span class="n">gpu_kernel_name</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">A</span> <span class="o">@</span> <span class="n">B</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">MATMUL_KERNEL</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">MATMUL_KERNEL</span> <span class="o">=</span> <span class="n">COURSE_LAPTOP_KERNEL</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;this machine&#39;s profiler reported no device-side events;&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;falling back to the name recorded on the course laptop.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;the kernel your `@` actually launched:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">MATMUL_KERNEL</span><span class="p">)</span>
+</code></pre></div>
+<p>Where the profiler can see the GPU, that prints a single kernel whose name
+begins:</p>
+<div class="highlight"><pre><span></span><code>Cijk_Ailk_Bljk_SB_MT128x64x8_SN_1LDSB0_..._TT8_8_..._WS32_WG16_8_1_WGM4
+</code></pre></div>
+<p>(If your machine takes the fallback branch, everything downstream still works —
+you are reading a decomposition that was really measured, just not on your own
+card. A free Colab T4 will show you your own.)</p>
+<p>It looks like line noise. It is not. That string is the entire decomposition of
+your matmul — how <code>C</code> was cut up, how many threads were assigned to each piece,
+how wide the hardware's thread groups are, and how much of <code>C</code> each individual
+thread computed. Every field in it is vocabulary from this lecture.</p>
+<blockquote>
+<p><strong>By the end of Depth 5 (in <a href="../Lecture7c/">Lecture 7c</a>) you will read that
+name and be able to state exactly how your <code>A @ B</code> was executed.</strong></p>
+</blockquote>
+<h3 id="what-a-kernel-is">What a <em>kernel</em> is</h3>
+<p>Nothing to do with an operating-system kernel. Here a <strong>kernel is software</strong>: one
+compiled function that runs <em>on the GPU</em>, executed by many threads at once.</p>
+<div class="highlight"><pre><span></span><code>software                                    hardware
+────────                                    ────────
+C = A @ B            ← the line you wrote
+     ↓
+PyTorch dispatcher
+     ↓
+rocBLAS / cuBLAS     ← a library of pre-built kernels
+     ↓
+one chosen kernel ──────────────► warps ──► CUs / SMs ──► ALU lanes
+</code></pre></div>
+<p>Keep three things separate:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>A @ B</code></td>
+<td>the operation you asked for</td>
+</tr>
+<tr>
+<td>the kernel</td>
+<td>GPU <strong>software</strong> that implements it</td>
+</tr>
+<tr>
+<td>CU/SM, warp, ALU lane</td>
+<td>GPU <strong>hardware</strong> that executes that software</td>
+</tr>
+</tbody>
+</table>
+<p>PyTorch did not write this kernel when you called <code>@</code>. Vendor BLAS libraries ship
+<strong>many</strong> pre-compiled variants of the same operation — different tile shapes,
+dtypes, transpositions, architectures — and select one per call from your shapes
+and your device. That is why the name is so specific: it names <em>one variant</em>, not
+"matmul". Being compiled for one architecture, it will not run on another.</p>
+<p>Two consequences this lecture uses:</p>
+<ul>
+<li>the choice depends on your problem, so a different matmul gets a different kernel — shown in <a href="../Lecture7c/#depth-5-one-block-one-tile-of-c">Depth 5</a></li>
+<li>a kernel is just a program, so you can write your own — which is what Triton is for. Every <code>@triton.jit</code> function below compiles to a kernel of exactly this kind, and runs beside the vendor's.</li>
+</ul>
+<hr />
+<h2 id="depth-2-the-kernel-inversion">Depth 2 — The kernel inversion</h2>
+<p>We now know a kernel is a program the GPU runs. But <em>what does that program say</em>?</p>
+<p>The tempting answer — "it is the recipe for breaking up the task" — is subtly
+wrong, and getting it wrong makes every kernel you read afterwards confusing.
+The launch configuration (the grid) does the breaking up. The kernel is the
+opposite:</p>
+<blockquote>
+<p><strong>The SPMD inversion.</strong> A kernel is an ordinary <em>sequential</em> function, written
+from the point of view of <strong>one worker</strong>. The parallelism comes from launching
+a million copies of it. You never write "split the work" — you write "here is
+what worker <em>(x, y)</em> does", and each worker computes its own identity to find
+its slice.</p>
+</blockquote>
+<p>Here is the whole idea in a naive CUDA matmul. Read it looking for the loop over
+the matrix, or for anything that says "in parallel". Neither is there:</p>
+<div class="highlight"><pre><span></span><code>// One thread&#39;s job. No visible parallelism anywhere.
+__global__ void matmul(float *A, float *B, float *C, int N) {
+    int row = blockIdx.y * blockDim.y + threadIdx.y;   // &quot;who am I?&quot;
+    int col = blockIdx.x * blockDim.x + threadIdx.x;
+    float sum = 0;
+    for (int k = 0; k &lt; N; k++)
+        sum += A[row*N + k] * B[k*N + col];            // one dot product
+    C[row*N + col] = sum;                              // one output element
+}
+</code></pre></div>
+<p>Those first two lines are the signature move of GPU programming: <strong>the program
+asks the hardware who it is</strong>, and derives its work from the answer. Every kernel
+in this lecture starts the same way.</p>
+<h3 id="a-detour-what-triton-is-and-why-we-use-it-here">A detour: what Triton is, and why we use it here</h3>
+<p>To watch the hierarchy we need to <em>write</em> a kernel, not just call one. The
+traditional way is CUDA C++, which only compiles for NVIDIA. <strong>Triton</strong> is a
+Python-embedded language for writing GPU kernels that compiles for both NVIDIA and
+AMD, so the same cell runs on a Colab T4 and on the course laptop. That is the only
+reason it appears in this lecture — we are not learning Triton, we are using it as
+a window onto the execution model.</p>
+<p>Three things to know before reading the code:</p>
+<ul>
+<li><code>@triton.jit</code> marks a function as a kernel. It is not ordinary Python: it is
+  compiled to GPU machine code the first time you launch it.</li>
+<li>You launch it with <code>kernel[grid](args...)</code>. The <code>[grid]</code> says <strong>how many
+  independent instances to run</strong>.</li>
+<li>Triton is <strong>block-level, not thread-level</strong>. In CUDA you write what <em>one thread</em>
+  does and the hardware runs thousands of copies. In Triton you write what <em>one
+  chunk of data</em> has done to it, using whole-array expressions, and the compiler
+  decides how many hardware threads to use. This difference is the one thing worth
+  keeping straight, and the code below is annotated to make it visible.</li>
+</ul>
+<p>One vocabulary note, because it trips people up: Triton calls each instance a
+<strong>program</strong>, not a thread block. They correspond closely enough that we will read
+<code>tl.program_id</code> as "which block am I", but they are not the same abstraction, and
+in a moment we will see exactly where they come apart.</p>
+<h3 id="the-hierarchy-in-one-runnable-kernel">The hierarchy in one runnable kernel</h3>
+<p>It adds two vectors — the simplest possible thing — but every level is visible as
+an actual line of code:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@triton</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">vector_add</span><span class="p">(</span><span class="n">a_ptr</span><span class="p">,</span> <span class="n">b_ptr</span><span class="p">,</span> <span class="n">c_ptr</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">,</span> <span class="n">ELEMS_PER_PROG</span><span class="p">:</span> <span class="n">tl</span><span class="o">.</span><span class="n">constexpr</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;One execution of this body = ONE PROGRAM INSTANCE (≈ one CUDA block).</span>
+
+<span class="sd">    `grid` of them exist. They are independent and unordered: no instance may</span>
+<span class="sd">    assume another has run, is running, or will run. That independence is why</span>
+<span class="sd">    the same source scales unchanged from an 18-unit laptop to a 132-SM server part.</span>
+
+<span class="sd">    Everything below is a VECTOR of width ELEMS_PER_PROG. Triton is a</span>
+<span class="sd">    *block-level* language -- there is no &quot;my thread&#39;s element&quot; in this code.</span>
+<span class="sd">    Nothing here names a thread, a warp, or a lane; the compiler chooses those.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">prog_id</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">program_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>                 <span class="c1"># instance id: 0 .. grid-1</span>
+
+    <span class="c1"># ELEMENT slots inside my chunk -- an index vector, NOT hardware lanes.</span>
+    <span class="c1"># Hardware lanes number num_warps*32, which is a different count entirely</span>
+    <span class="c1"># (the printout at the bottom shows the ratio).</span>
+    <span class="n">elem_in_prog</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ELEMS_PER_PROG</span><span class="p">)</span>
+
+    <span class="c1"># The global positions in a/b/c that this instance owns:</span>
+    <span class="c1">#   prog 0 -&gt; [0..255], prog 1 -&gt; [256..511], ...</span>
+    <span class="n">elem_idx</span> <span class="o">=</span> <span class="n">prog_id</span> <span class="o">*</span> <span class="n">ELEMS_PER_PROG</span> <span class="o">+</span> <span class="n">elem_in_prog</span>
+
+    <span class="c1"># n_elements is rarely a multiple of ELEMS_PER_PROG, so the LAST instance</span>
+    <span class="c1"># runs off the end. Masked-off positions are neither loaded nor stored, so</span>
+    <span class="c1"># we never touch memory we do not own.</span>
+    <span class="n">in_bounds</span> <span class="o">=</span> <span class="n">elem_idx</span> <span class="o">&lt;</span> <span class="n">n_elements</span>
+
+    <span class="c1"># Whole-vector ops, not scalar ones: `a_ptr + elem_idx` is ELEMS_PER_PROG</span>
+    <span class="c1"># addresses at once, so one tl.load fetches that many values in one go.</span>
+    <span class="n">a_vals</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">a_ptr</span> <span class="o">+</span> <span class="n">elem_idx</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">in_bounds</span><span class="p">)</span>
+    <span class="n">b_vals</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">b_ptr</span> <span class="o">+</span> <span class="n">elem_idx</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">in_bounds</span><span class="p">)</span>
+    <span class="n">tl</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">c_ptr</span> <span class="o">+</span> <span class="n">elem_idx</span><span class="p">,</span> <span class="n">a_vals</span> <span class="o">+</span> <span class="n">b_vals</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">in_bounds</span><span class="p">)</span>
+
+
+<span class="n">n_elements</span>     <span class="o">=</span> <span class="mi">1_000_000</span>
+<span class="n">ELEMS_PER_PROG</span> <span class="o">=</span> <span class="mi">256</span>               <span class="c1"># ELEMENTS per instance -- *not* a thread count</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_elements</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_elements</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+<span class="c1"># THE GRID: how many instances to cover n_elements, ELEMS_PER_PROG at a time?</span>
+<span class="c1"># cdiv rounds UP; `in_bounds` cleans up the overhang in the final instance.</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="p">(</span><span class="n">triton</span><span class="o">.</span><span class="n">cdiv</span><span class="p">(</span><span class="n">n_elements</span><span class="p">,</span> <span class="n">ELEMS_PER_PROG</span><span class="p">),)</span>
+<span class="n">compiled</span> <span class="o">=</span> <span class="n">vector_add</span><span class="p">[</span><span class="n">grid</span><span class="p">](</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">,</span> <span class="n">ELEMS_PER_PROG</span><span class="o">=</span><span class="n">ELEMS_PER_PROG</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="c1"># ---- Level 1: what YOU specified (the programming model) --------------------</span>
+<span class="n">n_progs</span>   <span class="o">=</span> <span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">slots</span>     <span class="o">=</span> <span class="n">n_progs</span> <span class="o">*</span> <span class="n">ELEMS_PER_PROG</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PROGRAMMING MODEL  (every number below came from your source)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  program instances : </span><span class="si">{</span><span class="n">n_progs</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  elements/instance : </span><span class="si">{</span><span class="n">ELEMS_PER_PROG</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  slots covered     : </span><span class="si">{</span><span class="n">slots</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="n">n_elements</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> elements&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;   (</span><span class="si">{</span><span class="n">slots</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">n_elements</span><span class="si">}</span><span class="s2"> masked off in the last instance)&quot;</span><span class="p">)</span>
+
+<span class="c1"># ---- Level 2: what the COMPILER built (the hardware mapping) ----------------</span>
+<span class="c1"># None of these appear anywhere in the kernel above.</span>
+<span class="n">warps_per_prog</span> <span class="o">=</span> <span class="n">compiled</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">num_warps</span>
+<span class="n">lanes_per_prog</span> <span class="o">=</span> <span class="n">warps_per_prog</span> <span class="o">*</span> <span class="n">WARP</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">HARDWARE MAPPING   (none of this appears in your source)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  warps/instance    : </span><span class="si">{</span><span class="n">warps_per_prog</span><span class="si">}</span><span class="s2">   &lt;- Triton chose this, you did not&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  lanes/instance    : </span><span class="si">{</span><span class="n">warps_per_prog</span><span class="si">}</span><span class="s2"> x </span><span class="si">{</span><span class="n">WARP</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">lanes_per_prog</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  elements/LANE     : </span><span class="si">{</span><span class="n">ELEMS_PER_PROG</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">lanes_per_prog</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot; = </span><span class="si">{</span><span class="n">ELEMS_PER_PROG</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">lanes_per_prog</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;   &lt;- &gt;1 means `elem_in_prog` indexes ELEMENTS, not lanes&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>On the course laptop that prints a grid of 3,907 instances covering 1,000,192
+slots — 192 of them masked off — and then the part that matters:</p>
+<div class="highlight"><pre><span></span><code>num_warps      : 4   &lt;- Triton chose this, you did not
+hardware lanes : 4 x 32 = 128 per instance
+elements/lane  : 256 / 128 = 2
+</code></pre></div>
+<p><strong><code>BLOCK</code> is 256 but there are only 128 hardware lanes.</strong> Each lane handles two
+elements. A tempting shortcut — "256 elements ÷ 32 per warp = 8 warps" — is simply
+wrong here, and the compiler will happily tell you so. <code>BLOCK</code> is a <em>logical</em> tile
+size you chose; <code>num_warps</code> is the <em>hardware</em> mapping the compiler chose. Keep them
+apart.</p>
+<p>So the levels are:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>In the code</th>
+<th>What it is</th>
+<th>Who chose it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>grid</strong></td>
+<td><code>grid = (cdiv(n, BLOCK),)</code></td>
+<td>all the instances needed to cover the problem</td>
+<td>you</td>
+</tr>
+<tr>
+<td><strong>program</strong> ≈ block / workgroup</td>
+<td><code>tl.program_id(0)</code></td>
+<td>one chunk of work, scheduled onto one CU</td>
+<td>you (via <code>BLOCK</code>)</td>
+</tr>
+<tr>
+<td><strong>element / lane position</strong></td>
+<td>one entry of <code>tl.arange(0, BLOCK)</code></td>
+<td>one logical position in that chunk</td>
+<td>you (via <code>BLOCK</code>)</td>
+</tr>
+<tr>
+<td><strong>warp</strong> / wavefront</td>
+<td><em>nowhere</em> — <code>num_warps</code></td>
+<td>what the hardware <strong>actually</strong> schedules</td>
+<td>the compiler</td>
+</tr>
+<tr>
+<td><strong>thread</strong></td>
+<td><em>nowhere</em></td>
+<td>one hardware lane, may handle several elements</td>
+<td>the compiler</td>
+</tr>
+</tbody>
+</table>
+<p>Note the asymmetry. You wrote the grid, the block and the per-element work. <strong>You
+never wrote the warp, and you never wrote a thread.</strong> Nothing in that kernel
+mentions 32. Those two rows are filled in underneath you — which is why they are
+the levels that surprise people, and why the rest of this lecture keeps returning
+to them.</p>
+<div class="admonition question">
+<p class="admonition-title">💬 If <code>tl.arange(0, 256)</code> does not create 256 threads, what does the number 256 actually control?</p>
+<details class="hint">
+<summary>Answer</summary>
+<p><strong>How much data one program instance owns</strong>, and nothing more directly. It sets
+the tile size, which in turn sets the grid (<code>n / BLOCK</code> instances) and how much
+work each hardware lane ends up with (<code>BLOCK / (num_warps × 32)</code> elements).
+Triton then picks <code>num_warps</code> — 4 here — to map that tile onto the machine. This
+is why the warp-width experiment in Depth 4 (<a href="../Lecture7c/">Lecture 7c</a>) pins <code>num_warps=1</code>: with
+one warp, <code>BLOCK</code> and the lane count finally coincide, and only then does
+sweeping <code>BLOCK</code> measure something about warps.</p>
+</details>
+</div>
+<p>Two of those rows deserve a sentence more.</p>
+<p>A <strong>block / workgroup</strong> is assigned to exactly one compute unit at a time, and the
+threads inside it can cooperate through shared memory. That is what makes it a
+meaningful unit rather than an arbitrary grouping.</p>
+<p>A <strong>warp / wavefront</strong> is a fixed-size group of threads that execute instructions
+together. NVIDIA uses 32-thread warps; AMD hardware uses 32- or 64-thread
+wavefronts depending on the architecture. The size is an architectural choice, not
+a universal constant — this laptop contains two AMD GPUs with different widths, as
+<a href="../Lecture7c/#appendix-b-this-laptops-gpus">Appendix B</a> shows.</p>
+<blockquote>
+<p><strong>The hardware schedules groups of threads, not independent CPU-like threads.</strong></p>
+</blockquote>
+<hr />
+<h2 id="next">Next</h2>
+<p>You launched a kernel, and the compiler quietly chose warps and blocks you never
+wrote. <strong><a href="../Lecture7b/">Lecture 7b</a></strong> meets the machine those warps land on — and
+measures the latency hiding it exists to perform.</p>
+<p>References for all three parts are collected at the end of
+<a href="../Lecture7c/#references-and-further-reading">Lecture 7c</a>.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../Lecture7/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 7:Matmul to Silicon — Overview">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                7:Matmul to Silicon — Overview
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../Lecture7b/" class="md-footer__link md-footer__link--next" aria-label="Next: 7b:The Throughput Machine">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                7b:The Throughput Machine
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Ankush Chander
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
