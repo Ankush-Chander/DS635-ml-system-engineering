@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-grade_lab7.py -- automated marking for Lab 7, "The concurrency budget".
+grade_lab2.py -- automated marking for Lab 2, "The concurrency budget".
 
-    python grade_lab7.py <submissions_dir> [-o report_dir] [--csv-only]
+    python grade_lab2.py <submissions_dir> [-o report_dir] [--csv-only]
 
 WHAT THIS CAN AND CANNOT MARK
 -----------------------------
@@ -322,7 +322,7 @@ def learn_templates(blank_nb: Path) -> None:
     """Record the length of every prompt in the pristine notebook.
 
     Without this a long prompt looks like a long answer. Point it at the notebook
-    as shipped: `--blank docs/labs/Lab7_concurrency_budget.ipynb`.
+    as shipped: `--blank docs/labs/Lab2_concurrency_budget.ipynb`.
     """
     for k, v in extract_prose(blank_nb).items():
         if not k.startswith("_"):
@@ -370,7 +370,7 @@ def find_duplicates(subs: list[Submission]) -> list[tuple[str, str, int]]:
 
 def scorecard(s: Submission) -> str:
     env = s.data.get("env", {})
-    L = [f"# Lab 7 scorecard — {s.roll}" + (f" ({s.name})" if s.name else ""), ""]
+    L = [f"# Lab 2 scorecard — {s.roll}" + (f" ({s.name})" if s.name else ""), ""]
     L += [f"- **Device:** {env.get('device','?')}",
           f"- **Backend:** torch {env.get('torch','?')} / {env.get('backend','?')} / "
           f"triton {env.get('triton','?')}",
@@ -410,14 +410,14 @@ def scorecard(s: Submission) -> str:
 
 def load(directory: Path) -> list[Submission]:
     subs = []
-    for jf in sorted(directory.glob("submission_lab7_*.json")):
+    for jf in sorted(directory.glob("submission_lab2_*.json")):
         try:
             data = json.loads(jf.read_text())
         except Exception as e:  # noqa: BLE001
             print(f"  !! {jf.name}: unreadable JSON ({e})", file=sys.stderr)
             continue
         roll = str(g(data, "student", "roll", default="")
-                   or jf.stem.replace("submission_lab7_", ""))
+                   or jf.stem.replace("submission_lab2_", ""))
         s = Submission(path=jf, roll=roll,
                        name=str(g(data, "student", "name", default="") or ""), data=data)
         cands = list(directory.glob(f"*{roll}*.ipynb"))
@@ -432,12 +432,12 @@ def load(directory: Path) -> list[Submission]:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Mark Lab 7 submissions.")
+    ap = argparse.ArgumentParser(description="Mark Lab 2 submissions.")
     ap.add_argument("directory", type=Path)
     ap.add_argument("-o", "--out", type=Path, default=None,
                     help="write per-student scorecards here (default: <dir>/reports)")
     ap.add_argument("--blank", type=Path,
-                    default=Path("docs/labs/Lab7_concurrency_budget.ipynb"),
+                    default=Path("docs/labs/Lab2_concurrency_budget.ipynb"),
                     help="the notebook as shipped, to measure prompt lengths against")
     ap.add_argument("--csv-only", action="store_true")
     a = ap.parse_args()
@@ -450,7 +450,7 @@ def main() -> int:
 
     subs = load(a.directory)
     if not subs:
-        print(f"No submission_lab7_*.json found in {a.directory}", file=sys.stderr)
+        print(f"No submission_lab2_*.json found in {a.directory}", file=sys.stderr)
         return 1
     for s in subs:
         run_checks(s)
@@ -469,7 +469,7 @@ def main() -> int:
         for s in subs:
             (out / f"scorecard_{s.roll}.md").write_text(scorecard(s))
 
-    csv_path = (out if not a.csv_only else a.directory) / "lab7_marks.csv"
+    csv_path = (out if not a.csv_only else a.directory) / "lab2_marks.csv"
     csv_path.parent.mkdir(parents=True, exist_ok=True)
     with csv_path.open("w", newline="") as f:
         w = csv.writer(f)

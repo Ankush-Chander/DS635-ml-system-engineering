@@ -4,9 +4,12 @@ Labs are where the course's claims get tested against hardware you control. Each
 
 Every lab runs on **Google Colab** (free GPU) or **your own machine**. Nothing requires lab hardware, and nothing requires a particular vendor: **NVIDIA (CUDA)**, **AMD (ROCm)** and **Apple silicon (MPS)** are all supported. Where a backend genuinely cannot run an experiment, it is skipped and recorded rather than failed, and you are marked on explaining why it does not apply.
 
+The one exception is **Lab 2**, whose experiments are all Triton kernels: Triton has no Metal backend, so that lab needs CUDA or ROCm — a free Colab T4 is enough.
+
 | Lab | Pairs with | You measure | Marks |
 |---|---|---|---:|
 | [Lab 5/6 — GPU Job Submission](Lab5_6.md) | [Lecture 5/6](../lectures/Lecture5_6.md) | Establishing theoretical peak · submission vs execution · launch cost · fences · pinned memory · stream overlap · CUDA Graphs | 100 |
+| [Lab 2 — The Concurrency Budget](Lab2.md) | [Lecture 7](../lectures/Lecture7.md) | Memory latency by pointer chase · achieved bandwidth · Little's Law · wave quantisation · the tail effect | 100 |
 
 ## How labs are marked
 

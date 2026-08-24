@@ -1,10 +1,10 @@
-# Lab 7 — The concurrency budget
+# Lab 2 — The concurrency budget
 
 > **Lab thesis:** a GPU is not fast because its threads are fast. It is fast because thousands of them are in flight at once. This lab makes you *derive* how much work your GPU must have in flight to run at full speed — from two numbers you measure yourself — and then find the exact grid size at which it stops being able to.
 
 This is the experimental half of [Lecture 7 — Matmul to silicon](../lectures/Lecture7.md). The lecture argued latency hiding qualitatively: over-subscribe the machine and memory latency disappears behind other warps' arithmetic. It never put a number on *how much* over-subscription is enough. Here you produce that number, and then test it.
 
-[**Open the notebook in Colab**](https://colab.research.google.com/github/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab7_concurrency_budget.ipynb) · [read it on this site](Lab7_concurrency_budget.ipynb) · [download from GitHub](https://github.com/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab7_concurrency_budget.ipynb)
+[**Open the notebook in Colab**](https://colab.research.google.com/github/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab2_concurrency_budget.ipynb) · [read it on this site](Lab2_concurrency_budget.ipynb) · [download from GitHub](https://github.com/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab2_concurrency_budget.ipynb)
 
 ---
 
@@ -70,7 +70,7 @@ Two traps are marked in the notebook and both have bitten this course's own code
 
 **Two files.** The JSON carries your measurements; the notebook carries your reasoning. A JSON without its notebook cannot be marked.
 
-1. **`submission_lab7_<roll>.json`** — written by the notebook's final cell. Set `ROLL_NUMBER` and `NAME` in the setup cell first, or the export refuses to run.
+1. **`submission_lab2_<roll>.json`** — written by the notebook's final cell. Set `ROLL_NUMBER` and `NAME` in the setup cell first, or the export refuses to run.
 2. **The executed notebook** — `File > Download > .ipynb`, outputs intact, every 📝 cell filled in.
 
 Run every cell top to bottom before exporting. The export cell reports how many measurements it recorded and names any that are missing.

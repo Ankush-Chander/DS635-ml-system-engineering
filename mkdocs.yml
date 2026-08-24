@@ -29,6 +29,8 @@ nav:
       - Overview: 'labs/index.md'
       - '5_6:GPU Job Submission': 'labs/Lab5_6.md'
       - '5_6:Lab notebook': 'labs/Lab5_6_gpu_job_submission.ipynb'
+      - '2:The Concurrency Budget': 'labs/Lab2.md'
+      - '2:Lab notebook': 'labs/Lab2_concurrency_budget.ipynb'
   # - Code:
   #     - Storage Engines: 'code/storage_engines/README.md'
   #     - SSTable: 'https://github.com/Ankush-Chander/sorted-string-table-101'
