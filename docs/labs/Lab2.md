@@ -2,7 +2,7 @@
 
 > **Lab thesis:** a GPU is not fast because its threads are fast. It is fast because thousands of them are in flight at once. This lab makes you *derive* how much work your GPU must have in flight to run at full speed — from two numbers you measure yourself — and then find the exact grid size at which it stops being able to.
 
-This is the experimental half of [Lecture 7 — Matmul to silicon](../lectures/Lecture7.md). The lecture argued latency hiding qualitatively: over-subscribe the machine and memory latency disappears behind other warps' arithmetic. It never put a number on *how much* over-subscription is enough. Here you produce that number, and then test it.
+This is the experimental half of [Lecture 7b — The throughput machine](../lectures/Lecture7b.md). The lecture argued latency hiding qualitatively: over-subscribe the machine and memory latency disappears behind other warps' arithmetic. It never put a number on *how much* over-subscription is enough. Here you produce that number, and then test it.
 
 [**Open the notebook in Colab**](https://colab.research.google.com/github/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab2_concurrency_budget.ipynb) · [read it on this site](Lab2_concurrency_budget.ipynb) · [download from GitHub](https://github.com/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab2_concurrency_budget.ipynb)
 

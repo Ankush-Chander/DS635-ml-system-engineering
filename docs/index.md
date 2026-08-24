@@ -15,8 +15,8 @@ Welcome to the course on Machine Learning System Engineering.
 
 - [2: Why Accelerators Exist](lectures/Lecture2.md) — the CPU baseline, the memory wall, what the matmul workload demands, design the hardware yourself
 - [3_4: Memory Hierarchy & Roofline](lectures/Lecture3_4.md) — the matmul ladder from naive Python to GPU, SIMD, tiling, threads, arithmetic intensity, the roofline model, two GPU timing traps
-- [5_6: GPU Job Submission](lectures/Lecture5_6.md) — PCIe, MMIO and BARs, DMA, ring/doorbell/fence, why an unsynchronized kernel launch measures nothing
-[7: Inside the GPU — Execution & Latency Hiding](lectures/Lecture7.md) — SMs, warps and SIMT, a CUDA core is not a core, latency hiding by oversubscription, why the register file is bigger than L1, divergence and occupancy
+- [5_6: GPU Job Submission](lectures/Lecture5_6.md) — PCIe, MMIO and BARs, DMA, ring/doorbell/fence, why an unsynchronized kernel launch measures nothing  
+[7: Inside the GPU — Execution & Latency Hiding](lectures/Lecture7.md) (in three parts: [7a](lectures/Lecture7a.md), [7b](lectures/Lecture7b.md), [7c](lectures/Lecture7c.md)) — SMs, warps and SIMT, a CUDA core is not a core, latency hiding by oversubscription, why the register file is bigger than L1, divergence and occupancy
 <!--- - [8: Inside the GPU — Memory & the Roofline](lectures/Lecture8.md) — the memory hierarchy, shared memory is not a cache, coalescing and the working-set cliff, building both roofline axes from `rocminfo`, why LLM decode is memory-bound and training compute-bound-->
 
 ## Labs
