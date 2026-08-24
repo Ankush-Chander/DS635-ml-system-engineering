@@ -398,7 +398,7 @@ def vector_add(a_ptr, b_ptr, c_ptr, n_elements, ELEMS_PER_PROG: tl.constexpr):
 
     `grid` of them exist. They are independent and unordered: no instance may
     assume another has run, is running, or will run. That independence is why
-    the same source scales unchanged from an 18-CU laptop to a 132-SM server part.
+    the same source scales unchanged from an 18-unit laptop to a 132-SM server part.
 
     Everything below is a VECTOR of width ELEMS_PER_PROG. Triton is a
     *block-level* language -- there is no "my thread's element" in this code.
@@ -879,7 +879,7 @@ gb = 2 * n * 4 / 1e9                                        # read + write
 
 print(f"copying {n*4/2**20:.0f} MB, {gb:.3f} GB moved, identical work every row")
 print(f"{'blocks':>8} {'ms':>9} {'GB/s':>9}")
-for g in (1, 2, 4, 8, 18, 36, 72, 144, 288, 1152, 4608):
+for g in (1, 2, 4, 6, 8, 10, 12, 14, 18, 36, 144, 1152):     # fine near the knee
     ms = triton.testing.do_bench(lambda: copy_kernel[(g,)](x, y, n, g, BLOCK=1024),
                                  warmup=25, rep=150, return_mode="median")
     print(f"{g:>8} {ms:>9.3f} {gb/(ms*1e-3):>9.1f}")
@@ -890,46 +890,80 @@ Measured on the course laptop:
 
 ```text
   blocks        ms      GB/s
-       1     5.569      24.1
-       2     2.654      50.6
-       4     1.386      96.8
-       8     0.872     154.0
-      18     0.803     167.2
-      36     0.820     163.7
-      72     0.841     159.5
-     144     0.856     156.8
-     288     0.874     153.5
-    1152     0.862     155.8
-    4608     0.824     162.8
+       1     5.512      24.3
+       2     2.645      50.7
+       4     1.399      95.9
+       6     1.053     127.4
+       8     0.886     151.5
+      10     0.796     168.7
+      12     0.768     174.7
+      14     0.775     173.3
+      18     0.783     171.5
+      36     0.772     173.8
+     144     0.794     169.0
+    1152     0.802     167.4
 ```
 
-Read the first row and the peak together. **Same bytes, same kernel, 6.9× the
+Read the first row and the peak together. **Same bytes, same kernel, 7.2× the
 throughput** — bought with nothing but having more work resident at the same time.
 Nothing was optimized. No instruction was made cheaper. The only change is that
 when one block stalls on DRAM, there is somebody else to run.
 
 That is latency hiding, and this table is what it looks like from the outside.
 
-Notice also where the curve stops climbing: around **18 blocks**, which is exactly
-the number of units this GPU reports. Below that, some units have no work at all
-and the machine is idle by construction. Past it, the extra blocks queue up and
-throughput flattens at the memory system's limit — the GPU cannot go faster than
-DRAM can supply, no matter how much work you give it.
+Now find where the curve stops climbing, and be careful with it. The obvious guess
+is that it should flatten at **18**, the number of units this GPU reports — one
+block each, machine full. That guess is wrong, and the sweep above is deliberately
+fine near the knee so you can watch it fail. Peak arrives at **10 to 12 blocks**,
+to the *left* of 18. At 12 blocks, six of the eighteen units have been handed
+nothing at all and the GPU is already running at full speed.
 
-That ceiling is the subject of [Lecture 8](Lecture8.md). This lecture's claim is
-only the left half of the table: **oversubscription is what gets you from 24 GB/s
-to 167 GB/s.**
+Sit with that, because it contradicts a guess the next section is about to make
+very tempting. [Depth 4](#depth-4-simt-the-shape-of-the-thread-army) will show
+that a block is pinned to one compute unit and lives and dies there — so surely the
+machine is "full" only once every unit holds one? No. Block→unit pinning tells you
+*where* a block runs. It says nothing about how many blocks the machine needs in
+order to be fast.
 
-!!! question "💬 Throughput saturates at 18 blocks. Does that mean 18 blocks is enough work for any kernel on this GPU?"
+> **Saturating is not the same as occupying.**
+
+What actually runs out in this kernel is DRAM bandwidth, and DRAM is a *single
+shared resource sitting behind all 36 compute units* — not something each unit owns
+a slice of. Once enough blocks are asking for bytes to keep the memory system busy,
+handing work to the units still standing idle adds no bandwidth at all; it only
+divides the same ~170 GB/s more ways. That is why the table is flat from 12 blocks
+all the way out to 1,152.
+
+How little of the machine this takes is the genuinely surprising part. Triton
+compiles this kernel to 128 threads per block, so 12 blocks is 48 warps against the
+1,152 warp slots this GPU can hold resident — **about 4% occupancy, with DRAM
+already maxed out**. Four blocks, touching at most four of the thirty-six compute
+units, already reach over half of peak bandwidth.
+
+So the left half of the table is not units sitting idle by construction. It is too
+few **outstanding memory requests** in flight to cover DRAM latency. How many bytes
+a GPU must keep in flight to hide its own latency is Little's Law, and
+[Lab 2](../labs/Lab2.md) measures it on your card directly.
+
+The ceiling on the right is the subject of [Lecture 8](Lecture8.md). This lecture's
+claim is only the left half of the table: **oversubscription is what gets you from
+24 GB/s to 174 GB/s.**
+
+!!! question "💬 Throughput saturates at 12 blocks, before every unit even has work. Does that mean 12 blocks is enough work for any kernel on this GPU?"
 
     ??? hint "Answer"
-        No — it means 18 blocks is enough to saturate *this* kernel's bottleneck, which
-        is DRAM bandwidth. A copy has almost no arithmetic and enormous memory latency
-        per instruction, so a handful of blocks per unit already covers the stalls. A
-        kernel with a long dependent chain of arithmetic and few memory operations
-        stalls for different reasons and saturates at a different point. This is the
-        measured version of the warning above: oversubscription creates *opportunities*
-        for latency hiding, and how many you need depends on the kernel.
+        No — it means 12 blocks is enough to saturate *this* kernel's bottleneck, which
+        is DRAM bandwidth, a resource shared by the whole chip rather than owned per
+        unit. A copy has almost no arithmetic and enormous memory latency per
+        instruction, so a handful of blocks already keeps the memory system busy.
+
+        A **compute-bound** kernel is the opposite case: its bottleneck is the ALUs,
+        which genuinely are per-unit, so it cannot go fast until every unit has work —
+        and then wants several blocks each on top of that, to hide arithmetic latency.
+        Change the kernel and you change both the bottleneck and the block count that
+        reaches it. This is the measured version of the warning above: oversubscription
+        creates *opportunities* for latency hiding, and how many you need depends
+        entirely on what the kernel is waiting for.
 
 ---
 
