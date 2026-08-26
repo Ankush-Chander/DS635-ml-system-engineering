@@ -445,18 +445,47 @@ This is why "avoid all branches on GPUs" is bad advice. Measure the kernel.
 
 We can now cash in the kernel name from Depth 1 ([Lecture 7a](Lecture7a.md)).
 
-The vector add was one-dimensional and each element was independent. A matmul is
-neither: every element of `C` is a dot product over a whole row and column. The
-decomposition is the same idea in two dimensions, and it requires one change of
-mental model:
+Recall the naive kernel from Depth 2. Its last line was
+`C[row*N + col] = sum`: each thread **owned one cell of the output** and computed
+it end to end. Nothing about that changes in this depth except the *grain* of
+ownership. The question a matmul decomposition answers is:
 
-> **Stop thinking "one thread = one element of C". Think "one block = one tile of
-> C".**
+> **Who is responsible for writing which entries of the output `C`?**
+
+We hand out the *answer*, not the inputs, for a reason. Every cell of `C` is an
+independent dot product — no two blocks ever need to write the same cell. `A` and
+`B`, by contrast, are read-only and shared: many blocks read the same row of `A`,
+and that is fine, because reading is not a conflict. So the output is the natural
+work list, and the inputs come along for the ride.
+
+What "a tile of `C`" costs is then concrete. A block that owns a 128×64 patch of
+the output must read the 128 rows of `A` and the 64 columns of `B` that feed it —
+two strips, one patch:
+
+```text
+        A  (M×K)            B  (K×N)               C  (M×N)
+   ┌──────────────┐    ┌───┬───┬───┬───┐     ┌───┬───┬───┬───┐
+   │              │    │   │▒▒▒│   │   │     │   │   │   │   │
+   ├──────────────┤    │   │▒▒▒│   │   │     ├───┼───┼───┼───┤
+   │▒▒▒▒▒▒▒▒▒▒▒▒▒▒│ ×  │   │▒▒▒│   │   │  =  │   │███│   │   │  ← this block's
+   ├──────────────┤    │   │▒▒▒│   │   │     ├───┼───┼───┼───┤     128×64 patch
+   │              │    │   │▒▒▒│   │   │     │   │   │   │   │
+   └──────────────┘    └───┴───┴───┴───┘     └───┴───┴───┴───┘
+     128×K strip           K×64 strip          reads two strips, writes one patch
+```
+
+Now the change of mental model has something to attach to:
+
+> **Stop thinking "one thread = one cell of C". Think "one block = one patch of
+> C, plus the two input strips that patch obligates it to read".**
 
 That is not a stylistic preference. A block is pinned to one compute unit, which
 is what makes its shared memory and barriers usable — so a block is the largest
-group of threads that can *cooperate* on a piece of `C`. Cutting `C` into tiles
-and giving one block to each tile is the decomposition the hardware is shaped for.
+group of threads that can *cooperate*: stage those two strips once, then have
+every thread reuse them. Cutting `C` into patches and giving one block to each is
+the decomposition the hardware is shaped for. (The vendor's name for a patch is a
+**macro tile**; below the block there is a second, per-thread *micro-tile*, which
+we meet when we decode the kernel name.)
 
 ```python
 @triton.jit
@@ -471,18 +500,18 @@ def tile_map(out_ptr, M, N, BM: tl.constexpr, BN: tl.constexpr):
 
 M = N = 512
 BM, BN = 128, 64                                           # the tile the library chose, below
-out  = torch.empty((M, N), device="cuda")
+owner = torch.empty((M, N), device="cuda")                # C-shaped, but holds block IDs, not A @ B
 grid = (triton.cdiv(M, BM), triton.cdiv(N, BN))
-tile_map[grid](out, M, N, BM=BM, BN=BN)
+tile_map[grid](owner, M, N, BM=BM, BN=BN)
 
-print(f"C is {M}x{N}, tile {BM}x{BN}  ->  grid {grid} = {grid[0]*grid[1]} blocks")
+print(f"C would be {M}x{N}; patch {BM}x{BN}  ->  grid {grid} = {grid[0]*grid[1]} blocks")
 plt.figure(figsize=(5, 5))
-plt.imshow(out.cpu(), cmap="tab20", interpolation="nearest")
-plt.title(f"which block computes which part of C  ({grid[0]}x{grid[1]} tiles)", fontsize=10)
+plt.imshow(owner.cpu(), cmap="tab20", interpolation="nearest")
+plt.title(f"ownership map: an array of C's shape, each cell coloured by the block that writes it\n({grid[0]}x{grid[1]} patches -- not the values of C)", fontsize=9)
 plt.xlabel("N"); plt.ylabel("M"); plt.show()
 ```
 
-That picture is the grid. Now read the real one off the kernel name we captured
+That picture is the grid — a map of *who writes where*, not of what gets written. Now read the real one off the kernel name we captured
 in [7a](Lecture7a.md) — it tells you the tile the vendor's library picked for
 your matmul. This part is its own notebook, so first re-capture that name
 (condensed from 7a's Depth 1, fallback included):
