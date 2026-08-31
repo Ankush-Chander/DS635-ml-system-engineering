@@ -16,7 +16,7 @@
         <link rel="prev" href="../Lecture7b/">
       
       
-        <link rel="next" href="../../labs/">
+        <link rel="next" href="../Lecture8/">
       
       
         
@@ -712,6 +712,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Depth 5 — One block, one tile of C">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#does-the-shape-change-the-tile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does the shape change the tile?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -823,6 +840,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8:Inside the GPU — Memory & the Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1168,6 +1213,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Depth 5 — One block, one tile of C">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#does-the-shape-change-the-tile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does the shape change the tile?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1655,41 +1717,200 @@ whether the machine had spare slots.</strong></p>
 <hr />
 <h2 id="depth-5-one-block-one-tile-of-c">Depth 5 — One block, one tile of C</h2>
 <p>We can now cash in the kernel name from Depth 1 (<a href="../Lecture7a/">Lecture 7a</a>).</p>
-<p>The vector add was one-dimensional and each element was independent. A matmul is
-neither: every element of <code>C</code> is a dot product over a whole row and column. The
-decomposition is the same idea in two dimensions, and it requires one change of
-mental model:</p>
+<p>Recall the naive kernel from Depth 2. Its last line was
+<code>C[row*N + col] = sum</code>: each thread <strong>owned one cell of the output</strong> and computed
+it end to end. Nothing about that changes in this depth except the <em>grain</em> of
+ownership. The question a matmul decomposition answers is:</p>
 <blockquote>
-<p><strong>Stop thinking "one thread = one element of C". Think "one block = one tile of
-C".</strong></p>
+<p><strong>Who is responsible for writing which entries of the output <code>C</code>?</strong></p>
+</blockquote>
+<p>We hand out the <em>answer</em>, not the inputs, for a reason. Every cell of <code>C</code> is an
+independent dot product — no two blocks ever need to write the same cell. <code>A</code> and
+<code>B</code>, by contrast, are read-only and shared: many blocks read the same row of <code>A</code>,
+and that is fine, because reading is not a conflict. So the output is the natural
+work list, and the inputs come along for the ride.</p>
+<p>What "a tile of <code>C</code>" costs is then concrete. A block that owns a 128×64 patch of
+the output must read the 128 rows of <code>A</code> and the 64 columns of <code>B</code> that feed it —
+two strips, one patch:</p>
+<div class="highlight"><pre><span></span><code>        A  (M×K)            B  (K×N)               C  (M×N)
+   ┌──────────────┐    ┌───┬───┬───┬───┐     ┌───┬───┬───┬───┐
+   │              │    │   │▒▒▒│   │   │     │   │   │   │   │
+   ├──────────────┤    │   │▒▒▒│   │   │     ├───┼───┼───┼───┤
+   │▒▒▒▒▒▒▒▒▒▒▒▒▒▒│ ×  │   │▒▒▒│   │   │  =  │   │███│   │   │  ← this block&#39;s
+   ├──────────────┤    │   │▒▒▒│   │   │     ├───┼───┼───┼───┤     128×64 patch
+   │              │    │   │▒▒▒│   │   │     │   │   │   │   │
+   └──────────────┘    └───┴───┴───┴───┘     └───┴───┴───┴───┘
+     128×K strip           K×64 strip          reads two strips, writes one patch
+</code></pre></div>
+<p>Why a <em>rectangle</em>, though, and not any 8,192 cells? Because sharing has a
+geometry. <code>C[i,j]</code> needs row <code>i</code> of <code>A</code> and column <code>j</code> of <code>B</code>. Row <code>i</code> of <code>A</code> is
+needed by every output in row <code>i</code> of <code>C</code>; column <code>j</code> of <code>B</code> by every output in
+column <code>j</code>:</p>
+<div class="highlight"><pre><span></span><code>                 column j of B is needed by
+                 every output in THIS column
+                        ↓
+        ┌──────────────┬──────────────┐
+        │              │ C[0,j]       │
+        │              │ C[1,j]       │
+row i → │ C[i,0] C[i,1]│ C[i,j] ...   │  ← row i of A is needed by
+        │              │ C[3,j]       │    every output in THIS row
+        └──────────────┴──────────────┘
+</code></pre></div>
+<p>Two outputs share input if they sit in the same row <strong>or</strong> the same column. The
+set of outputs that maximises how many pairs share something is a rectangle: every
+cell shares a row with its whole row and a column with its whole column. A
+scattered bag of cells, or a long thin diagonal, shares almost nothing. Tiles are
+rectangles because that is the shape of the dependency structure, not because of
+convention.</p>
+<p>Now the change of mental model has something to attach to:</p>
+<blockquote>
+<p><strong>Stop thinking "one thread = one cell of C". Think "one block = one patch of
+C, plus the two input strips that patch obligates it to read".</strong></p>
 </blockquote>
 <p>That is not a stylistic preference. A block is pinned to one compute unit, which
 is what makes its shared memory and barriers usable — so a block is the largest
-group of threads that can <em>cooperate</em> on a piece of <code>C</code>. Cutting <code>C</code> into tiles
-and giving one block to each tile is the decomposition the hardware is shaped for.</p>
+group of threads that can <em>cooperate</em>: stage those two strips once, then have
+every thread reuse them. Cutting <code>C</code> into patches and giving one block to each is
+the decomposition the hardware is shaped for. (The vendor's name for a patch is a
+<strong>macro tile</strong>; below the block there is a second, per-thread <em>micro-tile</em>, which
+we meet when we decode the kernel name.)</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@triton</span><span class="o">.</span><span class="n">jit</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">tile_map</span><span class="p">(</span><span class="n">out_ptr</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">BM</span><span class="p">:</span> <span class="n">tl</span><span class="o">.</span><span class="n">constexpr</span><span class="p">,</span> <span class="n">BN</span><span class="p">:</span> <span class="n">tl</span><span class="o">.</span><span class="n">constexpr</span><span class="p">):</span>
-    <span class="n">pid_m</span><span class="p">,</span> <span class="n">pid_n</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">program_id</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">tl</span><span class="o">.</span><span class="n">program_id</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>      <span class="c1"># a 2-D grid, one block per tile</span>
-    <span class="n">rm</span> <span class="o">=</span> <span class="n">pid_m</span> <span class="o">*</span> <span class="n">BM</span> <span class="o">+</span> <span class="n">tl</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">BM</span><span class="p">)</span>
-    <span class="n">rn</span> <span class="o">=</span> <span class="n">pid_n</span> <span class="o">*</span> <span class="n">BN</span> <span class="o">+</span> <span class="n">tl</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">BN</span><span class="p">)</span>
-    <span class="n">v</span>  <span class="o">=</span> <span class="n">pid_m</span> <span class="o">*</span> <span class="n">tl</span><span class="o">.</span><span class="n">cdiv</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">BN</span><span class="p">)</span> <span class="o">+</span> <span class="n">pid_n</span>                    <span class="c1"># this block&#39;s id</span>
-    <span class="n">tl</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">out_ptr</span> <span class="o">+</span> <span class="n">rm</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">rn</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:],</span>
-             <span class="p">(</span><span class="n">v</span> <span class="o">+</span> <span class="n">tl</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">BM</span><span class="p">,</span> <span class="n">BN</span><span class="p">],</span> <span class="n">tl</span><span class="o">.</span><span class="n">int32</span><span class="p">))</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">tl</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
-             <span class="n">mask</span><span class="o">=</span><span class="p">(</span><span class="n">rm</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">rn</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mark_tile_ownership</span><span class="p">(</span>
+    <span class="n">output_ptr</span><span class="p">,</span>
+    <span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span>
+    <span class="n">TILE_M</span><span class="p">:</span> <span class="n">tl</span><span class="o">.</span><span class="n">constexpr</span><span class="p">,</span>
+    <span class="n">TILE_N</span><span class="p">:</span> <span class="n">tl</span><span class="o">.</span><span class="n">constexpr</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="c1"># Which tile is this GPU program responsible for?</span>
+    <span class="n">tile_row_id</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">program_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">tile_col_id</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">program_id</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Which matrix rows and columns belong to this tile?</span>
+    <span class="n">row_indices</span> <span class="o">=</span> <span class="n">tile_row_id</span> <span class="o">*</span> <span class="n">TILE_M</span> <span class="o">+</span> <span class="n">tl</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">TILE_M</span><span class="p">)</span>
+    <span class="n">col_indices</span> <span class="o">=</span> <span class="n">tile_col_id</span> <span class="o">*</span> <span class="n">TILE_N</span> <span class="o">+</span> <span class="n">tl</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">TILE_N</span><span class="p">)</span>
+
+    <span class="c1"># Give this tile a unique ID.</span>
+    <span class="n">tiles_per_row</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">cdiv</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">TILE_N</span><span class="p">)</span>
+    <span class="n">tile_id</span> <span class="o">=</span> <span class="n">tile_row_id</span> <span class="o">*</span> <span class="n">tiles_per_row</span> <span class="o">+</span> <span class="n">tile_col_id</span>
+
+    <span class="c1"># Write the tile ID into every element of this tile.</span>
+    <span class="n">tl</span><span class="o">.</span><span class="n">store</span><span class="p">(</span>
+        <span class="n">output_ptr</span>
+        <span class="o">+</span> <span class="n">row_indices</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">N</span>
+        <span class="o">+</span> <span class="n">col_indices</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:],</span>
+
+        <span class="p">(</span><span class="n">tile_id</span> <span class="o">+</span> <span class="n">tl</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">TILE_M</span><span class="p">,</span> <span class="n">TILE_N</span><span class="p">],</span> <span class="n">tl</span><span class="o">.</span><span class="n">int32</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">tl</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+
+        <span class="n">mask</span><span class="o">=</span><span class="p">(</span><span class="n">row_indices</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">)</span>
+           <span class="o">&amp;</span> <span class="p">(</span><span class="n">col_indices</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">),</span>
+    <span class="p">)</span>
+
 
 <span class="n">M</span> <span class="o">=</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">512</span>
-<span class="n">BM</span><span class="p">,</span> <span class="n">BN</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">64</span>                                           <span class="c1"># the tile the library chose, below</span>
-<span class="n">out</span>  <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
-<span class="n">grid</span> <span class="o">=</span> <span class="p">(</span><span class="n">triton</span><span class="o">.</span><span class="n">cdiv</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">BM</span><span class="p">),</span> <span class="n">triton</span><span class="o">.</span><span class="n">cdiv</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">BN</span><span class="p">))</span>
-<span class="n">tile_map</span><span class="p">[</span><span class="n">grid</span><span class="p">](</span><span class="n">out</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">BM</span><span class="o">=</span><span class="n">BM</span><span class="p">,</span> <span class="n">BN</span><span class="o">=</span><span class="n">BN</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;C is </span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2">, tile </span><span class="si">{</span><span class="n">BM</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">BN</span><span class="si">}</span><span class="s2">  -&gt;  grid </span><span class="si">{</span><span class="n">grid</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> blocks&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;tab20&quot;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;which block computes which part of C  (</span><span class="si">{</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> tiles)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;N&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;M&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">TILE_M</span><span class="p">,</span> <span class="n">TILE_N</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">64</span>                      <span class="c1"># the tile the library chose, below</span>
+
+<span class="n">tile_owners</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>   <span class="c1"># C-shaped, but holds tile IDs, not A @ B</span>
+
+<span class="n">grid_shape</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">triton</span><span class="o">.</span><span class="n">cdiv</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">TILE_M</span><span class="p">),</span>
+    <span class="n">triton</span><span class="o">.</span><span class="n">cdiv</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">TILE_N</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">mark_tile_ownership</span><span class="p">[</span><span class="n">grid_shape</span><span class="p">](</span>
+    <span class="n">tile_owners</span><span class="p">,</span>
+    <span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span>
+    <span class="n">TILE_M</span><span class="o">=</span><span class="n">TILE_M</span><span class="p">,</span>
+    <span class="n">TILE_N</span><span class="o">=</span><span class="n">TILE_N</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;C would be </span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2">; &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;tile </span><span class="si">{</span><span class="n">TILE_M</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">TILE_N</span><span class="si">}</span><span class="s2"> &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;-&gt; grid </span><span class="si">{</span><span class="n">grid_shape</span><span class="si">}</span><span class="s2"> = &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">grid_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">grid_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> tiles&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Plot the tile ownership map.</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+    <span class="n">tile_owners</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;tab20&quot;</span><span class="p">,</span>
+    <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Tile ownership map</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">grid_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> × </span><span class="si">{</span><span class="n">grid_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> tiles, &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;each tile = </span><span class="si">{</span><span class="n">TILE_M</span><span class="si">}</span><span class="s2"> × </span><span class="si">{</span><span class="n">TILE_N</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Column (N)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Row (M)&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Tile ID&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
-<p>That picture is the grid. Now read the real one off the kernel name we captured
+<p><code>mark_tile_ownership</code> is <code>who_am_i</code> from Depth 4 in two dimensions. Everything
+you already know carries over — <code>program_id</code>, <code>tl.arange</code>, the zero-vector
+broadcast, the mask — and three lines are new. Read it against its 1-D twin:</p>
+<table>
+<thead>
+<tr>
+<th><code>who_am_i</code> (1-D, Depth 4)</th>
+<th><code>mark_tile_ownership</code> (2-D)</th>
+<th>what changed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pid = program_id(0)</code></td>
+<td><code>tile_row_id, tile_col_id = program_id(0), program_id(1)</code></td>
+<td>the grid is <code>(4, 8)</code>, so a program has a row-id <strong>and</strong> a column-id</td>
+</tr>
+<tr>
+<td><code>offs = pid * BLOCK + arange(BLOCK)</code></td>
+<td><code>row_indices = tile_row_id * TILE_M + arange(TILE_M)</code> <br> <code>col_indices = tile_col_id * TILE_N + arange(TILE_N)</code></td>
+<td>the same formula, once per axis</td>
+</tr>
+<tr>
+<td><code>out_ptr + offs</code></td>
+<td><code>output_ptr + row_indices[:, None] * N + col_indices[None, :]</code></td>
+<td><strong>new</strong> — two 1-D ranges become a 2-D block of addresses</td>
+</tr>
+<tr>
+<td><code>v = pid + zeros([BLOCK])</code></td>
+<td><code>tile_id = tile_row_id * tiles_per_row + tile_col_id</code></td>
+<td><strong>new</strong> — the <code>(row, col)</code> id is linearised so the colours count 0 … 31 row-major</td>
+</tr>
+</tbody>
+</table>
+<p>Take the program at <code>(tile_row_id, tile_col_id) = (2, 5)</code>. Its rows are
+<code>2 · 128 + [0 … 127] = 256 … 383</code>, its columns <code>5 · 64 + [0 … 63] = 320 … 383</code>,
+and its id is <code>2 · 8 + 5 = 21</code>. It writes <code>21</code> into that 128×64 rectangle and
+nothing else — the program was never <em>handed</em> a tile; it derived one from who it
+is, exactly as in Depth 2.</p>
+<p>The address line is the one that stops people. <code>row_indices[:, None]</code> is a
+<code>128 × 1</code> column, <code>col_indices[None, :]</code> a <code>1 × 64</code> row; adding them broadcasts to
+every <code>(row, col)</code> pair, and <code>* N</code> is plain row-major addressing,
+<code>row · 512 + col</code>:</p>
+<div class="highlight"><pre><span></span><code>                       col_indices[None, :]        (1 × 64)
+                        320   321   322  …   383
+                     ┌──────┬──────┬──────┬───────┐
+row_indices  256  →  │256·N │256·N │256·N │       │
+  [:, None]  257  →  │ +320 │ +321 │ +322 │  …    │   128 × 64 addresses,
+  (128 × 1)  258  →  │  …   │      │      │       │   one per output the
+             …       │      │      │      │       │   program owns
+             383  →  │      │      │      │       │
+                     └──────┴──────┴──────┴───────┘
+</code></pre></div>
+<p>The mask is all-true here because 512 divides by both 128 and 64. At 500×500
+the last tile row would overhang by 12 rows (<code>cdiv</code> rounds up), and the mask is
+what stops those writes.</p>
+<p>That picture is the grid — a map of <em>who writes where</em>, not of what gets written. Now read the real one off the kernel name we captured
 in <a href="../Lecture7a/">7a</a> — it tells you the tile the vendor's library picked for
 your matmul. This part is its own notebook, so first re-capture that name
 (condensed from 7a's Depth 1, fallback included):</p>
@@ -1717,40 +1938,91 @@ your matmul. This part is its own notebook, so first re-capture that name
 <span class="n">MATMUL_KERNEL</span> <span class="o">=</span> <span class="n">gpu_kernel_name</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">A</span> <span class="o">@</span> <span class="n">B</span><span class="p">)</span> <span class="ow">or</span> <span class="n">COURSE_LAPTOP_KERNEL</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;decoding:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">MATMUL_KERNEL</span><span class="p">)</span>
 </code></pre></div>
+<p>Before handing it to code, read it token by token. Every field is vocabulary
+from this lecture:</p>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Meaning</th>
+<th>Value here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Cijk_Ailk_Bljk</code></td>
+<td>Tensile index notation: <code>C[i,j] = Σₗ A[i,l]·B[l,j]</code> — a plain GEMM</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>SB</code></td>
+<td>single precision (fp32), batched-capable</td>
+<td>fp32</td>
+</tr>
+<tr>
+<td><code>MT128x64x8</code></td>
+<td><strong>Macro Tile</strong>: 128×64 of <code>C</code> per block; the <code>x8</code> is the depth of the K-slice per iteration</td>
+<td>one patch = 8,192 outputs</td>
+</tr>
+<tr>
+<td><code>WG16_8_1</code></td>
+<td><strong>Workgroup</strong> shape, 16×8×1 threads — the block</td>
+<td>128 threads → 4 warps</td>
+</tr>
+<tr>
+<td><code>TT8_8</code></td>
+<td><strong>Thread Tile</strong>: 8×8 outputs per thread — the micro-tile</td>
+<td>64 outputs</td>
+</tr>
+<tr>
+<td><code>WS32</code></td>
+<td><strong>Wave Size</strong> — the warp width you measured in Depth 4</td>
+<td>32 lanes</td>
+</tr>
+</tbody>
+</table>
 <p>Now decode it:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">warp</span><span class="o">=</span><span class="n">WARP</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">warp</span><span class="o">=</span><span class="n">WARP</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Pull the decomposition out of a vendor GEMM kernel name.</span>
 
 <span class="sd">    ROCm/Tensile spells it out: MT&lt;m&gt;x&lt;n&gt;x&lt;k&gt; macro tile, WG&lt;x&gt;_&lt;y&gt;_&lt;z&gt; workgroup,</span>
 <span class="sd">    TT&lt;m&gt;_&lt;n&gt; per-thread tile, WS&lt;w&gt; wave size. cuBLAS is terser -- `sgemm_128x64`</span>
 <span class="sd">    -- and gives only the tile. Anything else, we say so rather than guess.</span>
+
+<span class="sd">    `shape` is the (M, N) of *this* matmul. The grid depends on it, so it is a</span>
+<span class="sd">    parameter rather than a global -- the sweep further down decodes four shapes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">mt</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;MT(\d+)x(\d+)x(\d+)&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="ow">or</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;gemm_(\d+)x(\d+)&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     <span class="n">wg</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;WG(\d+)_(\d+)_(\d+)&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     <span class="n">tt</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;TT(\d+)_(\d+)&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     <span class="n">ws</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;WS(\d+)&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">mt</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;could not find a tile shape in this kernel name -- print it and look yourself&quot;</span><span class="p">)</span>
-        <span class="k">return</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;could not find a tile shape in this kernel name -- print it and look yourself&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
     <span class="n">bm</span><span class="p">,</span> <span class="n">bn</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">mt</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">mt</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
-    <span class="n">M</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="n">MATMUL_SHAPE</span>
+    <span class="n">M</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="n">shape</span>
     <span class="n">gm</span><span class="p">,</span> <span class="n">gn</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="o">-</span><span class="n">M</span> <span class="o">//</span> <span class="n">bm</span><span class="p">),</span> <span class="o">-</span><span class="p">(</span><span class="o">-</span><span class="n">N</span> <span class="o">//</span> <span class="n">bn</span><span class="p">)</span>              <span class="c1"># ceiling division</span>
+    <span class="n">w</span>    <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ws</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="k">if</span> <span class="n">ws</span> <span class="k">else</span> <span class="n">warp</span>
+    <span class="n">thr</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="k">if</span> <span class="n">wg</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">tm</span><span class="p">,</span> <span class="n">tn</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span> <span class="k">if</span> <span class="n">tt</span> <span class="k">else</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">verbose</span><span class="p">:</span>                                <span class="c1"># table mode, for the sweep below</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;tile&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">bm</span><span class="p">,</span> <span class="n">bn</span><span class="p">),</span> <span class="s2">&quot;grid&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">gm</span><span class="p">,</span> <span class="n">gn</span><span class="p">),</span> <span class="s2">&quot;threads&quot;</span><span class="p">:</span> <span class="n">thr</span><span class="p">,</span>
+                <span class="s2">&quot;warps&quot;</span><span class="p">:</span> <span class="n">thr</span> <span class="o">//</span> <span class="n">w</span> <span class="k">if</span> <span class="n">thr</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;micro&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">tm</span><span class="p">,</span> <span class="n">tn</span><span class="p">)}</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tile of C per block   : </span><span class="si">{</span><span class="n">bm</span><span class="si">}</span><span class="s2"> x </span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">   = </span><span class="si">{</span><span class="n">bm</span><span class="o">*</span><span class="n">bn</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> outputs&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;grid                  : </span><span class="si">{</span><span class="n">gm</span><span class="si">}</span><span class="s2"> x </span><span class="si">{</span><span class="n">gn</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">gm</span><span class="o">*</span><span class="n">gn</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> blocks&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">ws</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;wave size (hardware)  : </span><span class="si">{</span><span class="n">ws</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ws</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;wave size (hardware)  : </span><span class="si">{</span><span class="n">w</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">wg</span><span class="p">:</span>
-        <span class="n">thr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;threads per block     : </span><span class="si">{</span><span class="n">wg</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">wg</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">wg</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">thr</span><span class="si">}</span><span class="s2">&quot;</span>
-              <span class="sa">f</span><span class="s2">&quot;  -&gt; </span><span class="si">{</span><span class="n">thr</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">ws</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">ws</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">warp</span><span class="p">)</span><span class="si">}</span><span class="s2"> warps per block&quot;</span><span class="p">)</span>
+              <span class="sa">f</span><span class="s2">&quot;  -&gt; </span><span class="si">{</span><span class="n">thr</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">w</span><span class="si">}</span><span class="s2"> warps per block&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">tt</span><span class="p">:</span>
-            <span class="n">tm</span><span class="p">,</span> <span class="n">tn</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;outputs per thread    : </span><span class="si">{</span><span class="n">tm</span><span class="si">}</span><span class="s2"> x </span><span class="si">{</span><span class="n">tn</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">tm</span><span class="o">*</span><span class="n">tn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;check                 : </span><span class="si">{</span><span class="n">thr</span><span class="si">}</span><span class="s2"> threads x </span><span class="si">{</span><span class="n">tm</span><span class="o">*</span><span class="n">tn</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">thr</span><span class="o">*</span><span class="n">tm</span><span class="o">*</span><span class="n">tn</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span>
                   <span class="sa">f</span><span class="s2">&quot;  vs tile </span><span class="si">{</span><span class="n">bm</span><span class="o">*</span><span class="n">bn</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">  -&gt; </span><span class="si">{</span><span class="s1">&#39;consistent&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">thr</span><span class="o">*</span><span class="n">tm</span><span class="o">*</span><span class="n">tn</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">bm</span><span class="o">*</span><span class="n">bn</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;MISMATCH&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="n">decode</span><span class="p">(</span><span class="n">MATMUL_KERNEL</span><span class="p">)</span>
+<span class="n">decode</span><span class="p">(</span><span class="n">MATMUL_KERNEL</span><span class="p">,</span> <span class="n">MATMUL_SHAPE</span><span class="p">)</span>
 </code></pre></div>
 <p>On the course laptop, for the 2048×2048 matmul at the top of this lecture:</p>
 <div class="highlight"><pre><span></span><code>tile of C per block   : 128 x 64   = 8,192 outputs
@@ -1770,18 +2042,134 @@ computes <strong>64</strong>, an 8×8 patch it keeps in registers. That is a sec
 tiling below the block, and it is the reason the register file has to be as large
 as it is. Depth 3's budget and Depth 5's decomposition are the same constraint seen
 from two ends.</p>
+<p>The decode also lets you put a number on <em>why</em> the block bothers to own a patch
+at all, rather than letting each thread fetch for itself.</p>
 <div class="admonition question">
-<p class="admonition-title">💬 Re-run the profiler on a much smaller matmul — say 256×256. Does the library pick the same tile?</p>
+<p class="admonition-title">💬 The block owns 8,192 outputs and needs two strips of input. Count the floats that must come from DRAM with no sharing, then with sharing. What is the ratio?</p>
 <details class="hint">
 <summary>Answer</summary>
-<p>No. On the course laptop a two-layer MLP's <code>nn.Linear</code> calls select
-<code>MT64x64x8</code> with <code>WG16_16_1</code> (256 threads = 8 warps) and <code>TT4_4</code>, and the check
-still closes: 256 × 16 = 4,096 = 64 × 64. The library keeps a library of tilings
-and picks one per problem shape, because the best decomposition depends on
-whether you have enough tiles to fill every CU and enough work per tile to be
-worth the launch. That trade-off is the subject of <a href="../Lecture8/">Lecture 8</a>.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>floats from DRAM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>no sharing — each of 128·64 threads fetches its own row of <code>A</code> and column of <code>B</code>, <code>2K</code> floats</td>
+<td><code>128 · 64 · 2K</code></td>
+</tr>
+<tr>
+<td>sharing — the block fetches the two strips once, all 8,192 outputs compute from that copy</td>
+<td><code>(128 + 64) · K</code></td>
+</tr>
+<tr>
+<td>ratio</td>
+<td><code>128·64·2 / (128+64) = 16,384 / 192</code> <strong>≈ 85×</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Every float fetched is used about 85 times instead of once, and <code>K</code> cancels.
+The general form <code>2·BM·BN / (BM + BN)</code> is <strong>area over perimeter</strong>: the
+numerator counts outputs that benefit, the denominator counts what must be
+fetched. That is why it grows with the tile — 64×64 gives 64×, 128×128 gives
+128× — and why "fatter tiles, more reuse" is exact arithmetic, not a metaphor.</p>
 </details>
 </div>
+<h4 id="does-the-shape-change-the-tile">Does the shape change the tile?</h4>
+<p>That was one matmul. The library does not compute a tile from your dimensions —
+it keeps a <em>catalogue</em> of pre-tuned kernels and picks one per problem. So put four
+shapes through the same two functions and read the selections off. Nothing new is
+defined here; <code>gpu_kernel_name</code> and <code>decode</code> are the ones above.</p>
+<div class="highlight"><pre><span></span><code><span class="n">SHAPES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span> <span class="mi">256</span><span class="p">,</span>  <span class="mi">256</span><span class="p">,</span>  <span class="mi">256</span><span class="p">),</span>     <span class="c1"># small -- is there even enough work to tile?</span>
+    <span class="p">(</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">2048</span><span class="p">),</span>     <span class="c1"># the matmul this lecture opened with</span>
+    <span class="p">(</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">8192</span><span class="p">,</span>  <span class="mi">512</span><span class="p">),</span>     <span class="c1"># wide N, shallow K</span>
+    <span class="p">(</span><span class="mi">8192</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span>  <span class="mi">512</span><span class="p">),</span>     <span class="c1"># the row above with M and N swapped</span>
+<span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;M&#39;</span><span class="si">:</span><span class="s2">&gt;6</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;N&#39;</span><span class="si">:</span><span class="s2">&gt;6</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;K&#39;</span><span class="si">:</span><span class="s2">&gt;6</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;macro tile&#39;</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;grid&#39;</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> &quot;</span>
+      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;threads&#39;</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;micro&#39;</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;check&#39;</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">K</span> <span class="ow">in</span> <span class="n">SHAPES</span><span class="p">:</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">gpu_kernel_name</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">A</span> <span class="o">@</span> <span class="n">B</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">;</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>          <span class="c1"># 8192x2048 is 0.2 GB a side</span>
+
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Deliberately NOT falling back to COURSE_LAPTOP_KERNEL here. One hardcoded</span>
+        <span class="c1"># name would make every row identical -- a table &quot;proving&quot; the opposite of</span>
+        <span class="c1"># the point. Say so instead, and read the recorded table below.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">this machine&#39;s profiler does not report device kernel names;&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;the table printed below the cell is a verbatim course-laptop run.&quot;</span><span class="p">)</span>
+        <span class="k">break</span>
+
+    <span class="n">d</span> <span class="o">=</span> <span class="n">decode</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">M</span><span class="si">:</span><span class="s2">&gt;6</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">N</span><span class="si">:</span><span class="s2">&gt;6</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">K</span><span class="si">:</span><span class="s2">&gt;6</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">name</span><span class="p">[:</span><span class="mi">44</span><span class="p">]</span><span class="si">}</span><span class="s2">  &lt;- no tile field; print it and look&quot;</span><span class="p">)</span>
+        <span class="k">continue</span>
+    <span class="p">(</span><span class="n">bm</span><span class="p">,</span> <span class="n">bn</span><span class="p">),</span> <span class="p">(</span><span class="n">gm</span><span class="p">,</span> <span class="n">gn</span><span class="p">),</span> <span class="p">(</span><span class="n">tm</span><span class="p">,</span> <span class="n">tn</span><span class="p">)</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;tile&quot;</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;grid&quot;</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;micro&quot;</span><span class="p">]</span>
+    <span class="n">ok</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;threads&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">tm</span> <span class="ow">and</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;threads&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">tm</span> <span class="o">*</span> <span class="n">tn</span> <span class="o">==</span> <span class="n">bm</span> <span class="o">*</span> <span class="n">bn</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">M</span><span class="si">:</span><span class="s2">&gt;6</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">N</span><span class="si">:</span><span class="s2">&gt;6</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">K</span><span class="si">:</span><span class="s2">&gt;6</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">bm</span><span class="si">}</span><span class="s1">x</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s1">&#39;</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">gm</span><span class="si">}</span><span class="s1">x</span><span class="si">{</span><span class="n">gn</span><span class="si">}</span><span class="s1">&#39;</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> &quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;threads&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tm</span><span class="si">}</span><span class="s1">x</span><span class="si">{</span><span class="n">tn</span><span class="si">}</span><span class="s1">&#39;</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;consistent&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">ok</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;MISMATCH&#39;</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>On the course laptop:</p>
+<div class="highlight"><pre><span></span><code>     M      N      K |   macro tile        grid  threads   micro       check
+   256    256    256 |        32x16        8x16      128     2x2  consistent
+  2048   2048   2048 |       128x64       16x32      128     8x8  consistent
+  2048   8192    512 |      128x128       16x64      128    8x16  consistent
+  8192   2048    512 |       256x64       32x32      128    8x16  consistent
+</code></pre></div>
+<p>Four shapes, four different tiles — and three things worth stopping on.</p>
+<p><strong>The block size never moved.</strong> Every row is 128 threads, four warps. The library
+does not vary how many threads it launches; it varies how much of <code>C</code> those 128
+threads own, and pushes the difference into the micro-tile. A 32×16 macro tile
+gives each thread 2×2 outputs; a 128×128 macro tile gives it 8×16. The macro tile
+grew 32×, the block did not grow at all, and the check closes on every row.</p>
+<p><strong>The small matmul got a tiny tile, and you can see why.</strong> At 256×256 the library
+picked 32×16 instead of the 128×64 it likes at 2048. Had it reused 128×64:</p>
+<div class="highlight"><pre><span></span><code>grid = ceil(256/128) x ceil(256/64) = 2 x 4 = 8 blocks   on an 18-CU GPU
+                                                          -&gt; 10 units get nothing
+</code></pre></div>
+<p>Eight blocks cannot fill eighteen compute units. Shrinking the tile to 32×16 buys
+128 blocks instead — worse reuse per block (the 85× above collapses toward 21×),
+but every unit gets work. That is the same trade you measured in
+<a href="../Lecture7b/">7b</a>: parallelism you cannot use is worthless, and here the library
+is paying reuse to buy occupancy.</p>
+<p><strong>Swapping <code>M</code> and <code>N</code> did not transpose the tile.</strong> This is the one to sit with.
+<code>2048×8192</code> selects a <em>square</em> 128×128 with a 16×8 workgroup; <code>8192×2048</code> — the
+same problem, mirrored — selects a <em>long</em> 256×64 with a 32×4 workgroup. Not a
+transpose, not even the same aspect ratio. The heuristic is not a formula being
+applied to your dimensions; it is a lookup into what happened to be tuned, for
+this architecture, this dtype, this library version.</p>
+<p>So the honest chain is:</p>
+<blockquote>
+<p><strong>dimensions → kernel <em>selection</em> → tile configuration → work decomposition</strong></p>
+<p>not <code>dimensions → tile size</code>. Your dimensions are an <em>input to a heuristic</em>,
+alongside the architecture, the dtype and the library build. Change any of those
+and the table above changes with it — which is why it is a measurement you re-run,
+not a specification you can look up.</p>
+</blockquote>
+<div class="admonition tip">
+<p class="admonition-title">If the sweep prints nothing on ROCm</p>
+<p>On this course laptop the PyTorch profiler reports only host-side HIP calls —
+<code>prof.key_averages()</code> comes back with <code>aten::mm</code> and <code>hipExtModuleLaunchKernel</code>
+and no device rows at all, so <code>gpu_kernel_name</code> returns <code>None</code>. The runtime will
+still tell you directly:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">AMD_LOG_LEVEL</span><span class="o">=</span><span class="m">3</span><span class="w"> </span>python<span class="w"> </span>your_script.py<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-oE<span class="w"> </span><span class="s2">&quot;Cijk[A-Za-z0-9_]*&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u
+</code></pre></div>
+<p>That prints the full Tensile name, which you can paste straight into <code>decode</code>.
+The four names in the table above were captured exactly this way.</p>
+</div>
+<p>Back at the 2048² kernel, one field of its name is still unread: the trailing <code>x8</code>
+in <code>MT128x64x8</code>. The two strips do not fit — the <code>A</code> strip alone is <code>128 · 2048</code>
+floats, 1 MB, against 64 KB of LDS — so the block streams them in K-slices, 8
+columns of <code>A</code> and 8 rows of <code>B</code>
+at a time, <code>2048 / 8 = 256</code> steps. Slicing does not touch the 85×: each slice is
+still shared by all 8,192 outputs. That loop, and what it buys against memory
+bandwidth, is <a href="../Lecture8/">Lecture 8</a>.</p>
 <hr />
 <h2 id="occupancy-the-budget-on-residency">Occupancy: the budget on residency</h2>
 <p>Latency hiding needs resident warps. Resident warps consume resources. Occupancy
@@ -1820,10 +2208,11 @@ spills to memory.</p>
 maximize.</strong></p>
 </blockquote>
 <p>This is also the trade-off that produced the hundreds of pre-compiled BLAS kernels
-we met in Depth 1. Fatter tiles mean more reuse per byte fetched, but fewer
-resident warps to hide latency with. They compete for the same silicon, the best
-compromise depends on the shape, and so the vendor ships one kernel per point on
-that curve and picks between them at call time.</p>
+we met in Depth 1. Fatter tiles mean more reuse per byte fetched — the 85× of
+Depth 5 grows with the tile — but fewer resident warps to hide latency with. They
+compete for the same silicon, the best compromise depends on the shape, and so the
+vendor ships one kernel per point on that curve and picks between them at call
+time.</p>
 <hr />
 <h2 id="what-lies-below">What lies below</h2>
 <p>The descent has three depths left, and all of them are about <em>feeding</em> the machine
@@ -1839,7 +2228,7 @@ we just built. They are <a href="../Lecture8/">Lecture 8</a>:</p>
   needs <em>hundreds</em> of floating-point operations per byte fetched to stay busy — and
   a naive matmul manages about one. Latency hiding cannot help here: it hides
   <em>latency</em>, not missing <em>bandwidth</em>. Tiling is what breaks that wall, and the
-  tile you decoded in Depth 5 is the tool.</li>
+  85× you computed in Depth 5 is the tool.</li>
 <li><strong>Depth 8 — tensor cores and <code>torch.compile</code>.</strong> Casting matmul into dedicated
   wiring, and removing the round-trips to slow memory between kernels.</li>
 </ul>
@@ -2107,13 +2496,13 @@ large-bandwidth memory
         
         
           
-          <a href="../../labs/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+          <a href="../Lecture8/" class="md-footer__link md-footer__link--next" aria-label="Next: 8:Inside the GPU — Memory &amp; the Roofline">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Overview
+                8:Inside the GPU — Memory & the Roofline
               </div>
             </div>
             <div class="md-footer__button md-icon">

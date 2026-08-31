@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://DS635.ankushchander.com/lectures/Lecture8/">
       
       
+        <link rel="prev" href="../Lecture7c/">
+      
+      
+        <link rel="next" href="../../labs/">
       
       
         
@@ -23,7 +27,7 @@
     
     
       
-        <title>Inside the GPU: memory and the roofline - DS635 - Machine Learning System Engineering | DAU</title>
+        <title>8:Inside the GPU — Memory & the Roofline - DS635 - Machine Learning System Engineering | DAU</title>
       
     
     
@@ -106,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Inside the GPU: memory and the roofline
+              8:Inside the GPU — Memory & the Roofline
             
           </span>
         </div>
@@ -156,10 +160,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../Lecture0/" class="md-tabs__link">
           
   
@@ -256,26 +262,29 @@
       
   
   
+    
   
   
+  
     
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -293,7 +302,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -551,6 +560,325 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8:Inside the GPU — Memory & the Roofline
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8:Inside the GPU — Memory & the Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#7-feeding-the-alus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Feeding the ALUs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Feeding the ALUs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shared-memory-is-not-a-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared memory is not a cache
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpus-cache-too" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPUs cache too
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-coalescing-how-threads-access-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Coalescing: how threads access memory
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Coalescing: how threads access memory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#measure-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Measure it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-working-set-size-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does working-set size matter?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-what-actually-limits-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. What actually limits performance?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. What actually limits performance?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compute-roof" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compute roof
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-roof" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory roof
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-ridge-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The ridge point
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-where-does-matrix-multiplication-sit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Where does matrix multiplication sit?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-the-payoff-what-does-this-mean-for-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. The payoff: what does this mean for AI?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. The payoff: what does this mean for AI?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#llm-decode-one-token-at-a-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM decode: one token at a time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prefill-and-training-many-tokens-at-once" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prefill and training: many tokens at once
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#same-model-opposite-bottleneck" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Same model, opposite bottleneck
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-both-lectures-in-one-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Both lectures in one picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-it-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run it yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-c-tensor-and-matrix-units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix C — Tensor and matrix units
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-d-nvidia-and-amd-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix D — NVIDIA and AMD terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1638,6 +1966,44 @@ At what batch size does the workload cross your GPU's ridge point?
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../Lecture7c/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 7c:SIMT, Tiles &amp; Occupancy">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                7c:SIMT, Tiles & Occupancy
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../labs/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">
