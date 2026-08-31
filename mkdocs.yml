@@ -26,7 +26,7 @@ nav:
       - 7a:From Python to a Kernel Launch: 'lectures/Lecture7a.md'
       - 7b:The Throughput Machine: 'lectures/Lecture7b.md'
       - 7c:SIMT, Tiles & Occupancy: 'lectures/Lecture7c.md'
-      # - 8:Inside the GPU — Memory & the Roofline: 'lectures/Lecture8.md'
+      - 8:Inside the GPU — Memory & the Roofline: 'lectures/Lecture8.md'
       # - 4:Tensor Cores & Precision: 'lectures/Lecture4.md'
       # - 1:Requirements Discovery: 'lectures/Lecture1.md'
   - Labs:

@@ -474,6 +474,30 @@ two strips, one patch:
      128×K strip           K×64 strip          reads two strips, writes one patch
 ```
 
+Why a *rectangle*, though, and not any 8,192 cells? Because sharing has a
+geometry. `C[i,j]` needs row `i` of `A` and column `j` of `B`. Row `i` of `A` is
+needed by every output in row `i` of `C`; column `j` of `B` by every output in
+column `j`:
+
+```text
+                 column j of B is needed by
+                 every output in THIS column
+                        ↓
+        ┌──────────────┬──────────────┐
+        │              │ C[0,j]       │
+        │              │ C[1,j]       │
+row i → │ C[i,0] C[i,1]│ C[i,j] ...   │  ← row i of A is needed by
+        │              │ C[3,j]       │    every output in THIS row
+        └──────────────┴──────────────┘
+```
+
+Two outputs share input if they sit in the same row **or** the same column. The
+set of outputs that maximises how many pairs share something is a rectangle: every
+cell shares a row with its whole row and a column with its whole column. A
+scattered bag of cells, or a long thin diagonal, shares almost nothing. Tiles are
+rectangles because that is the shape of the dependency structure, not because of
+convention.
+
 Now the change of mental model has something to attach to:
 
 > **Stop thinking "one thread = one cell of C". Think "one block = one patch of
@@ -489,27 +513,124 @@ we meet when we decode the kernel name.)
 
 ```python
 @triton.jit
-def tile_map(out_ptr, M, N, BM: tl.constexpr, BN: tl.constexpr):
-    pid_m, pid_n = tl.program_id(0), tl.program_id(1)      # a 2-D grid, one block per tile
-    rm = pid_m * BM + tl.arange(0, BM)
-    rn = pid_n * BN + tl.arange(0, BN)
-    v  = pid_m * tl.cdiv(N, BN) + pid_n                    # this block's id
-    tl.store(out_ptr + rm[:, None] * N + rn[None, :],
-             (v + tl.zeros([BM, BN], tl.int32)).to(tl.float32),
-             mask=(rm[:, None] < M) & (rn[None, :] < N))
+def mark_tile_ownership(
+    output_ptr,
+    M, N,
+    TILE_M: tl.constexpr,
+    TILE_N: tl.constexpr,
+):
+    # Which tile is this GPU program responsible for?
+    tile_row_id = tl.program_id(0)
+    tile_col_id = tl.program_id(1)
+
+    # Which matrix rows and columns belong to this tile?
+    row_indices = tile_row_id * TILE_M + tl.arange(0, TILE_M)
+    col_indices = tile_col_id * TILE_N + tl.arange(0, TILE_N)
+
+    # Give this tile a unique ID.
+    tiles_per_row = tl.cdiv(N, TILE_N)
+    tile_id = tile_row_id * tiles_per_row + tile_col_id
+
+    # Write the tile ID into every element of this tile.
+    tl.store(
+        output_ptr
+        + row_indices[:, None] * N
+        + col_indices[None, :],
+
+        (tile_id + tl.zeros([TILE_M, TILE_N], tl.int32))
+            .to(tl.float32),
+
+        mask=(row_indices[:, None] < M)
+           & (col_indices[None, :] < N),
+    )
+
 
 M = N = 512
-BM, BN = 128, 64                                           # the tile the library chose, below
-owner = torch.empty((M, N), device="cuda")                # C-shaped, but holds block IDs, not A @ B
-grid = (triton.cdiv(M, BM), triton.cdiv(N, BN))
-tile_map[grid](owner, M, N, BM=BM, BN=BN)
 
-print(f"C would be {M}x{N}; patch {BM}x{BN}  ->  grid {grid} = {grid[0]*grid[1]} blocks")
-plt.figure(figsize=(5, 5))
-plt.imshow(owner.cpu(), cmap="tab20", interpolation="nearest")
-plt.title(f"ownership map: an array of C's shape, each cell coloured by the block that writes it\n({grid[0]}x{grid[1]} patches -- not the values of C)", fontsize=9)
-plt.xlabel("N"); plt.ylabel("M"); plt.show()
+TILE_M, TILE_N = 128, 64                      # the tile the library chose, below
+
+tile_owners = torch.empty((M, N), device="cuda")   # C-shaped, but holds tile IDs, not A @ B
+
+grid_shape = (
+    triton.cdiv(M, TILE_M),
+    triton.cdiv(N, TILE_N),
+)
+
+mark_tile_ownership[grid_shape](
+    tile_owners,
+    M, N,
+    TILE_M=TILE_M,
+    TILE_N=TILE_N,
+)
+
+print(
+    f"C would be {M}x{N}; "
+    f"tile {TILE_M}x{TILE_N} "
+    f"-> grid {grid_shape} = "
+    f"{grid_shape[0] * grid_shape[1]} tiles"
+)
+
+# Plot the tile ownership map.
+plt.figure(figsize=(6, 6))
+
+plt.imshow(
+    tile_owners.cpu(),
+    cmap="tab20",
+    interpolation="nearest",
+)
+
+plt.title(
+    f"Tile ownership map\n"
+    f"{grid_shape[0]} × {grid_shape[1]} tiles, "
+    f"each tile = {TILE_M} × {TILE_N}"
+)
+
+plt.xlabel("Column (N)")
+plt.ylabel("Row (M)")
+
+plt.colorbar(label="Tile ID")
+
+plt.show()
 ```
+
+`mark_tile_ownership` is `who_am_i` from Depth 4 in two dimensions. Everything
+you already know carries over — `program_id`, `tl.arange`, the zero-vector
+broadcast, the mask — and three lines are new. Read it against its 1-D twin:
+
+| `who_am_i` (1-D, Depth 4) | `mark_tile_ownership` (2-D) | what changed |
+| --- | --- | --- |
+| `pid = program_id(0)` | `tile_row_id, tile_col_id = program_id(0), program_id(1)` | the grid is `(4, 8)`, so a program has a row-id **and** a column-id |
+| `offs = pid * BLOCK + arange(BLOCK)` | `row_indices = tile_row_id * TILE_M + arange(TILE_M)` <br> `col_indices = tile_col_id * TILE_N + arange(TILE_N)` | the same formula, once per axis |
+| `out_ptr + offs` | `output_ptr + row_indices[:, None] * N + col_indices[None, :]` | **new** — two 1-D ranges become a 2-D block of addresses |
+| `v = pid + zeros([BLOCK])` | `tile_id = tile_row_id * tiles_per_row + tile_col_id` | **new** — the `(row, col)` id is linearised so the colours count 0 … 31 row-major |
+
+Take the program at `(tile_row_id, tile_col_id) = (2, 5)`. Its rows are
+`2 · 128 + [0 … 127] = 256 … 383`, its columns `5 · 64 + [0 … 63] = 320 … 383`,
+and its id is `2 · 8 + 5 = 21`. It writes `21` into that 128×64 rectangle and
+nothing else — the program was never *handed* a tile; it derived one from who it
+is, exactly as in Depth 2.
+
+The address line is the one that stops people. `row_indices[:, None]` is a
+`128 × 1` column, `col_indices[None, :]` a `1 × 64` row; adding them broadcasts to
+every `(row, col)` pair, and `* N` is plain row-major addressing,
+`row · 512 + col`:
+
+```text
+                       col_indices[None, :]        (1 × 64)
+                        320   321   322  …   383
+                     ┌──────┬──────┬──────┬───────┐
+row_indices  256  →  │256·N │256·N │256·N │       │
+  [:, None]  257  →  │ +320 │ +321 │ +322 │  …    │   128 × 64 addresses,
+  (128 × 1)  258  →  │  …   │      │      │       │   one per output the
+             …       │      │      │      │       │   program owns
+             383  →  │      │      │      │       │
+                     └──────┴──────┴──────┴───────┘
+```
+
+The mask is all-true here because 512 divides by both 128 and 64. At 500×500
+the last tile row would overhang by 12 rows (`cdiv` rounds up), and the mask is
+what stops those writes.
+
 
 That picture is the grid — a map of *who writes where*, not of what gets written. Now read the real one off the kernel name we captured
 in [7a](Lecture7a.md) — it tells you the tile the vendor's library picked for
@@ -542,42 +663,62 @@ MATMUL_KERNEL = gpu_kernel_name(lambda: A @ B) or COURSE_LAPTOP_KERNEL
 print("decoding:\n", MATMUL_KERNEL)
 ```
 
+Before handing it to code, read it token by token. Every field is vocabulary
+from this lecture:
+
+| Token | Meaning | Value here |
+| --- | --- | --- |
+| `Cijk_Ailk_Bljk` | Tensile index notation: `C[i,j] = Σₗ A[i,l]·B[l,j]` — a plain GEMM | — |
+| `SB` | single precision (fp32), batched-capable | fp32 |
+| `MT128x64x8` | **Macro Tile**: 128×64 of `C` per block; the `x8` is the depth of the K-slice per iteration | one patch = 8,192 outputs |
+| `WG16_8_1` | **Workgroup** shape, 16×8×1 threads — the block | 128 threads → 4 warps |
+| `TT8_8` | **Thread Tile**: 8×8 outputs per thread — the micro-tile | 64 outputs |
+| `WS32` | **Wave Size** — the warp width you measured in Depth 4 | 32 lanes |
+
 Now decode it:
 
 ```python
 import re
 
-def decode(name, warp=WARP):
+def decode(name, shape, warp=WARP, verbose=True):
     """Pull the decomposition out of a vendor GEMM kernel name.
 
     ROCm/Tensile spells it out: MT<m>x<n>x<k> macro tile, WG<x>_<y>_<z> workgroup,
     TT<m>_<n> per-thread tile, WS<w> wave size. cuBLAS is terser -- `sgemm_128x64`
     -- and gives only the tile. Anything else, we say so rather than guess.
+
+    `shape` is the (M, N) of *this* matmul. The grid depends on it, so it is a
+    parameter rather than a global -- the sweep further down decodes four shapes.
     """
     mt = re.search(r"MT(\d+)x(\d+)x(\d+)", name) or re.search(r"gemm_(\d+)x(\d+)", name)
     wg = re.search(r"WG(\d+)_(\d+)_(\d+)", name)
     tt = re.search(r"TT(\d+)_(\d+)", name)
     ws = re.search(r"WS(\d+)", name)
     if not mt:
-        print("could not find a tile shape in this kernel name -- print it and look yourself")
-        return
+        if verbose:
+            print("could not find a tile shape in this kernel name -- print it and look yourself")
+        return None
     bm, bn = int(mt.group(1)), int(mt.group(2))
-    M, N = MATMUL_SHAPE
+    M, N = shape
     gm, gn = -(-M // bm), -(-N // bn)              # ceiling division
+    w    = int(ws.group(1)) if ws else warp
+    thr  = int(wg.group(1)) * int(wg.group(2)) * int(wg.group(3)) if wg else None
+    tm, tn = (int(tt.group(1)), int(tt.group(2))) if tt else (None, None)
+    if not verbose:                                # table mode, for the sweep below
+        return {"tile": (bm, bn), "grid": (gm, gn), "threads": thr,
+                "warps": thr // w if thr else None, "micro": (tm, tn)}
     print(f"tile of C per block   : {bm} x {bn}   = {bm*bn:,} outputs")
     print(f"grid                  : {gm} x {gn} = {gm*gn:,} blocks")
-    if ws: print(f"wave size (hardware)  : {ws.group(1)}")
+    if ws: print(f"wave size (hardware)  : {w}")
     if wg:
-        thr = int(wg.group(1)) * int(wg.group(2)) * int(wg.group(3))
         print(f"threads per block     : {wg.group(1)}x{wg.group(2)}x{wg.group(3)} = {thr}"
-              f"  -> {thr // int(ws.group(1) if ws else warp)} warps per block")
+              f"  -> {thr // w} warps per block")
         if tt:
-            tm, tn = int(tt.group(1)), int(tt.group(2))
             print(f"outputs per thread    : {tm} x {tn} = {tm*tn}")
             print(f"check                 : {thr} threads x {tm*tn} = {thr*tm*tn:,}"
                   f"  vs tile {bm*bn:,}  -> {'consistent' if thr*tm*tn == bm*bn else 'MISMATCH'}")
 
-decode(MATMUL_KERNEL)
+decode(MATMUL_KERNEL, MATMUL_SHAPE)
 ```
 
 On the course laptop, for the 2048×2048 matmul at the top of this lecture:
@@ -604,15 +745,135 @@ tiling below the block, and it is the reason the register file has to be as larg
 as it is. Depth 3's budget and Depth 5's decomposition are the same constraint seen
 from two ends.
 
-!!! question "💬 Re-run the profiler on a much smaller matmul — say 256×256. Does the library pick the same tile?"
+The decode also lets you put a number on *why* the block bothers to own a patch
+at all, rather than letting each thread fetch for itself.
+
+!!! question "💬 The block owns 8,192 outputs and needs two strips of input. Count the floats that must come from DRAM with no sharing, then with sharing. What is the ratio?"
 
     ??? hint "Answer"
-        No. On the course laptop a two-layer MLP's `nn.Linear` calls select
-        `MT64x64x8` with `WG16_16_1` (256 threads = 8 warps) and `TT4_4`, and the check
-        still closes: 256 × 16 = 4,096 = 64 × 64. The library keeps a library of tilings
-        and picks one per problem shape, because the best decomposition depends on
-        whether you have enough tiles to fill every CU and enough work per tile to be
-        worth the launch. That trade-off is the subject of [Lecture 8](Lecture8.md).
+        | | floats from DRAM |
+        | --- | --- |
+        | no sharing — each of 128·64 threads fetches its own row of `A` and column of `B`, `2K` floats | `128 · 64 · 2K` |
+        | sharing — the block fetches the two strips once, all 8,192 outputs compute from that copy | `(128 + 64) · K` |
+        | ratio | `128·64·2 / (128+64) = 16,384 / 192` **≈ 85×** |
+
+        Every float fetched is used about 85 times instead of once, and `K` cancels.
+        The general form `2·BM·BN / (BM + BN)` is **area over perimeter**: the
+        numerator counts outputs that benefit, the denominator counts what must be
+        fetched. That is why it grows with the tile — 64×64 gives 64×, 128×128 gives
+        128× — and why "fatter tiles, more reuse" is exact arithmetic, not a metaphor.
+
+#### Does the shape change the tile?
+
+That was one matmul. The library does not compute a tile from your dimensions —
+it keeps a *catalogue* of pre-tuned kernels and picks one per problem. So put four
+shapes through the same two functions and read the selections off. Nothing new is
+defined here; `gpu_kernel_name` and `decode` are the ones above.
+
+```python
+SHAPES = [
+    ( 256,  256,  256),     # small -- is there even enough work to tile?
+    (2048, 2048, 2048),     # the matmul this lecture opened with
+    (2048, 8192,  512),     # wide N, shallow K
+    (8192, 2048,  512),     # the row above with M and N swapped
+]
+
+print(f"{'M':>6} {'N':>6} {'K':>6} | {'macro tile':>12} {'grid':>11} "
+      f"{'threads':>8} {'micro':>7} {'check':>11}")
+
+for M, N, K in SHAPES:
+    A = torch.randn(M, K, device="cuda")
+    B = torch.randn(K, N, device="cuda")
+    name = gpu_kernel_name(lambda: A @ B)
+    del A, B; torch.cuda.empty_cache()          # 8192x2048 is 0.2 GB a side
+
+    if name is None:
+        # Deliberately NOT falling back to COURSE_LAPTOP_KERNEL here. One hardcoded
+        # name would make every row identical -- a table "proving" the opposite of
+        # the point. Say so instead, and read the recorded table below.
+        print("\nthis machine's profiler does not report device kernel names;")
+        print("the table printed below the cell is a verbatim course-laptop run.")
+        break
+
+    d = decode(name, (M, N), verbose=False)
+    if d is None:
+        print(f"{M:>6} {N:>6} {K:>6} | {name[:44]}  <- no tile field; print it and look")
+        continue
+    (bm, bn), (gm, gn), (tm, tn) = d["tile"], d["grid"], d["micro"]
+    ok = d["threads"] and tm and d["threads"] * tm * tn == bm * bn
+    print(f"{M:>6} {N:>6} {K:>6} | {f'{bm}x{bn}':>12} {f'{gm}x{gn}':>11} "
+          f"{d['threads']:>8} {f'{tm}x{tn}':>7} {'consistent' if ok else 'MISMATCH':>11}")
+```
+
+On the course laptop:
+
+```text
+     M      N      K |   macro tile        grid  threads   micro       check
+   256    256    256 |        32x16        8x16      128     2x2  consistent
+  2048   2048   2048 |       128x64       16x32      128     8x8  consistent
+  2048   8192    512 |      128x128       16x64      128    8x16  consistent
+  8192   2048    512 |       256x64       32x32      128    8x16  consistent
+```
+
+Four shapes, four different tiles — and three things worth stopping on.
+
+**The block size never moved.** Every row is 128 threads, four warps. The library
+does not vary how many threads it launches; it varies how much of `C` those 128
+threads own, and pushes the difference into the micro-tile. A 32×16 macro tile
+gives each thread 2×2 outputs; a 128×128 macro tile gives it 8×16. The macro tile
+grew 32×, the block did not grow at all, and the check closes on every row.
+
+**The small matmul got a tiny tile, and you can see why.** At 256×256 the library
+picked 32×16 instead of the 128×64 it likes at 2048. Had it reused 128×64:
+
+```text
+grid = ceil(256/128) x ceil(256/64) = 2 x 4 = 8 blocks   on an 18-CU GPU
+                                                          -> 10 units get nothing
+```
+
+Eight blocks cannot fill eighteen compute units. Shrinking the tile to 32×16 buys
+128 blocks instead — worse reuse per block (the 85× above collapses toward 21×),
+but every unit gets work. That is the same trade you measured in
+[7b](Lecture7b.md): parallelism you cannot use is worthless, and here the library
+is paying reuse to buy occupancy.
+
+**Swapping `M` and `N` did not transpose the tile.** This is the one to sit with.
+`2048×8192` selects a *square* 128×128 with a 16×8 workgroup; `8192×2048` — the
+same problem, mirrored — selects a *long* 256×64 with a 32×4 workgroup. Not a
+transpose, not even the same aspect ratio. The heuristic is not a formula being
+applied to your dimensions; it is a lookup into what happened to be tuned, for
+this architecture, this dtype, this library version.
+
+So the honest chain is:
+
+> **dimensions → kernel *selection* → tile configuration → work decomposition**
+>
+> not `dimensions → tile size`. Your dimensions are an *input to a heuristic*,
+> alongside the architecture, the dtype and the library build. Change any of those
+> and the table above changes with it — which is why it is a measurement you re-run,
+> not a specification you can look up.
+
+!!! tip "If the sweep prints nothing on ROCm"
+
+    On this course laptop the PyTorch profiler reports only host-side HIP calls —
+    `prof.key_averages()` comes back with `aten::mm` and `hipExtModuleLaunchKernel`
+    and no device rows at all, so `gpu_kernel_name` returns `None`. The runtime will
+    still tell you directly:
+
+    ```bash
+    AMD_LOG_LEVEL=3 python your_script.py 2>&1 | grep -oE "Cijk[A-Za-z0-9_]*" | sort -u
+    ```
+
+    That prints the full Tensile name, which you can paste straight into `decode`.
+    The four names in the table above were captured exactly this way.
+
+Back at the 2048² kernel, one field of its name is still unread: the trailing `x8`
+in `MT128x64x8`. The two strips do not fit — the `A` strip alone is `128 · 2048`
+floats, 1 MB, against 64 KB of LDS — so the block streams them in K-slices, 8
+columns of `A` and 8 rows of `B`
+at a time, `2048 / 8 = 256` steps. Slicing does not touch the 85×: each slice is
+still shared by all 8,192 outputs. That loop, and what it buys against memory
+bandwidth, is [Lecture 8](Lecture8.md).
 
 ---
 
@@ -664,10 +925,11 @@ spills to memory.
 > maximize.**
 
 This is also the trade-off that produced the hundreds of pre-compiled BLAS kernels
-we met in Depth 1. Fatter tiles mean more reuse per byte fetched, but fewer
-resident warps to hide latency with. They compete for the same silicon, the best
-compromise depends on the shape, and so the vendor ships one kernel per point on
-that curve and picks between them at call time.
+we met in Depth 1. Fatter tiles mean more reuse per byte fetched — the 85× of
+Depth 5 grows with the tile — but fewer resident warps to hide latency with. They
+compete for the same silicon, the best compromise depends on the shape, and so the
+vendor ships one kernel per point on that curve and picks between them at call
+time.
 
 ---
 
@@ -686,7 +948,7 @@ we just built. They are [Lecture 8](Lecture8.md):
   needs *hundreds* of floating-point operations per byte fetched to stay busy — and
   a naive matmul manages about one. Latency hiding cannot help here: it hides
   *latency*, not missing *bandwidth*. Tiling is what breaks that wall, and the
-  tile you decoded in Depth 5 is the tool.
+  85× you computed in Depth 5 is the tool.
 * **Depth 8 — tensor cores and `torch.compile`.** Casting matmul into dedicated
   wiring, and removing the round-trips to slow memory between kernels.
 
