@@ -1,0 +1,170 @@
+{
+  "answers": {
+    "fence_penalty_ratio": null,
+    "graph_cpu_speedup": null,
+    "launch_bound_elements": null,
+    "nosync_over_peak": null,
+    "overlap_efficiency": null,
+    "peak_efficiency": null,
+    "peak_measured_tflops": 7.049701570076328,
+    "peak_vendor_tflops": 11.06,
+    "pinning_helps_below_mb": null
+  },
+  "env": {
+    "ac_power": true,
+    "arch": "gfx1030",
+    "backend": "ROCm/HIP 7.2.53211",
+    "caps": {
+      "events": true,
+      "graphs": true,
+      "pinned": true,
+      "streams": true
+    },
+    "clock_ghz_reported": 2.465,
+    "device": "AMD Radeon RX 6700M",
+    "exported_utc": "2026-08-15T08:33:08+00:00",
+    "iters": 30,
+    "matmul_n": 4096,
+    "multi_processor_count": 18,
+    "peak_tflops_declared": 11.06,
+    "platform": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+    "safe_mode": false,
+    "started_utc": "2026-08-15T08:22:45+00:00",
+    "torch": "2.13.0+rocm7.2",
+    "vendor": "rocm",
+    "vram_gb": 10.72
+  },
+  "integrity": {
+    "sha256": "8528079a18d2d699"
+  },
+  "results": {
+    "fence": {
+      "intervals": [
+        1,
+        2,
+        5,
+        10,
+        25,
+        50,
+        100,
+        250,
+        500
+      ],
+      "n_ops": 500,
+      "totals_ms": [
+        24.829824333210126,
+        11.403570000159865,
+        4.967505999957211,
+        3.2505563334173835,
+        2.462869666487677,
+        2.228353666699453,
+        2.50899033320214,
+        2.0733446666175346,
+        1.9525829999717341
+      ]
+    },
+    "graph": {
+      "captured": true,
+      "eager_cpu_ms": 0.7776763599758851,
+      "eager_gpu_ms": 0.8161259460449218,
+      "graph_cpu_ms": 0.014892319995851722,
+      "graph_gpu_ms": 3.2245712280273438,
+      "n_ops": 200
+    },
+    "launch": {
+      "submit_us": 4.132301500249014
+    },
+    "overlap": {
+      "compute_ms": 23.845033699944906,
+      "copy_ms": 20.027125399974466,
+      "matmul_n": 4096,
+      "mb": 128,
+      "overlap_ms": 23.18882029994711,
+      "serial_ms": 38.56283249988337
+    },
+    "peak": {
+      "derived_clock_ghz": 2.465,
+      "derived_lanes": 128,
+      "derived_tflops": 11.35872,
+      "derived_units": 18,
+      "efficiency": 0.6374052052510242,
+      "measured_sizes": [
+        1024,
+        2048,
+        4096
+      ],
+      "measured_tflops": 7.049701570076328,
+      "measured_tflops_all": [
+        2.960651019425212,
+        3.4281987160090757,
+        7.049701570076328
+      ],
+      "vendor_source": "https://www.techpowerup.com/gpu-specs/radeon-rx-6700m.c3775",
+      "vendor_tflops": 11.06
+    },
+    "submission": {
+      "flop": 137438953472,
+      "implied_tflops": {
+        "event": 7.263028480199547,
+        "nosync": 8186.558967264738,
+        "sync": 5.99648283674258
+      },
+      "iters": 30,
+      "n": 4096,
+      "t_event_ms": 18.923091634114584,
+      "t_nosync_ms": 0.01678836664117019,
+      "t_sync_ms": 22.91992776663392
+    },
+    "sweep": {
+      "per_op_us": [
+        7.755094766616821,
+        12.703360319137573,
+        7.7038949728012085,
+        7.6562947034835815,
+        8.821110129356384,
+        32.68959999084473,
+        50.270419120788574,
+        264.3501663208008
+      ],
+      "sizes": [
+        1,
+        16,
+        256,
+        4096,
+        65536,
+        1048576,
+        4194304,
+        16777216
+      ]
+    },
+    "transfer": {
+      "bw_pageable_gbs": [
+        2.7046910672095406,
+        6.462386444250864,
+        7.013462606648176,
+        6.97876184665815,
+        7.09529172718153
+      ],
+      "bw_pinned_gbs": [
+        5.061503551897303,
+        5.4938083219279825,
+        6.960742820502991,
+        7.026741891020349,
+        5.5524585864565035
+      ],
+      "sizes_mb": [
+        1,
+        4,
+        16,
+        64,
+        256
+      ],
+      "skipped": null
+    }
+  },
+  "schema_version": 2,
+  "student": {
+    "name": "AC",
+    "roll": "20251001"
+  }
+}

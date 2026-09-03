@@ -1,10 +1,13 @@
 build
 exams
+docs/plan/
 .idea
 .ipynb_checkpoints
 *.orig
 *.out
 __pycache__
 .venv
+AGENTS.md
+code/gpu_submission/make_fake_cohort.py
 gguf_artifacts
 *.gguf

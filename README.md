@@ -15,6 +15,15 @@ Course content for **DS635: Machine Learning System Engineering** at Dhirubhai A
 
 ### Module 2 — GPU Fundamentals & Hardware-Software Stack
 - [Lecture 2 — Why Accelerators Exist](docs/lectures/Lecture2.md): The CPU baseline · the memory wall · what the matmul workload demands · design the hardware yourself
+- [Lecture 3_4 — The Memory Hierarchy and the Roofline](docs/lectures/Lecture3_4.md): The matmul ladder from naive Python to GPU · SIMD, tiling, threads · arithmetic intensity · the roofline model · two GPU timing traps
+- [Lecture 5_6 — GPU Job Submission](docs/lectures/Lecture5_6.md): Who moves the bytes during a disk read · PCIe, posted vs non-posted · MMIO and BARs · DMA · ring, doorbell and fence · why an unsynchronized kernel launch measures nothing
+- [Lecture 7 — Inside the GPU: Execution & Latency Hiding](docs/lectures/Lecture7.md): How a GPU keeps thousands of ALUs busy · SMs, warps and SIMT · a CUDA core is not a core · latency hiding by oversubscription · why the register file is bigger than L1 · divergence and occupancy
+- [Lecture 8 — Inside the GPU: Memory & the Roofline](docs/lectures/Lecture8.md): What limits GPU performance · the memory hierarchy · shared memory is not a cache · coalescing and the working-set cliff · building both roofline axes from `rocminfo` · why LLM decode is memory-bound and training compute-bound on the same GPU
+
+### Labs
+
+- [Lab 5/6 — GPU Job Submission](docs/labs/Lab5_6.md) ([notebook](docs/labs/Lab5_6_gpu_job_submission.ipynb)): Measure the submission protocol on your own GPU or a free Colab T4 · submission vs execution (and the throughput number that beats the hardware) · per-launch and per-fence cost · pinned memory · stream overlap · CUDA Graphs. Marked 40 automatic + 60 rubric; see [`code/gpu_submission/grade_submissions.py`](code/gpu_submission/grade_submissions.py)
+- [Lab 2 — The Concurrency Budget](docs/labs/Lab2.md) ([notebook](docs/labs/Lab2_concurrency_budget.ipynb)): Pairs with Lecture 7 and shares no experiment with it · memory latency by pointer chase · achieved bandwidth from a grid-stride copy · Little's Law to predict the bytes a GPU must keep in flight · the block-scheduling quantum read off a wave-quantisation staircase · the tail effect. Needs CUDA or ROCm (Triton has no Metal backend). Marked 35 automatic + 65 rubric; see [`code/gpu_internals/grade_lab2.py`](code/gpu_internals/grade_lab2.py)
 
 
 
