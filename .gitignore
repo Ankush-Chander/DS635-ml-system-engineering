@@ -6,3 +6,5 @@ exams
 *.out
 __pycache__
 .venv
+gguf_artifacts
+*.gguf

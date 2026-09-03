@@ -18,6 +18,10 @@ Course content for **DS635: Machine Learning System Engineering** at Dhirubhai A
 
 
 
+## Notebooks
+
+- [GGUF, the long way around](docs/notebooks/gguf_the_long_way_around.ipynb) — *Module 4.* From a two-parameter PyTorch model to the byte layout of a real model file: `state_dict` → pickle (and its exploit) → safetensors → checkpoints → GGML → GGUF. Implements safetensors and GGUF readers/writers from their specs, then parses a real quantised model and derives its bits-per-weight. After Vicki Boykis, [*GGUF, the long way around*](https://vickiboykis.com/2024/02/28/gguf-the-long-way-around/).
+
 ## Running the site locally
 
 ```bash

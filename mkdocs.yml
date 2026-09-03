@@ -17,6 +17,8 @@ nav:
       - 3_4:Memory Hierarchy & Roofline: 'lectures/Lecture3_4.md'
       # - 4:Tensor Cores & Precision: 'lectures/Lecture4.md'
       # - 1:Requirements Discovery: 'lectures/Lecture1.md'
+  - Notebooks:
+      - "GGUF, the long way around": 'notebooks/gguf_the_long_way_around.ipynb'
   # - Code:
   #     - Storage Engines: 'code/storage_engines/README.md'
   #     - SSTable: 'https://github.com/Ankush-Chander/sorted-string-table-101'
@@ -125,6 +127,11 @@ plugins:
        - "*swagger*"
        - PULL_REQUEST_TEMPLATE.md
        - "*taxi_data/*"
+       - "*gguf_artifacts/*"
+       - "*.gguf"
+       - "*.safetensors"
+       - "*.pt"
+       - "*.pkl"
        - "*.parquet"
        - "*.db"
 #  - mkdocstrings:
