@@ -19,6 +19,8 @@ Course content for **DS635: Machine Learning System Engineering** at Dhirubhai A
 - [Lecture 5_6 — GPU Job Submission](docs/lectures/Lecture5_6.md): Who moves the bytes during a disk read · PCIe, posted vs non-posted · MMIO and BARs · DMA · ring, doorbell and fence · why an unsynchronized kernel launch measures nothing
 - [Lecture 7 — Inside the GPU: Execution & Latency Hiding](docs/lectures/Lecture7.md): How a GPU keeps thousands of ALUs busy · SMs, warps and SIMT · a CUDA core is not a core · latency hiding by oversubscription · why the register file is bigger than L1 · divergence and occupancy
 - [Lecture 8 — Inside the GPU: Memory & the Roofline](docs/lectures/Lecture8.md): What limits GPU performance · the memory hierarchy · shared memory is not a cache · coalescing and the working-set cliff · building both roofline axes from `rocminfo` · why LLM decode is memory-bound and training compute-bound on the same GPU
+- [Lecture 9_10 — Inference Optimization](docs/lectures/Lecture9_10.md): Server + model + hardware + workload · online vs batch vs embedding workloads · TTFT, TPOT, MFU and MBU mapped onto them · why prefill is compute-bound and decode memory-bound · GPU-only vs CPU offloading vs CPU-only · predicting token rate on paper · a purchase decision worked end to end
+- [Lecture 11_12 — Model Artifacts](docs/lectures/Lecture11_12.md): What is inside a `.pt` · pickle as a program, not a document · safetensors and safety by removing the mechanism · strides, contiguity and who pays for packing · GGUF for runtimes with no Python · ONNX and the model as a graph · what a format cannot do for you
 
 ### Labs
 

@@ -27,6 +27,8 @@ nav:
       - 7b:The Throughput Machine: 'lectures/Lecture7b.md'
       - 7c:SIMT, Tiles & Occupancy: 'lectures/Lecture7c.md'
       - 8:Inside the GPU — Memory & the Roofline: 'lectures/Lecture8.md'
+      - 9_10:Inference Optimization: 'lectures/Lecture9_10.md'
+      - 11_12:Model Artifacts: 'lectures/Lecture11_12.md'
       # - 4:Tensor Cores & Precision: 'lectures/Lecture4.md'
       # - 1:Requirements Discovery: 'lectures/Lecture1.md'
   - Labs:
@@ -70,6 +72,7 @@ theme:
     - navigation.expand
     - navigation.footer
     # - navigation.indexes
+    - content.code.copy
   palette:
     primary: indigo
     accent: purple
