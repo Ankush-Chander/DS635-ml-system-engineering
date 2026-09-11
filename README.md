@@ -26,6 +26,7 @@ Course content for **DS635: Machine Learning System Engineering** at Dhirubhai A
 
 - [Lab 5/6 — GPU Job Submission](docs/labs/Lab5_6.md) ([notebook](docs/labs/Lab5_6_gpu_job_submission.ipynb)): Measure the submission protocol on your own GPU or a free Colab T4 · submission vs execution (and the throughput number that beats the hardware) · per-launch and per-fence cost · pinned memory · stream overlap · CUDA Graphs. Marked 40 automatic + 60 rubric; see [`code/gpu_submission/grade_submissions.py`](code/gpu_submission/grade_submissions.py)
 - [Lab 2 — The Concurrency Budget](docs/labs/Lab2.md) ([notebook](docs/labs/Lab2_concurrency_budget.ipynb)): Pairs with Lecture 7 and shares no experiment with it · memory latency by pointer chase · achieved bandwidth from a grid-stride copy · Little's Law to predict the bytes a GPU must keep in flight · the block-scheduling quantum read off a wave-quantisation staircase · the tail effect. Needs CUDA or ROCm (Triton has no Metal backend). Marked 35 automatic + 65 rubric; see [`code/gpu_internals/grade_lab2.py`](code/gpu_internals/grade_lab2.py)
+- [Lab 11/12 — Three Formats, One Model](docs/labs/Lab11_12.md): Pairs with Lecture 11/12 · save one model as `.pt`, `.safetensors` and `.gguf` and measure what each flattening costs · file size, cold vs warm load, RSS and `rchar` · the `.contiguous()` cost curve · the pickle trust boundary · read a real GGUF. CPU-only, no GPU needed. Marked 40 automatic + 60 rubric
 
 
 
