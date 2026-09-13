@@ -9,3 +9,5 @@ __pycache__
 .venv
 AGENTS.md
 code/gpu_submission/make_fake_cohort.py
+gguf_artifacts
+*.gguf
