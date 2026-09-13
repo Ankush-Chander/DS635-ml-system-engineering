@@ -1255,12 +1255,13 @@
 
 
 
-<h1 id="lab-1112-three-formats-one-model">Lab 11/12 — Three formats, one model</h1>
+<h1 id="lab-1112-three-formats-one-model">Lab 11/12 — Three Formats, One Model</h1>
 <blockquote>
 <p><strong>Lab thesis:</strong> a model file is a live in-memory object flattened onto disk. This lab makes you <em>measure</em> what that flattening costs and what it throws away — by saving one model three ways and watching the numbers that only differ because the formats differ.</p>
 </blockquote>
 <p>This is the experimental half of <a href="../../lectures/Lecture11_12/">Lecture 11/12 — Model artifacts</a>. The lecture argued that each format keeps a different amount of the live object, and pays for it differently. Here you produce those differences as measurements on a machine you control.</p>
 <p>Runs on <strong>Google Colab</strong> (free) or <strong>your own machine</strong> — no GPU required. This lab is CPU-only; the disk, the page cache and the allocator are what you are measuring.</p>
+<p><a href="https://colab.research.google.com/github/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab11_12.ipynb"><strong>Open the notebook in Colab</strong></a> · <a href="./">read it on this site</a> · <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab11_12.ipynb">download from GitHub</a></p>
 <hr />
 <h2 id="what-this-is-not">What this is not</h2>
 <p>It is not the lecture's demo notebook re-run. The demos <em>showed</em> you a transpose costs nothing and a mmap load costs almost no memory. Here you <strong>predict every number before you look</strong>, then explain the gaps:</p>
@@ -1362,9 +1363,10 @@
 <li>safetensors RSS delta &lt; ¼ × file size</li>
 <li><code>read()</code> <code>rchar</code> ≈ file size; mmap <code>rchar</code> ≈ 0</li>
 <li><code>.contiguous()</code> time rises with tensor size</li>
-<li>your short answers are consistent with your recorded numbers</li>
+<li>the payload is blocked by default and fires only under <code>weights_only=False</code></li>
 </ul>
 <p><strong>Rubric (from your written cells)</strong> — predictions marked for being <em>made</em>, explanations for naming the <strong>mechanism</strong>: page cache, mmap, allocator copy, name resolution, allow-list. The heaviest single item is <strong>Part 3's paragraph</strong> on what safetensors does not fix — a format claim with no threat model behind it scores about half.</p>
+<p><strong>40 automatic + 60 rubric</strong>, out of 100. The automatic half is marked by <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/blob/main/code/artifacts/grade_lab11_12.py"><code>code/artifacts/grade_lab11_12.py</code></a> from the JSON your notebook's export cell writes.</p>
 <blockquote>
 <p><strong>An honest surprising measurement, correctly explained, scores higher than a tidy expected one.</strong> If your machine's page cache was already warm and cold ≈ warm, say so and explain it.</p>
 </blockquote>
