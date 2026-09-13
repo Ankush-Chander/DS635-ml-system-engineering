@@ -329,6 +329,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#module-3-inference-model-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 3 — Inference &amp; Model Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -975,7 +986,7 @@
   
   
     <li class="md-nav__item">
-      <a href="labs/Lab11_12/" class="md-nav__link">
+      <a href="labs/Lab11_12_model_artifacts/" class="md-nav__link">
         
   
   
@@ -1063,6 +1074,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#module-3-inference-model-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 3 — Inference &amp; Model Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1113,9 +1135,16 @@
 <li><a href="lectures/Lecture7/">7: Inside the GPU — Execution &amp; Latency Hiding</a> (in three parts: <a href="lectures/Lecture7a/">7a</a>, <a href="lectures/Lecture7b/">7b</a>, <a href="lectures/Lecture7c/">7c</a>) — SMs, warps and SIMT, a CUDA core is not a core, latency hiding by oversubscription, why the register file is bigger than L1, divergence and occupancy</li>
 <li><a href="lectures/Lecture8/">8: Inside the GPU — Memory &amp; the Roofline</a> — the memory hierarchy, shared memory is not a cache, coalescing and the working-set cliff, building both roofline axes from <code>rocminfo</code>, why LLM decode is memory-bound and training compute-bound</li>
 </ul>
+<h3 id="module-3-inference-model-optimization">Module 3 — Inference &amp; Model Optimization</h3>
+<ul>
+<li><a href="lectures/Lecture9_10/">9_10: Inference Optimization</a> — server + model + hardware + workload, online vs batch vs embedding, TTFT/TPOT/MFU/MBU, prefill compute-bound vs decode memory-bound, predicting token rate on paper</li>
+<li><a href="lectures/Lecture11_12/">11_12: Model Artifacts</a> — a live model object flattened to disk and back: pickle, safetensors, GGUF, ONNX; strides and contiguity; what survives the trip and what the reader must supply</li>
+</ul>
 <h2 id="labs">Labs</h2>
 <ul>
 <li><a href="labs/Lab5_6/">Lab 5_6: GPU Job Submission</a> — measure the ring/doorbell/fence protocol yourself, on Colab or your own GPU (<a href="labs/Lab5_6_gpu_job_submission/">notebook</a>)</li>
+<li><a href="labs/Lab2/">Lab 2: The Concurrency Budget</a> — derive the bytes your GPU must keep in flight, then find where it stops scaling; needs CUDA or ROCm (<a href="labs/Lab2_concurrency_budget/">notebook</a>)</li>
+<li><a href="labs/Lab11_12/">Lab 11_12: Three Formats, One Model</a> — save one model as <code>.pt</code>, <code>.safetensors</code> and <code>.gguf</code> and measure what each flattening costs; CPU-only (<a href="labs/Lab11_12_model_artifacts/">notebook</a>)</li>
 </ul>
 <hr />
 
