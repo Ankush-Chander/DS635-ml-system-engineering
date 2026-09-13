@@ -38,7 +38,7 @@ nav:
       - '2:The Concurrency Budget': 'labs/Lab2.md'
       - '2:Lab notebook': 'labs/Lab2_concurrency_budget.ipynb'
       - '11_12:Three Formats, One Model': 'labs/Lab11_12.md'
-      - '11_12:Lab notebook': 'labs/Lab11_12.ipynb'
+      - '11_12:The three formats, measured': 'labs/Lab11_12_model_artifacts.ipynb'
   # - Code:
   #     - Storage Engines: 'code/storage_engines/README.md'
   #     - SSTable: 'https://github.com/Ankush-Chander/sorted-string-table-101'
