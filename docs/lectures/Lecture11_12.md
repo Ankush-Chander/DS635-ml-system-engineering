@@ -39,7 +39,7 @@ import pickle
 class Recipe: pass
 
 blob = pickle.dumps(Recipe())   # the name "__main__.Recipe" goes into the bytes, not the class
-# del Recipe                      # stand in for loading where the class is undefined
+del Recipe                      # stand in for loading where the class is undefined
 pickle.loads(blob)              # AttributeError: Can't get attribute 'Recipe' on <module '__main__'>
 ```
 
