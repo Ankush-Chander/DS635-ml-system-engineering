@@ -21,6 +21,7 @@ Course content for **DS635: Machine Learning System Engineering** at Dhirubhai A
 - [Lecture 8 — Inside the GPU: Memory & the Roofline](docs/lectures/Lecture8.md): What limits GPU performance · the memory hierarchy · shared memory is not a cache · coalescing and the working-set cliff · building both roofline axes from `rocminfo` · why LLM decode is memory-bound and training compute-bound on the same GPU
 - [Lecture 9_10 — Inference Optimization](docs/lectures/Lecture9_10.md): Server + model + hardware + workload · online vs batch vs embedding workloads · TTFT, TPOT, MFU and MBU mapped onto them · why prefill is compute-bound and decode memory-bound · GPU-only vs CPU offloading vs CPU-only · predicting token rate on paper · a purchase decision worked end to end
 - [Lecture 11_12 — Model Artifacts](docs/lectures/Lecture11_12.md): What is inside a `.pt` · pickle as a program, not a document · safetensors and safety by removing the mechanism · strides, contiguity and who pays for packing · GGUF for runtimes with no Python · ONNX and the model as a graph · what a format cannot do for you
+<!-- - [Lecture 13_14 — Decoding Strategies](docs/lectures/Lecture13_14.md): Transformer revision ending at the LM head · the autoregressive loop and why `select()` is outside the model · greedy search and the repetition trap · beam search and why likelihood is the wrong objective for open-ended text · temperature as exponential ratio reshaping · the long-tail failure of pure sampling · top-k vs nucleus (top-p) · choosing a strategy per task -->
 
 ### Labs
 

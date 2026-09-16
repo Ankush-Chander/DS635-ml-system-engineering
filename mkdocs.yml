@@ -29,6 +29,7 @@ nav:
       - 8:Inside the GPU — Memory & the Roofline: 'lectures/Lecture8.md'
       - 9_10:Inference Optimization: 'lectures/Lecture9_10.md'
       - 11_12:Model Artifacts: 'lectures/Lecture11_12.md'
+      # - 13_14:Decoding Strategies: 'lectures/Lecture13_14.md'
       # - 4:Tensor Cores & Precision: 'lectures/Lecture4.md'
       # - 1:Requirements Discovery: 'lectures/Lecture1.md'
   - Labs:
