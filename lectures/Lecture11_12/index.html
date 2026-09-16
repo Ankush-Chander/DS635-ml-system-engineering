@@ -1487,7 +1487,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Recipe</span><span class="p">:</span> <span class="k">pass</span>
 
 <span class="n">blob</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">Recipe</span><span class="p">())</span>   <span class="c1"># the name &quot;__main__.Recipe&quot; goes into the bytes, not the class</span>
-<span class="c1"># del Recipe                      # stand in for loading where the class is undefined</span>
+<span class="k">del</span> <span class="n">Recipe</span>                      <span class="c1"># stand in for loading where the class is undefined</span>
 <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>              <span class="c1"># AttributeError: Can&#39;t get attribute &#39;Recipe&#39; on &lt;module &#39;__main__&#39;&gt;</span>
 </code></pre></div>
 <p>The bytes are intact; the <strong>name</strong> had nowhere to resolve. A checkpoint is therefore <strong>not self-contained</strong> — it depends on the class layout of the environment that wrote it. Rename a class between versions, or refactor which module it lives in, and old checkpoints stop loading.</p>
