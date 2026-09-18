@@ -11,6 +11,7 @@ The one exception is **Lab 2**, whose experiments are all Triton kernels: Triton
 | [Lab 5/6 — GPU Job Submission](Lab5_6.md) | [Lecture 5/6](../lectures/Lecture5_6.md) | Establishing theoretical peak · submission vs execution · launch cost · fences · pinned memory · stream overlap · CUDA Graphs | 100 |
 | [Lab 2 — The Concurrency Budget](Lab2.md) | [Lecture 7](../lectures/Lecture7.md) | Memory latency by pointer chase · achieved bandwidth · Little's Law · wave quantisation · the tail effect | 100 |
 | [Lab 11/12 — Three Formats, One Model](Lab11_12.md) ([notebook](Lab11_12_model_artifacts.ipynb)) | [Lecture 11/12](../lectures/Lecture11_12.md) | File size vs load time · mmap RSS and `rchar` · the `.contiguous()` cost curve · the pickle trust boundary · reading a real GGUF | 100 |
+| [Lab 13/14 — Decoding Strategies, Measured](Lab13_14.md) ([notebook](Lab13_14_decoding_strategies.ipynb)) | [Lecture 13/14](../lectures/Lecture13_14.md) | The next-token distribution · greedy determinism · temperature's `P(top)` and diversity · top-k vs top-p nucleus size · beam vs greedy log-prob | 100 |
 
 ## How labs are marked
 

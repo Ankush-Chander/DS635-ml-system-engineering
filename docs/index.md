@@ -29,5 +29,6 @@ Welcome to the course on Machine Learning System Engineering.
 - [Lab 5_6: GPU Job Submission](labs/Lab5_6.md) — measure the ring/doorbell/fence protocol yourself, on Colab or your own GPU ([notebook](labs/Lab5_6_gpu_job_submission.ipynb))
 - [Lab 2: The Concurrency Budget](labs/Lab2.md) — derive the bytes your GPU must keep in flight, then find where it stops scaling; needs CUDA or ROCm ([notebook](labs/Lab2_concurrency_budget.ipynb))
 - [Lab 11_12: Three Formats, One Model](labs/Lab11_12.md) — save one model as `.pt`, `.safetensors` and `.gguf` and measure what each flattening costs; CPU-only ([notebook](labs/Lab11_12_model_artifacts.ipynb))
+- [Lab 13_14: Decoding Strategies, Measured](labs/Lab13_14.md) — measure the next-token distribution and what greedy, temperature, top-k/top-p and beam each do to it; CPU-only ([notebook](labs/Lab13_14_decoding_strategies.ipynb))
 
 ---
