@@ -29,7 +29,7 @@ nav:
       - 8:Inside the GPU — Memory & the Roofline: 'lectures/Lecture8.md'
       - 9_10:Inference Optimization: 'lectures/Lecture9_10.md'
       - 11_12:Model Artifacts: 'lectures/Lecture11_12.md'
-      # - 13_14:Decoding Strategies: 'lectures/Lecture13_14.md'
+      - 13_14:Decoding Strategies: 'lectures/Lecture13_14.md'
       # - 4:Tensor Cores & Precision: 'lectures/Lecture4.md'
       # - 1:Requirements Discovery: 'lectures/Lecture1.md'
   - Labs:
@@ -40,6 +40,8 @@ nav:
       - '2:Lab notebook': 'labs/Lab2_concurrency_budget.ipynb'
       - '11_12:Three Formats, One Model': 'labs/Lab11_12.md'
       - '11_12:The three formats, measured': 'labs/Lab11_12_model_artifacts.ipynb'
+      - '13_14:Decoding Strategies, Measured': 'labs/Lab13_14.md'
+      - '13_14:Decoding, measured': 'labs/Lab13_14_decoding_strategies.ipynb'
   # - Code:
   #     - Storage Engines: 'code/storage_engines/README.md'
   #     - SSTable: 'https://github.com/Ankush-Chander/sorted-string-table-101'
