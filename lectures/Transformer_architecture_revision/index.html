@@ -10,13 +10,9 @@
       
       
       
-        <link rel="canonical" href="https://DS635.ankushchander.com/lectures/Lecture7/">
+        <link rel="canonical" href="https://DS635.ankushchander.com/lectures/Transformer_architecture_revision/">
       
       
-        <link rel="prev" href="../Lecture5_6/">
-      
-      
-        <link rel="next" href="../Lecture7a/">
       
       
         
@@ -27,7 +23,7 @@
     
     
       
-        <title>7:Matmul to Silicon — Overview - DS635 - Machine Learning System Engineering | DAU</title>
+        <title>Transformer architecture — a revision - DS635 - Machine Learning System Engineering | DAU</title>
       
     
     
@@ -76,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#matmul-to-silicon-execution-and-latency-hiding" class="md-skip">
+        <a href="#transformer-architecture-a-revision" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              7:Matmul to Silicon — Overview
+              Transformer architecture — a revision
             
           </span>
         </div>
@@ -160,12 +156,10 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../Lecture0/" class="md-tabs__link">
           
   
@@ -262,29 +256,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -302,7 +293,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -457,19 +448,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../Lecture7/" class="md-nav__link">
         
   
   
@@ -485,7 +467,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -1025,6 +1006,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-task-language-modelling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The task: language modelling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-embeddings-tokens-become-vectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Embeddings — tokens become vectors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-encoderdecoder-and-the-variant-that-won" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Encoder–decoder, and the variant that won
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-self-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Self-attention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-the-rest-of-the-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. The rest of the block
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-the-lm-head-where-the-decoding-lecture-takes-over" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. The LM head — where the decoding lecture takes over
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1040,62 +1106,91 @@
 
 
 
-<h1 id="matmul-to-silicon-execution-and-latency-hiding">Matmul to silicon: execution and latency hiding</h1>
+<h1 id="transformer-architecture-a-revision">Transformer architecture — a revision</h1>
 <blockquote>
-<p><strong>Module thesis:</strong> a GPU is not built to make one thread fast — it is built to
-never have an idle ALU. This lecture is the machinery that achieves that.</p>
+<p><strong>Why this page:</strong> <a href="../Lecture13_14/">Lecture 13/14 — Decoding strategies</a> picks up the moment a model produces its logits. This is the revision of everything up to that moment. The one fact the decoding lecture stands on: <strong>the forward pass ends in a vector of <code>vocab_size</code> logits, and softmax turns it into a probability distribution over the next token.</strong></p>
 </blockquote>
-<p>This is a guided descent. We start at one line of Python and go down until we
-reach the lanes that do the arithmetic, stopping at every layer that makes a
-decision on your behalf. It is split into three parts, one session each, with
-depth numbering running continuously across them:</p>
+<hr />
+<h2 id="1-the-task-language-modelling">1. The task: language modelling</h2>
+<p>Language modelling is predicting the next token given everything before it:</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">P(w_n \mid w_1, w_2, \ldots, w_{n-1})</div>
+<script type="math/tex; mode=display">P(w_n \mid w_1, w_2, \ldots, w_{n-1})</script>
+</div>
+<p><img alt="Next word prediction" src="../../images/transformers/next_word_pred.jpeg" /></p>
+<h2 id="2-embeddings-tokens-become-vectors">2. Embeddings — tokens become vectors</h2>
+<p>An <strong>embedding</strong> is a real-valued vector encoding a token's meaning: tokens that mean similar things sit close together in the vector space. The <strong>embedding layer</strong> maps each token id (a one-hot vector of <code>vocab_size</code>) to its embedding of dimension <code>d_model</code>.</p>
+<p><img alt="Embedding layer" src="../../images/transformers/embedding_layer.png" /></p>
+<h2 id="3-encoderdecoder-and-the-variant-that-won">3. Encoder–decoder, and the variant that won</h2>
+<p>The original transformer is an <strong>encoder–decoder</strong>: the encoder turns a variable-length input into internal representations; the decoder turns those into an output sequence.</p>
+<p><img alt="Encoder-decoder architecture" src="../../images/transformers/encoder_decoder_architecture.png" /></p>
+<p><em>Image credits: <a href="https://jalammar.github.io/illustrated-transformer/">The Illustrated Transformer</a></em></p>
+<p>Three variants of that blueprint survive:</p>
 <table>
 <thead>
 <tr>
-<th>Part</th>
-<th>What it covers</th>
-<th>Depths</th>
+<th></th>
+<th>Encoder–decoder</th>
+<th>Encoder-only</th>
+<th>Decoder-only</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><a href="../Lecture7a/">7a — From Python to a kernel launch</a></td>
-<td>the dispatcher, the doorbell, what a kernel is, and the SPMD inversion</td>
-<td>1–2</td>
+<td><strong>Use cases</strong></td>
+<td>translation, summarisation</td>
+<td>embeddings, classification</td>
+<td><strong>text generation</strong></td>
 </tr>
 <tr>
-<td><a href="../Lecture7b/">7b — The throughput machine</a></td>
-<td>the hardware hierarchy, over-subscription, and latency hiding measured directly</td>
-<td>3</td>
+<td><strong>Training objective</strong></td>
+<td>predict target sequence from source</td>
+<td>masked language modelling</td>
+<td><strong>autoregressive next-token prediction</strong></td>
 </tr>
 <tr>
-<td><a href="../Lecture7c/">7c — SIMT, tiles, and occupancy</a></td>
-<td>warps, divergence, one block = one tile of <code>C</code>, the residency budget — plus the synthesis and capstone</td>
-<td>4–5</td>
+<td><strong>Examples</strong></td>
+<td>T5, BART</td>
+<td>BERT</td>
+<td><strong>GPT family, Llama, Qwen</strong></td>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code>&quot;how C = A @ B reaches the GPU and gets executed&quot;
-├── ✗ what matmul computes (O(n³) work on O(n²) data)     — assumed
-├── ✗ latency machines vs throughput machines             — assumed
-├── 1. the software stack: dispatcher → BLAS → launch       ◀ Lecture 7a
-├── 2. what a kernel really is (the SPMD inversion)         ◀ Lecture 7a
-├── 3. the throughput machine: residency &amp; the free switch  ◀ Lecture 7b
-├── 4. SIMT: grids, blocks, warps of 32, divergence         ◀ Lecture 7c
-├── 5. one block = one tile of C                            ◀ Lecture 7c
-├── 6. coalescing &amp; broadcast                               → Lecture 8
-├── 7. the memory hierarchy and the FLOPs/byte wall         → Lecture 8
-└── 8. tensor cores &amp; torch.compile                         → Lecture 8
-</code></pre></div>
-<p>Depths 1–5 are the execution model: how work is created, named, scheduled and
-kept flowing. Depths 6–8 are about <em>feeding</em> that machine, and they are
-<a href="../Lecture8/">Lecture 8</a>.</p>
-<p>Each part is also a runnable notebook — every measurement on those pages was
-produced by a cell you can re-run on your own GPU, or on a free Colab T4 via the
-badge at the top of each part.</p>
-<p>The NVIDIA/AMD terminology table, this laptop's GPU inventory, and the
-references for all three parts are collected at the end of
-<a href="../Lecture7c/#appendix-a-nvidia-and-amd-terminology">Lecture 7c</a>.</p>
+<p><strong>Every model this lecture decodes from is decoder-only</strong> — the whole model is one stack that reads the tokens so far and predicts the next.</p>
+<h2 id="4-self-attention">4. Self-attention</h2>
+<p>Attention lets each position weigh every other position by relevance. Each token gets three representations:</p>
+<ul>
+<li><strong>Query</strong> — the current token, as the thing doing the comparing</li>
+<li><strong>Key</strong> — every token, as the thing being compared against</li>
+<li><strong>Value</strong> — the actual content that gets weighted and summed</li>
+</ul>
+<p><img alt="Self-attention output" src="../../images/transformers/self-attention-output.png" /></p>
+<p><strong>Multi-head attention</strong> runs several of these in parallel, each head free to learn a different relation, and concatenates the results:</p>
+<p><img alt="Multi-headed self-attention recap" src="../../images/transformers/transformer_multi-headed_self-attention-recap.png" /></p>
+<p>In a decoder-only model the attention is <strong>causally masked</strong>: a token may attend only to positions before it — the model cannot peek at the future it is trying to predict.</p>
+<h2 id="5-the-rest-of-the-block">5. The rest of the block</h2>
+<ul>
+<li><strong>Positional encoding</strong> — attention itself is order-blind, so position information is added to each embedding; the same word at two positions gets two slightly different vectors.</li>
+<li><strong>Feed-forward network</strong> — a two-layer MLP (<code>d_model → dim_feedforward → d_model</code>) applied at each position after attention.</li>
+<li><strong>Residual connections + layer normalisation</strong> — each sublayer's input is added to its output, then normalised; the residual path is what lets gradients flow through a deep stack.</li>
+</ul>
+<p><img alt="Residuals and layer norm" src="../../images/transformers/transformer_resideual_layer_norm.png" /></p>
+<p><em>Image credits: <a href="https://jalammar.github.io/illustrated-transformer/">The Illustrated Transformer</a></em></p>
+<p>One block = attention + FFN, wrapped in residuals and normalisation. A model is <strong>that block stacked <code>num_layers</code> deep</strong>:</p>
+<p><img alt="Encoder-decoder stack" src="../../images/transformers/transformer_encoder_decoder_stack.png" /></p>
+<h2 id="6-the-lm-head-where-the-decoding-lecture-takes-over">6. The LM head — where the decoding lecture takes over</h2>
+<p>The final block's output vector (per position, size <code>d_model</code>) goes through one last <strong>linear layer</strong> projecting it to <code>vocab_size</code> scores — the <strong>logits</strong> — and <strong>softmax</strong> turns those scores into probabilities: all positive, summing to 1.</p>
+<p><img alt="Decoder output softmax" src="../../images/transformers/transformer_decoder_output_softmax.png" /></p>
+<p>The full pipeline, end to end:</p>
+<p><img alt="Transformer full view" src="../../images/transformers/transformer_full_view.png" /></p>
+<p><strong>The model's job ends here.</strong> It has produced a distribution over the vocabulary. Picking a token from it is a separate decision — and that is where <a href="../Lecture13_14/">Lecture 13/14 — Decoding strategies</a> takes over.</p>
+<hr />
+<h2 id="references">References</h2>
+<ol>
+<li>Vaswani et al., <a href="https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf"><em>Attention Is All You Need</em></a> (NeurIPS 2017)</li>
+<li>Jay Alammar, <a href="https://jalammar.github.io/illustrated-transformer/"><em>The Illustrated Transformer</em></a></li>
+<li>Harvard NLP, <a href="https://nlp.seas.harvard.edu/annotated-transformer/"><em>The Annotated Transformer</em></a></li>
+</ol>
 
 
 
@@ -1120,44 +1215,6 @@ references for all three parts are collected at the end of
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="../Lecture5_6/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 5_6:GPU job submission">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                5_6:GPU job submission
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="../Lecture7a/" class="md-footer__link md-footer__link--next" aria-label="Next: 7a:From Python to a Kernel Launch">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                7a:From Python to a Kernel Launch
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">

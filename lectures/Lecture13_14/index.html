@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://DS635.ankushchander.com/lectures/Lecture13_14/">
       
       
+        <link rel="prev" href="../Lecture11_12/">
+      
+      
+        <link rel="next" href="../../labs/">
       
       
         
@@ -23,7 +27,7 @@
     
     
       
-        <title>Decoding strategies - DS635 - Machine Learning System Engineering | DAU</title>
+        <title>13_14:Decoding Strategies - DS635 - Machine Learning System Engineering | DAU</title>
       
     
     
@@ -106,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Decoding strategies
+              13_14:Decoding Strategies
             
           </span>
         </div>
@@ -156,10 +160,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../Lecture0/" class="md-tabs__link">
           
   
@@ -256,26 +262,29 @@
       
   
   
+    
   
   
+  
     
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -293,7 +302,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -640,6 +649,298 @@
 
               
             
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13_14:Decoding Strategies
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13_14:Decoding Strategies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-text-generation-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Text generation fundamentals
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Text generation fundamentals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sequence-probability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequence probability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-two-families" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The two families
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-greedy-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Greedy search
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Greedy search">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-locally-best-globally-best" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why locally best ≠ globally best
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-repetition-trap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The repetition trap
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-beam-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Beam search
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Beam search">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-it-wins-and-where-it-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where it wins — and where it fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-sampling-and-temperature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Sampling and temperature
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Sampling and temperature">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#temperature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temperature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-failure-mode-the-long-tail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The failure mode: the long tail
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-truncated-sampling-top-k-and-nucleus-top-p" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Truncated sampling — top-k and nucleus (top-p)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Truncated sampling — top-k and nucleus (top-p)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#top-k" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-k
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nucleus-top-p" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nucleus (top-p)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-practice-the-knobs-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In practice: the knobs compose
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-choosing-a-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Choosing a strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -895,6 +1196,62 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab13_14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13_14:Decoding Strategies, Measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab13_14_decoding_strategies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 13/14 — Decoding strategies, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -929,98 +1286,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-transformer-architecture-a-revision" class="md-nav__link">
+  <a href="#1-text-generation-fundamentals" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Transformer architecture — a revision
+        1. Text generation fundamentals
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="1. Transformer architecture — a revision">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#11-the-task-language-modelling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.1 The task: language modelling
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#12-embeddings-tokens-become-vectors" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.2 Embeddings — tokens become vectors
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#13-encoderdecoder-and-the-variant-that-won" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.3 Encoder–decoder, and the variant that won
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#14-self-attention" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.4 Self-attention
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#15-the-rest-of-the-block" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.5 The rest of the block
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#16-the-lm-head-where-this-lecture-takes-over" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.6 The LM head — where this lecture takes over
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-text-generation-fundamentals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Text generation fundamentals
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="2. Text generation fundamentals">
+    <nav class="md-nav" aria-label="1. Text generation fundamentals">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1051,15 +1325,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-greedy-search" class="md-nav__link">
+  <a href="#2-greedy-search" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Greedy search
+        2. Greedy search
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="3. Greedy search">
+    <nav class="md-nav" aria-label="2. Greedy search">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1090,15 +1364,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-beam-search" class="md-nav__link">
+  <a href="#3-beam-search" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Beam search
+        3. Beam search
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4. Beam search">
+    <nav class="md-nav" aria-label="3. Beam search">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1118,15 +1392,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-sampling-and-temperature" class="md-nav__link">
+  <a href="#4-sampling-and-temperature" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Sampling and temperature
+        4. Sampling and temperature
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="5. Sampling and temperature">
+    <nav class="md-nav" aria-label="4. Sampling and temperature">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1157,15 +1431,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-truncated-sampling-top-k-and-nucleus-top-p" class="md-nav__link">
+  <a href="#5-truncated-sampling-top-k-and-nucleus-top-p" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Truncated sampling — top-k and nucleus (top-p)
+        5. Truncated sampling — top-k and nucleus (top-p)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="6. Truncated sampling — top-k and nucleus (top-p)">
+    <nav class="md-nav" aria-label="5. Truncated sampling — top-k and nucleus (top-p)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1207,10 +1481,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7-choosing-a-strategy" class="md-nav__link">
+  <a href="#6-choosing-a-strategy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7. Choosing a strategy
+        6. Choosing a strategy
       
     </span>
   </a>
@@ -1252,83 +1526,11 @@
 <p>Lectures 11/12 covered what a model is on disk. These notes are about the last inch of inference: the model has produced its logits — <strong>now what?</strong></p>
 <p><strong>The arc:</strong> the next-token distribution → greedy search → beam search → sampling with temperature → top-k → nucleus (top-p). Each strategy exists because the previous one fails on a concrete class of text.</p>
 <hr />
-<h2 id="1-transformer-architecture-a-revision">1. Transformer architecture — a revision</h2>
-<p>Everything in this section is revision. The one fact the rest of the lecture stands on: <strong>the forward pass ends in a vector of <code>vocab_size</code> logits, and softmax turns it into a probability distribution over the next token.</strong> The sections after this one are entirely about what to do with that distribution.</p>
-<h3 id="11-the-task-language-modelling">1.1 The task: language modelling</h3>
-<p>Language modelling is predicting the next token given everything before it:</p>
-<div class="arithmatex">
-<div class="MathJax_Preview">P(w_n \mid w_1, w_2, \ldots, w_{n-1})</div>
-<script type="math/tex; mode=display">P(w_n \mid w_1, w_2, \ldots, w_{n-1})</script>
-</div>
-<p><img alt="Next word prediction" src="../../images/transformers/next_word_pred.jpeg" /></p>
-<h3 id="12-embeddings-tokens-become-vectors">1.2 Embeddings — tokens become vectors</h3>
-<p>An <strong>embedding</strong> is a real-valued vector encoding a token's meaning: tokens that mean similar things sit close together in the vector space. The <strong>embedding layer</strong> maps each token id (a one-hot vector of <code>vocab_size</code>) to its embedding of dimension <code>d_model</code>.</p>
-<p><img alt="Embedding layer" src="../../images/transformers/embedding_layer.png" /></p>
-<h3 id="13-encoderdecoder-and-the-variant-that-won">1.3 Encoder–decoder, and the variant that won</h3>
-<p>The original transformer is an <strong>encoder–decoder</strong>: the encoder turns a variable-length input into internal representations; the decoder turns those into an output sequence.</p>
-<p><img alt="Encoder-decoder architecture" src="../../images/transformers/encoder_decoder_architecture.png" /></p>
-<p><em>Image credits: <a href="https://jalammar.github.io/illustrated-transformer/">The Illustrated Transformer</a></em></p>
-<p>Three variants of that blueprint survive:</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>Encoder–decoder</th>
-<th>Encoder-only</th>
-<th>Decoder-only</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Use cases</strong></td>
-<td>translation, summarisation</td>
-<td>embeddings, classification</td>
-<td><strong>text generation</strong></td>
-</tr>
-<tr>
-<td><strong>Training objective</strong></td>
-<td>predict target sequence from source</td>
-<td>masked language modelling</td>
-<td><strong>autoregressive next-token prediction</strong></td>
-</tr>
-<tr>
-<td><strong>Examples</strong></td>
-<td>T5, BART</td>
-<td>BERT</td>
-<td><strong>GPT family, Llama, Qwen</strong></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Every model this lecture decodes from is decoder-only</strong> — the whole model is one stack that reads the tokens so far and predicts the next.</p>
-<h3 id="14-self-attention">1.4 Self-attention</h3>
-<p>Attention lets each position weigh every other position by relevance. Each token gets three representations:</p>
-<ul>
-<li><strong>Query</strong> — the current token, as the thing doing the comparing</li>
-<li><strong>Key</strong> — every token, as the thing being compared against</li>
-<li><strong>Value</strong> — the actual content that gets weighted and summed</li>
-</ul>
-<p><img alt="Self-attention output" src="../../images/transformers/self-attention-output.png" /></p>
-<p><strong>Multi-head attention</strong> runs several of these in parallel, each head free to learn a different relation, and concatenates the results:</p>
-<p><img alt="Multi-headed self-attention recap" src="../../images/transformers/transformer_multi-headed_self-attention-recap.png" /></p>
-<p>In a decoder-only model the attention is <strong>causally masked</strong>: a token may attend only to positions before it — the model cannot peek at the future it is trying to predict.</p>
-<h3 id="15-the-rest-of-the-block">1.5 The rest of the block</h3>
-<ul>
-<li><strong>Positional encoding</strong> — attention itself is order-blind, so position information is added to each embedding; the same word at two positions gets two slightly different vectors.</li>
-<li><strong>Feed-forward network</strong> — a two-layer MLP (<code>d_model → dim_feedforward → d_model</code>) applied at each position after attention.</li>
-<li><strong>Residual connections + layer normalisation</strong> — each sublayer's input is added to its output, then normalised; the residual path is what lets gradients flow through a deep stack.</li>
-</ul>
-<p><img alt="Residuals and layer norm" src="../../images/transformers/transformer_resideual_layer_norm.png" /></p>
-<p><em>Image credits: <a href="https://jalammar.github.io/illustrated-transformer/">The Illustrated Transformer</a></em></p>
-<p>One block = attention + FFN, wrapped in residuals and normalisation. A model is <strong>that block stacked <code>num_layers</code> deep</strong>:</p>
-<p><img alt="Encoder-decoder stack" src="../../images/transformers/transformer_encoder_decoder_stack.png" /></p>
-<h3 id="16-the-lm-head-where-this-lecture-takes-over">1.6 The LM head — where this lecture takes over</h3>
-<p>The final block's output vector (per position, size <code>d_model</code>) goes through one last <strong>linear layer</strong> projecting it to <code>vocab_size</code> scores — the <strong>logits</strong> — and <strong>softmax</strong> turns those scores into probabilities: all positive, summing to 1.</p>
-<p><img alt="Decoder output softmax" src="../../images/transformers/transformer_decoder_output_softmax.png" /></p>
-<p>The full pipeline, end to end:</p>
-<p><img alt="Transformer full view" src="../../images/transformers/transformer_full_view.png" /></p>
-<p><strong>The model's job ends here.</strong> It has produced a distribution over the vocabulary. Picking a token from it is a separate decision — and every strategy below is a different way to make it.</p>
+<blockquote>
+<p><strong>Prerequisite (revision):</strong> these notes pick up where the forward pass ends — at the <strong>logits</strong>. If you need the transformer recap (embeddings, attention, and the LM head that produces <code>vocab_size</code> logits + softmax), read <a href="../Transformer_architecture_revision/">Transformer architecture — a revision</a> first.</p>
+</blockquote>
 <hr />
-<h2 id="2-text-generation-fundamentals">2. Text generation fundamentals</h2>
+<h2 id="1-text-generation-fundamentals">1. Text generation fundamentals</h2>
 <p>Generation is a loop around the forward pass:</p>
 <div class="highlight"><pre><span></span><code>while not done:
     logits = model(tokens)          # one forward pass → vocab_size scores
@@ -1379,7 +1581,7 @@
 </details>
 </div>
 <hr />
-<h2 id="3-greedy-search">3. Greedy search</h2>
+<h2 id="2-greedy-search">2. Greedy search</h2>
 <p>The simplest <code>select()</code>: <strong>take the argmax at every step.</strong> Deterministic, no extra state, no extra compute.</p>
 <h3 id="why-locally-best-globally-best">Why locally best ≠ globally best</h3>
 <p>Greedy commits to the best <em>token</em> and hopes it leads to the best <em>sequence</em>. It often does not. A two-step example (probabilities on the arrows):</p>
@@ -1408,6 +1610,9 @@
 </tbody>
 </table>
 <p>Greedy takes "nice" because 0.5 &gt; 0.4 — and thereby locks itself out of the most probable sequence. The high-probability word hiding <em>behind</em> a lower-probability word is invisible to a strategy that never looks ahead.</p>
+<p><img alt="Greedy search — argmax at each step" src="../../images/decoding/greedy_search.png" /><br />
+<em>Greedy walks one path — "The" → "nice" → "woman" — and never sees that "dog" → "has" scores higher behind a lower first step.<br />
+Source: <a href="https://huggingface.co/blog/how-to-generate">von Platen, How to generate text</a>, Hugging Face.</em></p>
 <h3 id="the-repetition-trap">The repetition trap</h3>
 <p>Greedy's second failure is worse: <strong>degenerate repetition</strong>. Once a phrase has appeared, its tokens are in the context, which <em>raises</em> the model's probability of producing them again — a positive feedback loop (<a href="https://arxiv.org/abs/1904.09751">Holtzman et al., 2020</a>):</p>
 <div class="highlight"><pre><span></span><code>I&#39;m not sure if I&#39;ll ever be able to walk again.
@@ -1416,13 +1621,16 @@ I&#39;m not sure if I&#39;ll ...
 </code></pre></div>
 <p>Each repetition makes the next repetition <em>more</em> probable, and argmax has no randomness with which to escape.</p>
 <hr />
-<h2 id="4-beam-search">4. Beam search</h2>
+<h2 id="3-beam-search">3. Beam search</h2>
 <p>Fix the lookahead problem directly: instead of the 1 best token, <strong>keep the <code>k</code> best partial sequences</strong> ("beams") at every step, extend each, and keep the best <code>k</code> of the extensions.</p>
-<p>On the §3 tree with <code>k = 2</code>: after step 1 both "The nice" (0.5) and "The dog" (0.4) survive. Step 2 scores "The nice woman" at 0.20 and "The dog has" at 0.36 — beam search returns the sequence greedy could not see.</p>
+<p>On the §2 tree with <code>k = 2</code>: after step 1 both "The nice" (0.5) and "The dog" (0.4) survive. Step 2 scores "The nice woman" at 0.20 and "The dog has" at 0.36 — beam search returns the sequence greedy could not see.</p>
+<p><img alt="Beam search — keep the k best partial sequences" src="../../images/decoding/beam_search.png" /><br />
+<em>With k = 2 the two most probable beams are carried forward at each step, so "The dog has" (0.36) is never dropped.<br />
+Source: <a href="https://huggingface.co/blog/how-to-generate">von Platen, How to generate text</a>, Hugging Face.</em></p>
 <p><strong>Cost:</strong> each step runs the model on <code>k</code> hypotheses — <code>k</code> beams ≈ <code>k</code> requests' worth of compute and KV-cache memory (<a href="../Lecture9_10/">Lecture 9/10</a>'s per-request costs, multiplied).</p>
 <h3 id="where-it-wins-and-where-it-fails">Where it wins — and where it fails</h3>
 <p>Beam search is the standard for <strong>closed-ended</strong> tasks — translation, summarisation — where there is a roughly-correct target and sequence likelihood tracks quality.</p>
-<p>For <strong>open-ended</strong> text it fails in a revealing way. Holtzman et al. put human-written text through GPT-2 and plotted the per-token probability the model assigns: <strong>human text bounces between confident and surprising tokens, while beam-search text runs flat at high probability</strong> — and reads as exactly what it is, the blandest available continuation, before typically collapsing into the §3 repetition loop.</p>
+<p>For <strong>open-ended</strong> text it fails in a revealing way. Holtzman et al. put human-written text through GPT-2 and plotted the per-token probability the model assigns: <strong>human text bounces between confident and surprising tokens, while beam-search text runs flat at high probability</strong> — and reads as exactly what it is, the blandest available continuation, before typically collapsing into the §2 repetition loop.</p>
 <div class="admonition question">
 <p class="admonition-title">💬 Beam search finds a higher-probability sequence than sampling. Why does it produce <em>worse</em> open-ended text?</p>
 <details class="hint">
@@ -1432,8 +1640,11 @@ I&#39;m not sure if I&#39;ll ...
 </div>
 <p>This is why chat models do not use beam search: open-ended generation needs a strategy that <em>spends</em> probability on variety, not one that hoards it. That strategy is sampling.</p>
 <hr />
-<h2 id="5-sampling-and-temperature">5. Sampling and temperature</h2>
+<h2 id="4-sampling-and-temperature">4. Sampling and temperature</h2>
 <p>The stochastic family's base move: <strong>draw the next token at random, weighted by the distribution</strong> (multinomial sampling). "woman" at 0.4 is now chosen 40% of the time — variety is built in, and repetition loops break because an escape token eventually gets drawn.</p>
+<p><img alt="Sampling — draw weighted by the distribution" src="../../images/decoding/sampling_search.png" /><br />
+<em>The next token is drawn at random in proportion to its probability, instead of always taking the argmax.<br />
+Source: <a href="https://huggingface.co/blog/how-to-generate">von Platen, How to generate text</a>, Hugging Face.</em></p>
 <h3 id="temperature">Temperature</h3>
 <p>One knob reshapes the distribution before the draw — divide the logits by a <strong>temperature</strong> <code>T</code> before softmax:</p>
 <div class="arithmatex">
@@ -1477,17 +1688,25 @@ I&#39;m not sure if I&#39;ll ...
 <li><strong>T &gt; 1</strong>: the distribution flattens toward uniform — more adventurous, less reliable</li>
 </ul>
 <p>What <code>T</code> really moves is the <strong>ratio</strong> between any two tokens, exponentially: <span class="arithmatex"><span class="MathJax_Preview">P_i / P_j = e^{(l_i - l_j)/T}</span><script type="math/tex">P_i / P_j = e^{(l_i - l_j)/T}</script></span>. A logit gap of 1 means A is 2.7× likelier than B at <code>T = 1</code>, 7.4× at <code>T = 0.5</code>, only 1.6× at <code>T = 2</code>. Temperature does not add or remove candidates — it redistributes trust among them.</p>
+<p><img alt="Temperature reshapes the distribution before the draw" src="../../images/decoding/sampling_search_with_temp.png" /><br />
+<em>Low temperature sharpens the distribution toward the top token; high temperature flattens it toward uniform.<br />
+Source: <a href="https://huggingface.co/blog/how-to-generate">von Platen, How to generate text</a>, Hugging Face.</em></p>
 <h3 id="the-failure-mode-the-long-tail">The failure mode: the long tail</h3>
-<p>A vocabulary has ~50,000–150,000 entries, and softmax gives <strong>every one of them</strong> nonzero probability. Each tail token is individually negligible — but tens of thousands of "negligible" sum to real mass, so pure sampling keeps rolling dice against the whole tail. Sooner or later an absurd token wins a draw; and by the loop in §2, that token is now <em>context</em>, and the model dutifully continues the derailed text. One bad draw, compounded autoregressively, is a ruined paragraph.</p>
+<p>A vocabulary has ~50,000–150,000 entries, and softmax gives <strong>every one of them</strong> nonzero probability. Each tail token is individually negligible — but tens of thousands of "negligible" sum to real mass, so pure sampling keeps rolling dice against the whole tail. Sooner or later an absurd token wins a draw; and by the loop in §1, that token is now <em>context</em>, and the model dutifully continues the derailed text. One bad draw, compounded autoregressively, is a ruined paragraph.</p>
 <p>Raising <code>T</code> makes this worse (the tail fattens); lowering <code>T</code> trades it back toward greedy's blandness. The fix is not a better <code>T</code> — it is refusing to let the tail vote at all.</p>
 <hr />
-<h2 id="6-truncated-sampling-top-k-and-nucleus-top-p">6. Truncated sampling — top-k and nucleus (top-p)</h2>
+<h2 id="5-truncated-sampling-top-k-and-nucleus-top-p">5. Truncated sampling — top-k and nucleus (top-p)</h2>
 <p>Both fixes have the same shape: <strong>cut the distribution down to a trusted set, renormalise, and sample only inside it.</strong> They differ in how the set is chosen.</p>
 <h3 id="top-k">Top-k</h3>
 <p>Keep the <code>k</code> highest-probability tokens (typical <code>k</code>: 50), drop everything else, renormalise. The tail is gone by construction.</p>
+<p><img alt="Top-k — keep the k highest-probability tokens" src="../../images/decoding/top_k_sampling.png" /><br />
+<em>With K = 6 (as drawn), only the six most likely tokens survive each step; the rest of the tail is zeroed before renormalising.<br />
+Source: <a href="https://huggingface.co/blog/how-to-generate">von Platen, How to generate text</a>, Hugging Face.</em></p>
 <p>The weakness: <strong><code>k</code> is static, but the distribution's shape is not.</strong> After "The Eiffel Tower is located in", the distribution is peaked — one token holds nearly everything, and <code>k = 50</code> readmits 49 tokens the model itself considers junk. After "My favourite food is", the distribution is flat — hundreds of tokens are legitimate, and <code>k = 50</code> amputates most of them. One number cannot serve both shapes.</p>
 <h3 id="nucleus-top-p">Nucleus (top-p)</h3>
 <p>Sort tokens by probability and keep the <strong>smallest set whose cumulative probability reaches <code>p</code></strong> (typical <code>p</code>: 0.9) — the <em>nucleus</em> — then renormalise and sample. The set size now <strong>adapts to the distribution</strong>: a peaked step keeps 1–2 tokens, a flat step keeps hundreds. Same knob, both shapes handled — which is why top-p (<a href="https://arxiv.org/abs/1904.09751">Holtzman et al., 2020</a>) is the default in essentially every serving stack.</p>
+<p><img alt="Nucleus (top-p) — smallest set reaching cumulative p" src="../../images/decoding/top_p_sampling.png" />
+<em>Top-p keeps the smallest group of tokens whose probabilities sum to p (0.92 as drawn) — a set that grows on flat distributions and shrinks on peaked ones. Source: <a href="https://huggingface.co/blog/how-to-generate">von Platen, How to generate text</a>, Hugging Face.</em></p>
 <div class="admonition question">
 <p class="admonition-title">💬 Peaked distribution: one token at 0.95. Flat distribution: 500 tokens at ~0.2% each. What does top-k = 50 do to each, and what does top-p = 0.9 do?</p>
 <details class="hint">
@@ -1500,9 +1719,9 @@ I&#39;m not sure if I&#39;ll ...
 <div class="highlight"><pre><span></span><code><span class="c1"># vLLM</span>
 <span class="n">SamplingParams</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">top_p</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
 </code></pre></div>
-<p>The OpenAI-style API exposes the same <code>temperature</code> and <code>top_p</code>. Model cards ship recommended values per model — chat models commonly land near <code>temperature</code> 0.6–0.8 with <code>top_p</code> 0.9–0.95 — and the right setting is the task's, not a universal constant, which is §7.</p>
+<p>The OpenAI-style API exposes the same <code>temperature</code> and <code>top_p</code>. Model cards ship recommended values per model — chat models commonly land near <code>temperature</code> 0.6–0.8 with <code>top_p</code> 0.9–0.95 — and the right setting is the task's, not a universal constant, which is §6.</p>
 <hr />
-<h2 id="7-choosing-a-strategy">7. Choosing a strategy</h2>
+<h2 id="6-choosing-a-strategy">6. Choosing a strategy</h2>
 <p>The decision reduces to one question: <strong>does the task have a right answer?</strong></p>
 <table>
 <thead>
@@ -1531,17 +1750,21 @@ I&#39;m not sure if I&#39;ll ...
 </tbody>
 </table>
 <p>The systems view, closing the loop with <a href="../Lecture9_10/">Lecture 9/10</a>: decoding runs <strong>once per generated token, inside the serving engine's hot loop</strong>, and sampling parameters are <strong>per-request state</strong> — a batch of 32 requests can carry 32 different temperatures, and the engine must apply each request's own reshaping to its own row of logits every step. Cheap per step, but on the critical path of every token the system ever emits.</p>
-<p>Demo — decoding strategies side by side: same model, same prompt, every strategy above, live. <em>(Not built yet.)</em></p>
+<div class="admonition note">
+<p class="admonition-title">Notebook — decoding strategies, live</p>
+<p>Companion notebook: <a href="../../notebooks/decoding_strategies/"><strong>decoding_strategies.ipynb</strong></a> runs every
+strategy above on the same model (<code>gpt2</code>) and prompt — greedy's repetition loop, beam's blandness,
+temperature sweeps, and top-k vs top-p — plus the under-the-hood truncation showing top-p keep <strong>1</strong>
+token on a peaked step and <strong>1,913</strong> on a flat one.</p>
+</div>
 <hr />
 <h2 id="references">References</h2>
 <ol>
-<li>Vaswani et al., <a href="https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf"><em>Attention Is All You Need</em></a> (NeurIPS 2017)</li>
-<li>Jay Alammar, <a href="https://jalammar.github.io/illustrated-transformer/"><em>The Illustrated Transformer</em></a></li>
-<li>Harvard NLP, <a href="https://nlp.seas.harvard.edu/annotated-transformer/"><em>The Annotated Transformer</em></a></li>
 <li>Holtzman et al., <a href="https://arxiv.org/abs/1904.09751"><em>The Curious Case of Neural Text Degeneration</em></a> (ICLR 2020) — nucleus sampling; the human-vs-beam probability plots</li>
 <li>Fan et al., <a href="https://arxiv.org/abs/1805.04833"><em>Hierarchical Neural Story Generation</em></a> (ACL 2018) — top-k sampling</li>
-<li>Patrick von Platen, <a href="https://huggingface.co/blog/how-to-generate"><em>How to generate text</em></a> (Hugging Face blog) — source of the greedy/beam tree example</li>
+<li>Patrick von Platen, <a href="https://huggingface.co/blog/how-to-generate"><em>How to generate text</em></a> (Hugging Face blog) — source of the greedy/beam tree example and the decoding figures</li>
 <li>Chip Huyen, <em>AI Engineering</em> (O'Reilly, 2025), ch. 2 — sampling</li>
+<li><a href="../Transformer_architecture_revision/">Transformer architecture — a revision</a> — the forward-pass recap these notes build on</li>
 </ol>
 
 
@@ -1567,6 +1790,44 @@ I&#39;m not sure if I&#39;ll ...
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../Lecture11_12/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 11_12:Model Artifacts">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                11_12:Model Artifacts
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../labs/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">
