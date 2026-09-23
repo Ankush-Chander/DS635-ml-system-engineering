@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>The Acceptance Rule</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --surface:   #fcfcfb;
+    --panel:     #ffffff;
+    --sunk:      #f4f3ef;
+    --line:      #e3e2dd;
+    --line-soft: #efeeea;
+    --ink:       #0b0b0b;
+    --ink-2:     #52514e;
+    --ink-3:     #86847d;
+    --track:     #e8e7e2;
+    --good:      #0ca30c;
+    --critical:  #d03b3b;
+    --accent:    #2a78d6;
+    --s0: #2a78d6;
+    --s1: #eb6834;
+    --s2: #1baf7a;
+    --s3: #eda100;
+    --s4: #e87ba4;
+    --shadow: 0 1px 2px rgba(11,11,11,.05), 0 10px 28px -20px rgba(11,11,11,.35);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --surface:   #1a1a19;
+      --panel:     #212120;
+      --sunk:      #1c1c1b;
+      --line:      #383835;
+      --line-soft: #2c2c2a;
+      --ink:       #ffffff;
+      --ink-2:     #c3c2b7;
+      --ink-3:     #8f8e85;
+      --track:     #2e2e2b;
+      --good:      #0ca30c;
+      --critical:  #d03b3b;
+      --accent:    #3987e5;
+      --s0: #3987e5;
+      --s1: #d95926;
+      --s2: #199e70;
+      --s3: #c98500;
+      --s4: #d55181;
+      --shadow: 0 1px 2px rgba(0,0,0,.45), 0 10px 28px -20px rgba(0,0,0,.9);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface:   #1a1a19;
+    --panel:     #212120;
+    --sunk:      #1c1c1b;
+    --line:      #383835;
+    --line-soft: #2c2c2a;
+    --ink:       #ffffff;
+    --ink-2:     #c3c2b7;
+    --ink-3:     #8f8e85;
+    --track:     #2e2e2b;
+    --good:      #0ca30c;
+    --critical:  #d03b3b;
+    --accent:    #3987e5;
+    --s0: #3987e5;
+    --s1: #d95926;
+    --s2: #199e70;
+    --s3: #c98500;
+    --s4: #d55181;
+    --shadow: 0 1px 2px rgba(0,0,0,.45), 0 10px 28px -20px rgba(0,0,0,.9);
+  }
+
+  body {
+    background: var(--surface);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 960px; margin-inline: auto;
+    padding-inline: 16px; padding-block: 24px 56px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  h1, h2, h3 { margin: 0; text-wrap: balance; }
+  p { margin: 0; }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; }
+
+  /* ---------- header ---------- */
+  .lede { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: flex-start; justify-content: space-between; }
+  .eyebrow { font-family: "IBM Plex Mono", monospace; font-size: 11px; font-weight: 500;
+             letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+  h1 { font-size: 22px; font-weight: 600; letter-spacing: -.015em; margin-top: 4px; }
+  .lede p.sub { color: var(--ink-2); font-size: 13.5px; margin-top: 4px; max-width: 60ch; }
+
+  .propose {
+    appearance: none; border: 0; cursor: pointer; font: inherit; font-weight: 600; font-size: 14px;
+    background: var(--accent); color: #fff; border-radius: 8px; padding: 11px 20px;
+    box-shadow: var(--shadow); white-space: nowrap;
+  }
+  .propose:hover { filter: brightness(1.07); }
+  .propose:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+  /* ---------- cards ---------- */
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 16px; box-shadow: var(--shadow);
+  }
+  .card > h2 {
+    font-size: 14px; font-weight: 600; display: flex; align-items: baseline;
+    justify-content: space-between; gap: 10px; margin-bottom: 12px;
+  }
+  .card > h2 .tag { font-size: 11.5px; font-weight: 400; color: var(--ink-3); }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 720px) { .pair { grid-template-columns: 1fr; } }
+
+  /* ---------- horizontal bar rows ---------- */
+  .rows { display: flex; flex-direction: column; gap: 7px; }
+  .row { display: grid; grid-template-columns: 14px 1fr 42px; align-items: center; gap: 10px; }
+  .row.editable .bar-track { cursor: ew-resize; }
+  .idx { font-size: 12px; color: var(--ink-2); text-align: right; }
+  .bar-track {
+    position: relative; height: 15px; background: var(--track);
+    border-radius: 4px; touch-action: none;
+  }
+  .bar-track:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .bar-fill { height: 100%; border-radius: 4px; min-width: 2px; }
+  body.ready .bar-fill { transition: width .16s ease-out; }
+  .pct { font-size: 12px; color: var(--ink-2); text-align: right; }
+  .s0 { background: var(--s0); } .s1 { background: var(--s1); }
+  .s2 { background: var(--s2); } .s3 { background: var(--s3); }
+  .s4 { background: var(--s4); }
+  .c0 { color: var(--s0); } .c1 { color: var(--s1); }
+  .c2 { color: var(--s2); } .c3 { color: var(--s3); } .c4 { color: var(--s4); }
+  .row.drawn .bar-track { box-shadow: 0 0 0 2px var(--ink); }
+  .accept-annot { font-size: 11px; color: var(--ink-3); text-align: right; }
+  .row.with-annot { grid-template-columns: 14px 1fr 42px 62px; }
+
+  /* ---------- flow arrow ---------- */
+  .flow { text-align: center; color: var(--ink-3); font-size: 12.5px; }
+
+  /* ---------- proposal ---------- */
+  .proposal { background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+              padding: 20px 16px; box-shadow: var(--shadow); text-align: center; }
+  .proposal h2 { font-size: 17px; font-weight: 600; }
+  .proposal h2 b { font-weight: 600; }
+  .verdict-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 16px; margin-top: 16px; }
+  .prob-tile {
+    background: var(--sunk); border: 1px solid var(--line); border-radius: 8px;
+    padding: 10px 18px; min-width: 150px;
+  }
+  .prob-tile .cap { font-size: 11px; color: var(--ink-3); }
+  .prob-tile .big { font-size: 26px; font-weight: 600; letter-spacing: -.02em;
+                    font-family: "IBM Plex Mono", monospace; line-height: 1.25; }
+  .prob-tile .calc { font-size: 11px; color: var(--ink-3); font-family: "IBM Plex Mono", monospace; }
+  .arrow { color: var(--ink-3); font-size: 18px; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px;
+    border-radius: 8px; padding: 12px 18px; border: 1.5px solid var(--line); background: var(--panel);
+  }
+  .badge.acc { color: var(--good); border-color: color-mix(in srgb, var(--good) 55%, var(--line)); }
+  .badge.rej { color: var(--critical); border-color: color-mix(in srgb, var(--critical) 55%, var(--line)); }
+
+  /* ---------- explainer ---------- */
+  .explain { background: var(--sunk); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .explain h3 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .explain p { font-size: 13px; color: var(--ink-2); }
+  .explain b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- concept trio ---------- */
+  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 720px) { .trio { grid-template-columns: 1fr; } }
+  .concept { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 13px 15px; font-size: 12.5px; color: var(--ink-2); }
+  .concept b { color: var(--ink); }
+
+  .keynote {
+    border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent);
+    border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 13px; color: var(--ink-2);
+  }
+  .keynote b { color: var(--ink); }
+
+  /* ---------- long run ---------- */
+  .runbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
+  .btn {
+    appearance: none; font: inherit; font-size: 12.5px; font-weight: 500; cursor: pointer;
+    border-radius: 7px; padding: 7px 13px; border: 1px solid var(--line);
+    background: var(--panel); color: var(--ink);
+  }
+  .btn:hover { border-color: var(--ink-3); }
+  .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .switch { display: inline-flex; border: 1px solid var(--line); border-radius: 7px; overflow: hidden; margin-left: auto; }
+  .switch button {
+    appearance: none; border: 0; background: transparent; cursor: pointer; font: inherit;
+    font-size: 12.5px; padding: 7px 12px; color: var(--ink-2); border-right: 1px solid var(--line);
+  }
+  .switch button:last-child { border-right: 0; }
+  .switch button[aria-pressed="true"] { background: var(--ink); color: var(--surface); font-weight: 500; }
+  .switch button.danger[aria-pressed="true"] { background: var(--critical); color: #fff; }
+
+  .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 14px; }
+  @media (max-width: 560px) { .metrics { grid-template-columns: 1fr; } }
+  .metric { background: var(--sunk); border: 1px solid var(--line); border-radius: 8px; padding: 10px 13px; }
+  .metric .cap { font-size: 10.5px; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3); font-family: "IBM Plex Mono", monospace; }
+  .metric .val { font-size: 19px; font-weight: 600; font-family: "IBM Plex Mono", monospace; letter-spacing: -.01em; }
+  .metric .foot { font-size: 11.5px; color: var(--ink-2); }
+  .pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500;
+          border-radius: 999px; padding: 2px 8px; border: 1px solid var(--line); margin-top: 3px; }
+  .pill.ok { color: var(--good); border-color: color-mix(in srgb, var(--good) 45%, var(--line)); }
+  .pill.bad { color: var(--critical); border-color: color-mix(in srgb, var(--critical) 45%, var(--line)); }
+
+  .tick { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ink); border-radius: 1px; }
+  .obs-legend { font-size: 11.5px; color: var(--ink-3); margin-top: 10px; display: flex; gap: 14px; flex-wrap: wrap; }
+  .note { font-size: 12px; color: var(--ink-3); margin-top: 10px; }
+  .note b { color: var(--ink-2); font-weight: 600; }
+  .obs-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: var(--ink-3); vertical-align: -1px; margin-right: 5px; }
+  .obs-legend i.tickkey { width: 2px; height: 11px; background: var(--ink); border-radius: 1px; }
+
+  .presets { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+  .chip { appearance: none; font: inherit; font-size: 11.5px; cursor: pointer; color: var(--ink-2);
+          background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; }
+  .chip:hover { border-color: var(--ink-3); color: var(--ink); }
+  .chip:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  .backlink {
+    display: inline-flex; align-items: center; gap: 6px; align-self: flex-start;
+    font-size: 12px; color: var(--ink-3); text-decoration: none;
+    border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px;
+  }
+  .backlink:hover { color: var(--ink); border-color: var(--ink-3); }
+  .backlink:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <a class="backlink" href="../">&larr; DS635</a>
+  <div class="lede">
+    <div>
+      <div class="eyebrow">Speculative decoding · stage 0</div>
+      <h1>The cheap model proposes. The acceptance rule corrects it.</h1>
+      <p class="sub">Click <b>Propose</b> repeatedly, then watch an accepted token or the residual take over. Drag any bar to reshape <b>q</b> or <b>p</b>.</p>
+    </div>
+    <button class="propose" id="proposeBtn">Propose token</button>
+  </div>
+
+  <div class="pair">
+    <section class="card">
+      <h2>1. Draft distribution q <span class="tag">cheap proposal</span></h2>
+      <div class="rows" id="qRows"></div>
+    </section>
+    <section class="card">
+      <h2>2. Target distribution p <span class="tag">what we must match</span></h2>
+      <div class="rows" id="pRows"></div>
+    </section>
+  </div>
+
+  <div class="presets">
+    <button class="chip" data-preset="blind">Blind spot (default)</button>
+    <button class="chip" data-preset="good">Good drafter</button>
+    <button class="chip" data-preset="poor">Poor drafter</button>
+    <button class="chip" data-preset="same">q = p</button>
+  </div>
+
+  <div class="flow">&darr; q proposes a token</div>
+
+  <section class="proposal">
+    <h2 id="proposalTitle">Press <b>Propose token</b> to draw one proposal from q</h2>
+    <div class="verdict-row" id="verdictRow" hidden>
+      <div class="prob-tile">
+        <div class="cap">accept probability</div>
+        <div class="big" id="probBig">&mdash;</div>
+        <div class="calc" id="probCalc">&mdash;</div>
+      </div>
+      <div class="arrow">&rarr;</div>
+      <div id="badgeSlot"></div>
+    </div>
+  </section>
+
+  <div class="explain">
+    <h3>What just happened?</h3>
+    <p id="explainText">Nothing yet. A proposal from <b>q</b> is either kept, or replaced by a draw from the residual.</p>
+  </div>
+
+  <section class="card">
+    <h2>Residual distribution <span class="tag mono">normalize(max(0, p &minus; q))</span></h2>
+    <div class="rows" id="rRows"></div>
+    <p class="obs-legend">The mass <b>p</b> wants that <b>q</b> never supplies. Rejected proposals are replaced from here.</p>
+  </section>
+
+  <div class="trio">
+    <div class="concept"><b>Accepted:</b> q(x) supplied a proposal we can keep.</div>
+    <div class="concept"><b>Rejected:</b> q was too large at that token.</div>
+    <div class="concept"><b>Residual:</b> gives back exactly the mass q was missing.</div>
+  </div>
+
+  <div class="keynote" id="keynote"></div>
+
+  <section class="card">
+    <h2>Over many proposals <span class="tag">the guarantee is distributional</span></h2>
+    <div class="runbar">
+      <button class="btn" id="run1k">Propose &times;1,000</button>
+      <button class="btn" id="run100k">Propose &times;100,000</button>
+      <button class="btn" id="resetBtn">Reset</button>
+      <div class="switch" role="group" aria-label="Residual mode">
+        <button id="modeCorrect" aria-pressed="true">Correct residual</button>
+        <button id="modeBroken" class="danger" aria-pressed="false">&minus;&minus;broken</button>
+      </div>
+    </div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="cap">Proposals</div>
+        <div class="val" id="mN">0</div>
+        <div class="foot">accepted <span class="mono" id="mAccN">0</span></div>
+      </div>
+      <div class="metric">
+        <div class="cap">Acceptance rate</div>
+        <div class="val" id="mAcc">&mdash;</div>
+        <div class="foot">predicted <span class="mono" id="mAccPred">&mdash;</span> = 1 &minus; TV(p, q)</div>
+      </div>
+      <div class="metric">
+        <div class="cap">Output vs p</div>
+        <div class="val" id="mChi">&mdash;</div>
+        <div class="foot">chi-square, dof <span class="mono" id="mDof">4</span> · p = <span class="mono" id="mPval">&mdash;</span></div>
+        <span class="pill" id="mPill">needs 100+</span>
+      </div>
+    </div>
+    <div class="rows" id="oRows"></div>
+    <p class="note">Bars are the <b>observed output</b>, one colour per symbol. The upright tick on each row marks <b>p</b>.</p>
+  </section>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var K = 5;
+  var PRESETS = {
+    blind: { p: [0.40, 0.25, 0.20, 0.10, 0.05], q: [0.40, 0.15, 0.10, 0.00, 0.35] },
+    good:  { p: [0.40, 0.25, 0.20, 0.10, 0.05], q: [0.38, 0.27, 0.18, 0.12, 0.05] },
+    poor:  { p: [0.40, 0.25, 0.20, 0.10, 0.05], q: [0.05, 0.10, 0.20, 0.30, 0.35] },
+    same:  { p: [0.40, 0.25, 0.20, 0.10, 0.05], q: [0.40, 0.25, 0.20, 0.10, 0.05] }
+  };
+
+  var pW = PRESETS.blind.p.slice();
+  var qW = PRESETS.blind.q.slice();
+  var P = pW.slice(), Q = qW.slice(), R = [];
+  var counts = new Float64Array(K);
+  var n = 0, accepted = 0, broken = false;
+  var last = null;
+
+  // ---------- math ----------
+  function normalize(a) {
+    var s = 0, i;
+    for (i = 0; i < a.length; i++) s += a[i];
+    if (s <= 0) return a.map(function () { return 1 / a.length; });
+    return a.map(function (v) { return v / s; });
+  }
+  function residualOf(p, q) {
+    var r = [], s = 0, i, v;
+    for (i = 0; i < K; i++) { v = Math.max(p[i] - q[i], 0); r.push(v); s += v; }
+    if (s <= 0) return p.slice();
+    return r.map(function (x) { return x / s; });
+  }
+  function sample(dist) {
+    var u = Math.random(), acc = 0, i;
+    for (i = 0; i < K; i++) { acc += dist[i]; if (u < acc) return i; }
+    return K - 1;
+  }
+  function threshold(x) { return Q[x] <= 0 ? 1 : Math.min(1, P[x] / Q[x]); }
+  function predictedRate() {
+    var s = 0, i;
+    for (i = 0; i < K; i++) s += Math.min(P[i], Q[i]);
+    return s;
+  }
+  var LG = [76.18009172947146, -86.50532032941677, 24.01409824083091,
+            -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+  function lgamma(z) {
+    var x = z, y = z, tmp = x + 5.5, ser = 1.000000000190015, j;
+    tmp -= (x + 0.5) * Math.log(tmp);
+    for (j = 0; j < 6; j++) ser += LG[j] / ++y;
+    return -tmp + Math.log(2.5066282746310005 * ser / x);
+  }
+  function chi2sf(stat, dof) {
+    if (dof <= 0) return 1;
+    var a = dof / 2, x = stat / 2, i;
+    if (x <= 0) return 1;
+    if (x < a + 1) {
+      var term = 1 / a, total = term;
+      for (i = 1; i < 1000; i++) {
+        term *= x / (a + i); total += term;
+        if (Math.abs(term) < Math.abs(total) * 1e-15) break;
+      }
+      return 1 - total * Math.exp(-x + a * Math.log(x) - lgamma(a));
+    }
+    var b = x + 1 - a, c = 1e300, d = 1 / b, h = d;
+    for (i = 1; i < 1000; i++) {
+      var an = -i * (i - a);
+      b += 2;
+      d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300;
+      c = b + an / c;  if (Math.abs(c) < 1e-300) c = 1e-300;
+      d = 1 / d;
+      var delta = d * c; h *= delta;
+      if (Math.abs(delta - 1) < 1e-15) break;
+    }
+    return h * Math.exp(-x + a * Math.log(x) - lgamma(a));
+  }
+
+  function recompute() {
+    P = normalize(pW);
+    Q = normalize(qW);
+    R = residualOf(P, Q);
+  }
+
+  // ---------- one proposal ----------
+  function propose(record) {
+    var x = sample(Q);
+    var thr = threshold(x);
+    var r = Math.random();
+    var ok = r < thr;
+    var committed, from = null;
+    if (ok) { committed = x; accepted++; }
+    else { from = broken ? P : R; committed = sample(from); }
+    counts[committed]++;
+    n++;
+    if (record) last = { x: x, thr: thr, r: r, ok: ok, committed: committed };
+  }
+  function burst(count) {
+    for (var i = 0; i < count - 1; i++) propose(false);
+    propose(true);
+  }
+
+  // ---------- row builders ----------
+  function rowHTML(i, editable, annot) {
+    return '<div class="row' + (editable ? " editable" : "") + (annot ? " with-annot" : "") + '" data-i="' + i + '">' +
+      '<span class="idx mono">' + i + '</span>' +
+      '<div class="bar-track"' + (editable ? ' tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"' : "") + '>' +
+        '<div class="bar-fill s' + i + '"></div>' +
+      '</div>' +
+      '<span class="pct mono"></span>' +
+      (annot ? '<span class="accept-annot mono"></span>' : "") +
+      '</div>';
+  }
+  function buildRows(el, editable, annot) {
+    var html = "", i;
+    for (i = 0; i < K; i++) html += rowHTML(i, editable, annot);
+    el.innerHTML = html;
+  }
+
+  var qRows = document.getElementById("qRows");
+  var pRows = document.getElementById("pRows");
+  var rRows = document.getElementById("rRows");
+  var oRows = document.getElementById("oRows");
+
+  function paint(el, dist, opts) {
+    opts = opts || {};
+    var i, row, fill, pct;
+    for (i = 0; i < K; i++) {
+      row = el.children[i];
+      fill = row.querySelector(".bar-fill");
+      pct = row.querySelector(".pct");
+      fill.style.width = (dist[i] * 100).toFixed(2) + "%";
+      pct.textContent = Math.round(dist[i] * 100) + "%";
+      var track = row.querySelector(".bar-track");
+      if (track.hasAttribute("role")) track.setAttribute("aria-valuenow", Math.round(dist[i] * 100));
+      row.classList.toggle("drawn", opts.drawn === i);
+      if (opts.annot) {
+        var a = row.querySelector(".accept-annot");
+        a.textContent = Q[i] > 0 ? "keep " + Math.round(threshold(i) * 100) + "%" : "never";
+      }
+    }
+  }
+
+  function paintObserved() {
+    var i, row, fill, pct, track, tick;
+    for (i = 0; i < K; i++) {
+      row = oRows.children[i];
+      fill = row.querySelector(".bar-fill");
+      pct = row.querySelector(".pct");
+      track = row.querySelector(".bar-track");
+      var obs = n > 0 ? counts[i] / n : 0;
+      fill.style.width = (obs * 100).toFixed(2) + "%";
+      pct.textContent = n > 0 ? (obs * 100).toFixed(1) + "%" : "—";
+      tick = track.querySelector(".tick");
+      if (!tick) { tick = document.createElement("div"); tick.className = "tick"; track.appendChild(tick); }
+      tick.style.left = "calc(" + (P[i] * 100).toFixed(2) + "% - 1px)";
+    }
+  }
+
+  // ---------- proposal panel ----------
+  function renderProposal() {
+    var title = document.getElementById("proposalTitle");
+    var vrow = document.getElementById("verdictRow");
+    var explain = document.getElementById("explainText");
+
+    if (!last) {
+      title.innerHTML = "Press <b>Propose token</b> to draw one proposal from q";
+      vrow.hidden = true;
+      explain.innerHTML = "Nothing yet. A proposal from <b>q</b> is either kept, or replaced by a draw from the residual.";
+      paint(rRows, R, {});
+      return;
+    }
+    vrow.hidden = false;
+    title.innerHTML = 'q proposed <b class="c' + last.x + '">symbol ' + last.x + "</b>";
+
+    document.getElementById("probBig").textContent = Math.round(last.thr * 100) + "%";
+    document.getElementById("probCalc").textContent =
+      "min(1, " + P[last.x].toFixed(4) + "/" + Q[last.x].toFixed(4) + ")";
+
+    var slot = document.getElementById("badgeSlot");
+    if (last.ok) {
+      slot.innerHTML = '<div class="badge acc">✓ ACCEPT symbol ' + last.committed + "</div>";
+      explain.innerHTML = "Because <b>p(" + last.x + ") ≥ q(" + last.x +
+        ") enough</b> to pass the ratio test, this proposal can be kept. The output is symbol <b>" +
+        last.committed + "</b>.";
+    } else {
+      slot.innerHTML = '<div class="badge rej">✕ REJECT symbol ' + last.x + "</div>";
+      var src = broken ? "<b>p</b> (the broken shortcut)" : "the <b>residual</b>";
+      explain.innerHTML = "q wanted symbol <b>" + last.x + "</b> more often than p does (q=" +
+        Q[last.x].toFixed(2) + " vs p=" + P[last.x].toFixed(2) +
+        "), so the draw <span class=\"mono\">r=" + last.r.toFixed(3) + "</span> missed the " +
+        Math.round(last.thr * 100) + "% window. The replacement comes from " + src +
+        ", and it returned symbol <b>" + last.committed + "</b>.";
+    }
+    paint(rRows, R, { drawn: last.ok ? -1 : last.committed });
+  }
+
+  // ---------- key example ----------
+  function renderKeynote() {
+    var worst = -1, worstRatio = Infinity, i;
+    for (i = 0; i < K; i++) {
+      if (Q[i] > 0 && P[i] < Q[i]) {
+        var ratio = P[i] / Q[i];
+        if (ratio < worstRatio) { worstRatio = ratio; worst = i; }
+      }
+    }
+    var el = document.getElementById("keynote");
+    if (worst < 0) {
+      el.innerHTML = "<b>No over-proposed token.</b> q never asks for more mass than p allows, so every proposal is accepted and the residual is never used.";
+      return;
+    }
+    var oneIn = worstRatio > 0 ? (1 / worstRatio) : Infinity;
+    var oneInText = oneIn.toFixed(1).replace(/\.0$/, "");
+    var missing = [], j;
+    for (j = 0; j < K; j++) if (R[j] > 0.001) missing.push(j);
+    el.innerHTML = "<b>Key example:</b> symbol <b>" + worst + "</b> has p=" + P[worst].toFixed(2) +
+      " and q=" + Q[worst].toFixed(2) + ", so it is accepted only " +
+      (oneIn >= 1.95 ? "1 in " + oneInText : Math.round(worstRatio * 100) + "%") +
+      " of the time it is proposed. When rejected, the residual puts that mass back on symbol" +
+      (missing.length === 1 ? " " : "s ") + missing.join(", ") + ".";
+  }
+
+  // ---------- metrics ----------
+  function renderMetrics() {
+    document.getElementById("mN").textContent = n.toLocaleString();
+    document.getElementById("mAccN").textContent = accepted.toLocaleString();
+    document.getElementById("mAccPred").textContent = predictedRate().toFixed(4);
+    document.getElementById("mAcc").textContent = n > 0 ? (accepted / n).toFixed(4) : "—";
+
+    var chiEl = document.getElementById("mChi"), pvalEl = document.getElementById("mPval");
+    var dofEl = document.getElementById("mDof"), pill = document.getElementById("mPill");
+
+    if (n < 100) {
+      chiEl.textContent = "—"; pvalEl.textContent = "—";
+      pill.className = "pill"; pill.textContent = "needs 100+";
+      return;
+    }
+    var obs = [], exp = [], tailO = 0, tailE = 0, i, e;
+    for (i = 0; i < K; i++) {
+      e = P[i] * n;
+      if (e >= 5) { obs.push(counts[i]); exp.push(e); } else { tailO += counts[i]; tailE += e; }
+    }
+    if (tailE > 0) { obs.push(tailO); exp.push(tailE); }
+    var stat = 0;
+    for (i = 0; i < obs.length; i++) stat += Math.pow(obs[i] - exp[i], 2) / exp[i];
+    var dof = obs.length - 1;
+    var pval = chi2sf(stat, dof);
+
+    chiEl.textContent = stat < 10000 ? stat.toFixed(1) : stat.toExponential(1);
+    dofEl.textContent = dof;
+    pvalEl.textContent = pval < 0.0001 ? "<0.0001" : pval.toFixed(4);
+    if (pval > 0.01) { pill.className = "pill ok"; pill.textContent = "✓ matches p"; }
+    else { pill.className = "pill bad"; pill.textContent = "✕ does not match p"; }
+  }
+
+  function renderAll() {
+    paint(qRows, Q, { annot: true });
+    paint(pRows, P, {});
+    renderProposal();
+    renderKeynote();
+    paintObserved();
+    renderMetrics();
+  }
+
+  // ---------- editing ----------
+  function setWeight(which, i, value) {
+    var w = which === "p" ? pW : qW;
+    w[i] = Math.max(0, Math.min(0.6, value));
+    recompute();
+    resetCounts();
+    renderAll();
+  }
+  function valueFromEvent(track, clientX) {
+    var rect = track.getBoundingClientRect();
+    return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)) * 0.6;
+  }
+  function wireEditing(el, which) {
+    var dragging = null;
+    el.addEventListener("pointerdown", function (e) {
+      var track = e.target.closest(".bar-track");
+      if (!track) return;
+      dragging = track;
+      track.setPointerCapture(e.pointerId);
+      setWeight(which, +track.parentNode.dataset.i, valueFromEvent(track, e.clientX));
+    });
+    el.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      setWeight(which, +dragging.parentNode.dataset.i, valueFromEvent(dragging, e.clientX));
+    });
+    el.addEventListener("pointerup", function () { dragging = null; });
+    el.addEventListener("pointercancel", function () { dragging = null; });
+    el.addEventListener("keydown", function (e) {
+      var track = e.target.closest(".bar-track");
+      if (!track) return;
+      var i = +track.parentNode.dataset.i;
+      var w = which === "p" ? pW : qW;
+      var step = e.shiftKey ? 0.05 : 0.01;
+      if (e.key === "ArrowRight" || e.key === "ArrowUp") { setWeight(which, i, w[i] + step); e.preventDefault(); }
+      else if (e.key === "ArrowLeft" || e.key === "ArrowDown") { setWeight(which, i, w[i] - step); e.preventDefault(); }
+      else if (e.key === "Home") { setWeight(which, i, 0); e.preventDefault(); }
+    });
+  }
+
+  function resetCounts() {
+    counts = new Float64Array(K);
+    n = 0; accepted = 0; last = null;
+  }
+
+  // ---------- wiring ----------
+  document.getElementById("proposeBtn").addEventListener("click", function () {
+    propose(true); renderAll();
+  });
+  document.getElementById("run1k").addEventListener("click", function () { burst(1000); renderAll(); });
+  document.getElementById("run100k").addEventListener("click", function () { burst(100000); renderAll(); });
+  document.getElementById("resetBtn").addEventListener("click", function () { resetCounts(); renderAll(); });
+
+  function setBroken(v) {
+    broken = v;
+    document.getElementById("modeCorrect").setAttribute("aria-pressed", String(!v));
+    document.getElementById("modeBroken").setAttribute("aria-pressed", String(v));
+    resetCounts();
+    renderAll();
+  }
+  document.getElementById("modeCorrect").addEventListener("click", function () { setBroken(false); });
+  document.getElementById("modeBroken").addEventListener("click", function () { setBroken(true); });
+
+  document.querySelectorAll("[data-preset]").forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      var pre = PRESETS[chip.dataset.preset];
+      pW = pre.p.slice(); qW = pre.q.slice();
+      recompute(); resetCounts(); renderAll();
+    });
+  });
+
+  // ---------- boot ----------
+  buildRows(qRows, true, true);
+  buildRows(pRows, true, false);
+  buildRows(rRows, false, false);
+  buildRows(oRows, false, false);
+  wireEditing(qRows, "q");
+  wireEditing(pRows, "p");
+  recompute();
+  burst(2000);          // opens with a real proposal on screen, not an empty shell
+  renderAll();
+  requestAnimationFrame(function () { document.body.classList.add("ready"); });
+})();
+</script>
+</body>
+</html>

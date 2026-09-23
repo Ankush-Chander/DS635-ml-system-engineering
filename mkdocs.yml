@@ -42,6 +42,9 @@ nav:
       - '11_12:The three formats, measured': 'labs/Lab11_12_model_artifacts.ipynb'
       - '13_14:Decoding Strategies, Measured': 'labs/Lab13_14.md'
       - '13_14:Decoding, measured': 'labs/Lab13_14_decoding_strategies.ipynb'
+  - Demos:
+      - 'Speculative decoding: the acceptance rule': 'viz/acceptance-rule.html'
+      - 'Speculative decoding: convergence bench': 'viz/rejection-sampling.html'
   # - Code:
   #     - Storage Engines: 'code/storage_engines/README.md'
   #     - SSTable: 'https://github.com/Ankush-Chander/sorted-string-table-101'
