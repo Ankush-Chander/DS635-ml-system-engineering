@@ -398,7 +398,7 @@ you have just measured, and you can say which metric it moves and which it costs
     - **Distillation:** Reduce the model size by *distilling from a larger model*
     - **Pruning:** Reduce the model size by *pruning unnecessary parameters*
   - **The autoregressive bottleneck:** One forward pass over the entire weight set buys *exactly one token*, so the weights are re-read for every token produced
-    - **Speculative decoding:** Use a *speculator model* to predict the next tokens and a *target model* to verify the predictions
+    - **Speculative decoding:** Use a *speculator model* to predict the next tokens and a *target model* to verify the predictions — the acceptance rule that keeps the output distribution exact is worked through in [The acceptance rule](../viz/acceptance-rule.html)
     - **Inference by reference:** Most tasks act on the input verbatim, so *copy the input to the output* instead of generating it
     - **Parallel decoding:** Give the model extra prediction heads, or solve several positions at once, so *one pass emits multiple tokens* without a separate draft model
   - **Attention mechanism:** Attention cost grows with *sequence length*, so what you store and how you compute it decide the decode rate
