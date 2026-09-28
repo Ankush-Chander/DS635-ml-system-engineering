@@ -28,28 +28,9 @@ The two drafters measured throughout these notes, both for `Qwen3.8-27B-FP8`:
 
 ## 2. Draft decodes, target verifies
 
-```text
-                   draft model
-                        │
-                        ▼
-                  sample x ~ q
-                        │
-                        ▼
-             accept with probability
-               min(1, p[x] / q[x])
-                        │
-              ┌─────────┴─────────┐
-              ▼                   ▼
-           accept              reject
-              │                   │
-              │                   ▼
-              │              sample from
-              │            residual(p, q)
-              │                   │
-              └─────────┬─────────┘
-                        ▼
-                     output
-```
+![Speculative decoding: the draft model proposes k tokens, the target verifies them in one parallel pass, and tokens are accepted up to the first mismatch](../images/decoding/speculative_decoding_workflow.png)
+
+*Image credit: ChatGPT.*
 
 A walkthrough with `k = 3`, where the target's continuation is *"the cat sat on the mat"*:
 
@@ -285,6 +266,10 @@ Three things this rule buys, each worked through on the live pages rather than h
 
     [**Convergence bench**](../viz/rejection-sampling.html) — run it a million times and watch the output settle onto `p`; flip to `--broken` and watch the chi-square catch a bug the acceptance rate cannot see.
 
+!!! note "Lab — implement the mechanics yourself"
+
+    [**Lab 15/16 — Speculative decoding, measured**](../labs/Lab15_16.md) has you implement the three moving parts on dummy data — the **acceptance branch** (`min(1, p/q)`), the **rejection-sampling residual** (`max(0, p − q)`), and a **vectorised verification** over all `k` positions — then a real `gpt2 ← distilgpt2` stitch. Check your emitted distribution settles onto `p`.
+
 Original algorithm: Leviathan et al. ([arXiv:2211.17192](https://arxiv.org/abs/2211.17192)) and, independently, Chen et al. ([arXiv:2302.01318](https://arxiv.org/abs/2302.01318)).
 
 ---
@@ -308,9 +293,17 @@ One rule underlies every row: **whatever reshaping the request asks for must be 
 
 This is why stage 3 of the lab asserts *token-for-token identity* rather than a statistical property. It is the strongest correctness test available, and it is only available at `T=0`.
 
+![Greedy speculative step: the draft is argmax(q); accept iff it equals argmax(p), otherwise emit argmax(p) — no residual](../images/decoding/spec_dec_greedy.png)
+
+*Image credit: ChatGPT.*
+
 ### Temperature
 
 Scale the logits of **both** models before the softmax. Scaling only `p` leaves `q` proposing for a different distribution — the guarantee still technically holds against the shaped `p`, but acceptance collapses, because you are now comparing two models that disagree by construction.
+
+![Temperature speculative step: divide both p and q logits by the same T before sampling and before the ratio test and residual](../images/decoding/spec_dec_temperature.png)
+
+*Image credit: ChatGPT.*
 
 ### Top-k and top-p
 
@@ -318,9 +311,17 @@ Truncation makes this sharper. Suppose the filter is applied to `p` only. If `q`
 
 The fix is the general rule: apply the same `top_k` / `top_p` to `q` during drafting. Since `q` approximates `p`, the two surviving sets overlap heavily, and the occasional miss is handled by the maths rather than by a wasted block.
 
+![Top-k / top-p speculative step: apply the same truncation to both p and q before sampling, so proposals and residual stay inside the kept set](../images/decoding/spec_dec_topk_p.png)
+
+*Image credit: ChatGPT.*
+
 ### Constrained decoding
 
 The same argument, one step more severe. The grammar mask from Lecture 13/14 zeroes every illegal token in `p`. An unmasked drafter proposes freely, and every illegal proposal has `p(x) = 0` — guaranteed rejection. Acceptance collapses toward zero precisely on the structured workloads where speculation would otherwise shine, because the drafter spends its passes proposing tokens the automaton already forbade. Engines therefore advance the same automaton over the drafter.
+
+![Constrained speculative step: advance the same grammar automaton over both p and q, so only grammar-legal tokens are proposed and carry residual mass](../images/decoding/spec_dec_constrained_decoding.png)
+
+*Image credit: ChatGPT.*
 
 !!! question "💬 Temperature is applied to the target but not the drafter. What breaks?"
 

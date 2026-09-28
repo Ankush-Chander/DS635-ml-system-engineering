@@ -23,6 +23,9 @@ Welcome to the course on Machine Learning System Engineering.
 
 - [9_10: Inference Optimization](lectures/Lecture9_10.md) — server + model + hardware + workload, online vs batch vs embedding, TTFT/TPOT/MFU/MBU, prefill compute-bound vs decode memory-bound, predicting token rate on paper
 - [11_12: Model Artifacts](lectures/Lecture11_12.md) — a live model object flattened to disk and back: pickle, safetensors, GGUF, ONNX; strides and contiguity; what survives the trip and what the reader must supply
+- [13_14: Decoding Strategies](lectures/Lecture13_14.md) — autoregressive loop, greedy search, beam search, temperature, top-k vs nucleus, choosing a strategy per task
+- [15_16: Speculative Decoding](lectures/Lecture15_16.md) — draft model, prefill/decode profile, mathematical gaurantee
+- [17_18: Speculative decoding variants](lectures/Lecture17_18.md) —  
 
 ## Labs
 
@@ -30,5 +33,6 @@ Welcome to the course on Machine Learning System Engineering.
 - [Lab 2: The Concurrency Budget](labs/Lab2.md) — derive the bytes your GPU must keep in flight, then find where it stops scaling; needs CUDA or ROCm ([notebook](labs/Lab2_concurrency_budget.ipynb))
 - [Lab 11_12: Three Formats, One Model](labs/Lab11_12.md) — save one model as `.pt`, `.safetensors` and `.gguf` and measure what each flattening costs; CPU-only ([notebook](labs/Lab11_12_model_artifacts.ipynb))
 - [Lab 13_14: Decoding Strategies, Measured](labs/Lab13_14.md) — measure the next-token distribution and what greedy, temperature, top-k/top-p and beam each do to it; CPU-only ([notebook](labs/Lab13_14_decoding_strategies.ipynb))
+- [Lab 15_16: Speculative Decoding, Measured](labs/Lab15_16.md) — implement the accept/reject rule on dummy data, then a real gpt2 ← distilgpt2 stitch; CPU-only ([notebook](labs/Lab15_16_speculative_decoding.ipynb))
 
 ---
