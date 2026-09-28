@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://DS635.ankushchander.com/labs/Lab13_14/">
+        <link rel="canonical" href="https://DS635.ankushchander.com/labs/Lab15_16/">
       
       
-        <link rel="prev" href="../Lab11_12_model_artifacts/">
+        <link rel="prev" href="../Lab13_14_decoding_strategies/">
       
       
-        <link rel="next" href="../Lab13_14_decoding_strategies/">
+        <link rel="next" href="../Lab15_16_speculative_decoding/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>13_14:Decoding Strategies, Measured - DS635 - Machine Learning System Engineering | DAU</title>
+        <title>15_16:Speculative Decoding - DS635 - Machine Learning System Engineering | DAU</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#lab-1314-decoding-strategies-measured" class="md-skip">
+        <a href="#lab-1516-speculative-decoding-measured" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              13_14:Decoding Strategies, Measured
+              15_16:Speculative Decoding
             
           </span>
         </div>
@@ -1012,6 +1012,62 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lab13_14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13_14:Decoding Strategies, Measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lab13_14_decoding_strategies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 13/14 — Decoding strategies, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -1031,7 +1087,7 @@
   <span class="md-ellipsis">
     
   
-    13_14:Decoding Strategies, Measured
+    15_16:Speculative Decoding
   
 
     
@@ -1049,7 +1105,7 @@
   <span class="md-ellipsis">
     
   
-    13_14:Decoding Strategies, Measured
+    15_16:Speculative Decoding
   
 
     
@@ -1075,10 +1131,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-this-is-not" class="md-nav__link">
+  <a href="#the-two-silent-failures-this-lab-is-built-around" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What this is not
+        The two silent failures this lab is built around
       
     </span>
   </a>
@@ -1109,10 +1165,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#part-1-the-distribution-and-greedy-25-marks" class="md-nav__link">
+  <a href="#part-1-the-acceptance-branch-15-marks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Part 1 — The distribution and greedy (25 marks)
+        Part 1 — The acceptance branch (15 marks)
       
     </span>
   </a>
@@ -1120,10 +1176,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#part-2-temperature-25-marks" class="md-nav__link">
+  <a href="#part-2-rejection-sampling-the-residual-30-marks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Part 2 — Temperature (25 marks)
+        Part 2 — Rejection sampling: the residual (30 marks)
       
     </span>
   </a>
@@ -1131,10 +1187,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#part-3-truncation-top-k-vs-top-p-20-marks" class="md-nav__link">
+  <a href="#part-3-vectorised-verification-15-marks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Part 3 — Truncation: top-k vs top-p (20 marks)
+        Part 3 — Vectorised verification (15 marks)
       
     </span>
   </a>
@@ -1142,10 +1198,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#part-4-beam-vs-greedy-30-marks-almost-all-rubric" class="md-nav__link">
+  <a href="#part-4-the-real-stitch-gpt2-distilgpt2-40-marks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Part 4 — Beam vs greedy (30 marks, almost all rubric)
+        Part 4 — The real stitch: gpt2 ← distilgpt2 (40 marks)
       
     </span>
   </a>
@@ -1191,10 +1247,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#related" class="md-nav__link">
+  <a href="#going-further" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Related
+        Going further
       
     </span>
   </a>
@@ -1205,62 +1261,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Lab13_14_decoding_strategies/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Lab 13/14 — Decoding strategies, measured
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Lab15_16/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    15_16:Speculative Decoding
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1415,10 +1415,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-this-is-not" class="md-nav__link">
+  <a href="#the-two-silent-failures-this-lab-is-built-around" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What this is not
+        The two silent failures this lab is built around
       
     </span>
   </a>
@@ -1449,10 +1449,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#part-1-the-distribution-and-greedy-25-marks" class="md-nav__link">
+  <a href="#part-1-the-acceptance-branch-15-marks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Part 1 — The distribution and greedy (25 marks)
+        Part 1 — The acceptance branch (15 marks)
       
     </span>
   </a>
@@ -1460,10 +1460,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#part-2-temperature-25-marks" class="md-nav__link">
+  <a href="#part-2-rejection-sampling-the-residual-30-marks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Part 2 — Temperature (25 marks)
+        Part 2 — Rejection sampling: the residual (30 marks)
       
     </span>
   </a>
@@ -1471,10 +1471,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#part-3-truncation-top-k-vs-top-p-20-marks" class="md-nav__link">
+  <a href="#part-3-vectorised-verification-15-marks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Part 3 — Truncation: top-k vs top-p (20 marks)
+        Part 3 — Vectorised verification (15 marks)
       
     </span>
   </a>
@@ -1482,10 +1482,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#part-4-beam-vs-greedy-30-marks-almost-all-rubric" class="md-nav__link">
+  <a href="#part-4-the-real-stitch-gpt2-distilgpt2-40-marks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Part 4 — Beam vs greedy (30 marks, almost all rubric)
+        Part 4 — The real stitch: gpt2 ← distilgpt2 (40 marks)
       
     </span>
   </a>
@@ -1531,10 +1531,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#related" class="md-nav__link">
+  <a href="#going-further" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Related
+        Going further
       
     </span>
   </a>
@@ -1558,61 +1558,40 @@
 
 
 
-<h1 id="lab-1314-decoding-strategies-measured">Lab 13/14 — Decoding Strategies, Measured</h1>
+<h1 id="lab-1516-speculative-decoding-measured">Lab 15/16 — Speculative Decoding, Measured</h1>
 <blockquote>
-<p><strong>Lab thesis:</strong> a decoding strategy is a <em>choice about a distribution</em>. This lab makes you <strong>measure</strong> the distribution a model emits and what each strategy does to it — greedy's determinism, temperature's reshaping, top-k vs top-p's truncation — so the lecture's rules become numbers you produced.</p>
+<p><strong>Lab thesis:</strong> speculative decoding is a <strong>sampling rule</strong>, not a model trick — a small drafter proposes, a large target verifies in one pass, and a residual correction keeps the output <em>exactly</em> the target's distribution. This lab makes you <strong>build that rule yourself</strong>: first on dummy distributions where correctness is provable, then as a real two-model stitch.</p>
 </blockquote>
-<p>This is the experimental half of <a href="../../lectures/Lecture13_14/">Lecture 13/14 — Decoding strategies</a>. The lecture derived each strategy from the shape of the next-token distribution. Here you produce that distribution on a model you control and confirm the relationships the lecture claims.</p>
-<p>Runs on <strong>Google Colab</strong> (free) or <strong>your own machine</strong> — no GPU required. The model is <code>gpt2</code> (124M); the CPU is enough.</p>
-<p><a href="https://colab.research.google.com/github/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab13_14_decoding_strategies.ipynb"><strong>Open the notebook in Colab</strong></a> · <a href="../Lab13_14_decoding_strategies/">read it on this site</a> · <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab13_14_decoding_strategies.ipynb">download from GitHub</a></p>
+<p>This is the experimental half of <a href="../../lectures/Lecture15_16/">Lecture 15/16 — Speculative decoding</a>. The lecture proved the guarantee on paper; here you implement it and confirm the relationships it claims.</p>
+<p>Runs on <strong>Google Colab</strong> (free) or <strong>your own machine</strong> — no GPU required. The real stitch uses <code>gpt2</code> (target) drafted by <code>distilgpt2</code> — a <strong>same-tokenizer</strong> pair, both small enough for CPU.</p>
+<p><a href="https://colab.research.google.com/github/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab15_16_speculative_decoding.ipynb"><strong>Open the notebook in Colab</strong></a> · <a href="../Lab15_16_speculative_decoding/">read it on this site</a> · <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/labs/Lab15_16_speculative_decoding.ipynb">download from GitHub</a></p>
 <hr />
-<h2 id="what-this-is-not">What this is not</h2>
-<p>It is not the lecture's <a href="../../notebooks/decoding_strategies/">companion notebook</a> re-run. That one <em>showed</em> you greedy loops and top-p adapts. Here you <strong>predict every relationship before you look</strong>, then explain the mechanism:</p>
-<table>
-<thead>
-<tr>
-<th>The lecture showed</th>
-<th>This lab makes you produce</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>the model emits a distribution over ~50k tokens</td>
-<td>the top-50 mass, and the long tail it leaves</td>
-</tr>
-<tr>
-<td>greedy is deterministic</td>
-<td>two greedy runs, byte-identical, and greedy's first token = the argmax</td>
-</tr>
-<tr>
-<td>temperature reshapes the distribution</td>
-<td><code>P(top token)</code> falling as <code>T</code> rises, and diversity rising with it</td>
-</tr>
-<tr>
-<td>top-p adapts, top-k does not</td>
-<td>the nucleus size on a peaked vs a flat prompt, against top-k's fixed count</td>
-</tr>
-<tr>
-<td>beam finds a higher-probability sequence</td>
-<td>whether it actually does on <em>your</em> run — and why a heuristic may not</td>
-</tr>
-</tbody>
-</table>
+<h2 id="the-two-silent-failures-this-lab-is-built-around">The two silent failures this lab is built around</h2>
+<ul>
+<li><strong>The shared tokenizer.</strong> The accept test compares <code>p(x)</code> and <code>q(x)</code> for the same integer <code>x</code>; a mismatched tokenizer is not an error, it is acceptance near zero. That is why the stitch works within a model family (gpt2 ← distilgpt2) but not across.</li>
+<li><strong>The residual.</strong> On a reject you must resample from <code>norm(max(0, p − q))</code>, not from <code>p</code>. Both have the <em>identical acceptance rate</em>; only a distribution test tells them apart. Part 2 puts that on trial.</li>
+</ul>
 <hr />
 <h2 id="what-you-need">What you need</h2>
 <ul>
-<li>Python 3.10+, <code>torch</code>, <code>transformers</code>. First run downloads <code>gpt2</code> (~500 MB), then it is cached.</li>
+<li>Python 3.10+, <code>numpy</code>, <code>torch</code>, <code>transformers</code>. First run downloads <code>gpt2</code> + <code>distilgpt2</code> (~0.5 GB total), then cached.</li>
 <li>No GPU, no lab hardware. Colab's free CPU runtime is enough.</li>
 </ul>
 <hr />
 <h2 id="what-you-do">What you do</h2>
-<p>Set <code>ROLL_NUMBER</code> and <code>NAME</code> first. The sampling in Part 2 is <strong>seeded from your roll number</strong>, so your diversity numbers are yours — that is what the plagiarism check reads.</p>
-<h3 id="part-1-the-distribution-and-greedy-25-marks">Part 1 — The distribution and greedy (25 marks)</h3>
-<p>Take one forward pass and read the <strong>next-token distribution</strong>. Report the top-50 probability mass.</p>
-<p>Then run greedy decoding <strong>twice</strong> and show that the two outputs are identical, and that greedy's first token is the <strong>argmax</strong> of the distribution.</p>
-<p><strong>Predict then explain:</strong> why greedy is deterministic while sampling is not, and what the top-50 mass says about the tail Part 3 exists to cut.</p>
-<h3 id="part-2-temperature-25-marks">Part 2 — Temperature (25 marks)</h3>
-<p>On the <em>same</em> logits, sweep the temperature <code>T</code> and record <code>P(top token)</code> at each. Separately, sample many continuations at low, medium and high <code>T</code> and record the <strong>distinct-token ratio</strong> at each.</p>
+<p>Set <code>ROLL_NUMBER</code> and <code>NAME</code> first. The dummy sampling is <strong>seeded from your roll number</strong>, so your numbers are yours — that is what the plagiarism check reads. You implement the cells marked <code># TODO</code>; the harnesses and dummy data are given.</p>
+<h3 id="part-1-the-acceptance-branch-15-marks">Part 1 — The acceptance branch (15 marks)</h3>
+<p>Implement <code>is_accepted</code> — accept a draft <code>x</code> with probability <code>min(1, p[x] / q[x])</code>. The harness measures the empirical accept rate at each dummy position; it must track <code>min(1, p/q)</code>.</p>
+<p><strong>Explain:</strong> why the probability is capped at 1, and why over-proposing (<code>q &gt; p</code>) is throttled.</p>
+<h3 id="part-2-rejection-sampling-the-residual-30-marks">Part 2 — Rejection sampling: the residual (30 marks)</h3>
+<p>Implement <code>residual</code> = <code>norm(max(0, p − q))</code> and <code>sample_on_reject</code>. The harness runs the single-position emitter many times and compares the emitted distribution to <code>p</code> — <strong>and</strong> runs a <em>broken</em> control that resamples from <code>p</code>.</p>
+<p>Show that the correct version's emitted distribution matches <code>p</code> (small total-variation distance) while the broken one does <strong>not</strong> — at an <em>identical acceptance rate</em>.</p>
+<p><strong>The paragraph that carries this part:</strong> why the residual and not <code>p</code>, and why only a distribution test (not a latency or acceptance dashboard) catches the difference.</p>
+<h3 id="part-3-vectorised-verification-15-marks">Part 3 — Vectorised verification (15 marks)</h3>
+<p>Implement <code>verify_vectorised</code> — the <code>k</code> ratio tests as array ops, the cut at the first reject sequential. The harness checks it agrees with a scalar reference over thousands of random draws.</p>
+<p><strong>Explain:</strong> what is embarrassingly parallel and what is not, and how that mirrors "verification is a prefill".</p>
+<h3 id="part-4-the-real-stitch-gpt2-distilgpt2-40-marks">Part 4 — The real stitch: gpt2 ← distilgpt2 (40 marks)</h3>
+<p>Implement <code>speculative_greedy</code> — draft <code>k</code> tokens from <code>distilgpt2</code>, verify them in <strong>one</strong> <code>gpt2</code> pass, accept while the target's argmax matches, emit the target's token at the first mismatch (or the bonus if all accept).</p>
 <p>You are marked on establishing these <strong>relationships between your own numbers</strong>:</p>
 <table>
 <thead>
@@ -1623,60 +1602,46 @@
 </thead>
 <tbody>
 <tr>
-<td><code>P(top token)</code> falls as <code>T</code> rises</td>
-<td><code>softmax(l/T)</code> shrinks the top logit's lead</td>
+<td>speculative-greedy output == plain greedy, token for token</td>
+<td>greedy speculation is lossless by construction</td>
 </tr>
 <tr>
-<td>distinct-token ratio rises as <code>T</code> rises</td>
-<td>a flatter distribution spreads the draws</td>
+<td>target forward passes &lt; tokens generated</td>
+<td>one pass verifies <code>k+1</code> positions</td>
+</tr>
+<tr>
+<td>every block yields between 1 and <code>k+1</code> tokens</td>
+<td>reject still emits the target's own token</td>
 </tr>
 </tbody>
 </table>
-<p><strong>One paragraph:</strong> using <code>P_i / P_j = exp((l_i − l_j)/T)</code>, why <code>T</code> flattens the distribution, and what happens as <code>T → 0</code>.</p>
-<h3 id="part-3-truncation-top-k-vs-top-p-20-marks">Part 3 — Truncation: top-k vs top-p (20 marks)</h3>
-<p>On a <strong>peaked</strong> prompt (one obvious next word) and a <strong>flat</strong> prompt (many options), record the <strong>nucleus size</strong> (top-p) for each, and top-k's count for each.</p>
-<p>Show that:</p>
-<ul>
-<li>nucleus keeps <strong>fewer</strong> tokens on the peaked prompt than on the flat one — it <em>adapts</em>,</li>
-<li>top-k keeps the <strong>same</strong> count on both — it does not,</li>
-<li>the nucleus reaches probability <code>p</code> while dropping a real tail (kept mass ≥ <code>p</code>, set ≪ vocabulary).</li>
-</ul>
-<p><strong>One paragraph:</strong> the failure each truncation fixes, and the failure each still has.</p>
-<h3 id="part-4-beam-vs-greedy-30-marks-almost-all-rubric">Part 4 — Beam vs greedy (30 marks, almost all rubric)</h3>
-<p>Fold each output's tokens back through the model and sum their log-probabilities. Compare beam search's total against greedy's.</p>
-<p><strong>The paragraph that carries this part:</strong> did beam beat greedy on <em>your</em> run? Beam is not exhaustive — it prunes. Explain how greedy's path can be <strong>dropped</strong> from the beam even though greedy would have recovered, and what that says about "higher probability = better output". If beam won, say what it found that greedy could not see.</p>
-<blockquote>
-<p>This part is deliberately <strong>not</strong> auto-marked: beam does not reliably beat greedy, and reporting that honestly is the point.</p>
-</blockquote>
-<p>Finally, choose a decoding strategy for <strong>code generation</strong>, a <strong>chatbot reply</strong>, and <strong>machine translation</strong>, one line each, tied to a number you measured.</p>
+<p><strong>The write-up:</strong> on <em>your</em> CPU, is speculative decoding actually <em>faster</em> in wall-clock? Fewer target passes, yet the drafter runs its own passes — reconcile the two, and say why a bad drafter costs speed but never accuracy.</p>
 <hr />
 <h2 id="what-you-submit">What you submit</h2>
 <p><strong>Two files.</strong> The JSON carries your measurements; the notebook carries your reasoning.</p>
 <ol>
-<li><strong><code>submission_lab13_14_&lt;roll&gt;.json</code></strong> — written by the notebook's final cell. Set <code>ROLL_NUMBER</code> and <code>NAME</code> first.</li>
+<li><strong><code>submission_lab15_16_&lt;roll&gt;.json</code></strong> — written by the notebook's final cell. Set <code>ROLL_NUMBER</code> and <code>NAME</code> first.</li>
 <li><strong>The executed notebook</strong> — outputs intact, every 📝 prediction and explanation cell filled in.</li>
 </ol>
-<p>Run every cell top to bottom before exporting.</p>
 <h2 id="how-it-is-marked">How it is marked</h2>
 <p><strong>Automatic (from your JSON)</strong> — each check tests a <em>relationship</em>, never a magnitude against a reference:</p>
 <ul>
-<li>greedy run 1 == run 2, and greedy's first token == argmax</li>
-<li><code>P(top token)</code> falls monotonically as <code>T</code> rises</li>
-<li>distinct-token ratio rises with <code>T</code></li>
-<li>nucleus(peaked) &lt; nucleus(flat), while top-k is fixed across both</li>
-<li>top-p kept mass ≥ <code>p</code>, and the nucleus is a proper subset of the vocabulary</li>
+<li>accept rate tracks <code>min(1, p/q)</code> at each position</li>
+<li>the emitted distribution matches <code>p</code> (small TV); the broken control does not</li>
+<li>vectorised verification agrees with the scalar cut</li>
+<li>speculative-greedy output == plain greedy; target passes &lt; tokens; accepted-run lengths in <code>[0, k]</code></li>
 </ul>
-<p><strong>Rubric (from your written cells)</strong> — predictions marked for being <em>made</em>, explanations for naming the <strong>mechanism</strong>: argmax determinism, the temperature ratio, the long tail, the adaptive nucleus, beam pruning. The heaviest single item is <strong>Part 4's paragraph</strong> on why beam can lose to greedy.</p>
-<p><strong>40 automatic + 60 rubric</strong>, out of 100. The automatic half is marked by <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/blob/main/code/decoding/grade_lab13_14.py"><code>code/decoding/grade_lab13_14.py</code></a> from the JSON your notebook's export cell writes.</p>
+<p><strong>Rubric (from your written cells)</strong> — explanations marked for naming the <strong>mechanism</strong>: the ratio test, the residual, the silent bug, the prefill, acceptance-vs-speedup. The heaviest items are <strong>Part 2's residual paragraph</strong> and <strong>Part 4's acceptance-is-not-speedup write-up</strong>.</p>
+<p><strong>40 automatic + 60 rubric</strong>, out of 100. The automatic half is marked by <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/blob/main/code/spec_decode/grade_lab15_16.py"><code>code/spec_decode/grade_lab15_16.py</code></a> from the JSON your notebook writes.</p>
 <blockquote>
-<p><strong>An honest surprising measurement, correctly explained, scores higher than a tidy expected one.</strong> If beam lost to greedy on your run, say so and explain the pruning.</p>
+<p><strong>An honest surprising measurement, correctly explained, scores higher than a tidy expected one.</strong> If speculative decoding was <em>slower</em> than plain greedy on your CPU — near-perfect drafting and still slower — say so and explain why the drafter's own passes cost more than they saved.</p>
 </blockquote>
 <h2 id="academic-integrity">Academic integrity</h2>
-<p>The sampling in Part 2 is seeded from your roll number, so two honest submissions never share a diversity vector. Submissions sharing that vector are treated as copied. Discussing mechanisms is encouraged; sharing measurement files is not.</p>
-<h2 id="related">Related</h2>
+<p>The dummy sampling is seeded from your roll number, so two honest submissions never share a measurement vector. Submissions sharing that vector are treated as copied. Discussing mechanisms is encouraged; sharing measurement files is not.</p>
+<h2 id="going-further">Going further</h2>
 <ul>
-<li><a href="../../lectures/Lecture13_14/">Lecture 13/14 — Decoding strategies</a> — the strategies this lab measures</li>
-<li><a href="../../notebooks/decoding_strategies/"><code>decoding_strategies.ipynb</code></a> — the companion demo; here you predict its numbers first</li>
+<li><a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/tree/main/code/spec_decode"><code>code/spec_decode/</code></a> — the same ladder as a staged <code>make</code> project ("Route A"), scaled to the Qwen2.5 0.5B/1.5B pair, with KV-cache rollback and a <code>k</code>-sweep. Start there once the notebook clicks.</li>
+<li><a href="../../lectures/Lecture17_18/">Lecture 17/18 — Choosing a drafter</a> — n-gram, model, and feature drafters.</li>
 </ul>
 
 
@@ -1707,7 +1672,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../Lab11_12_model_artifacts/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lab 11/12 — The three formats, measured">
+          <a href="../Lab13_14_decoding_strategies/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lab 13/14 — Decoding strategies, measured">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1717,20 +1682,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Lab 11/12 — The three formats, measured
+                Lab 13/14 — Decoding strategies, measured
               </div>
             </div>
           </a>
         
         
           
-          <a href="../Lab13_14_decoding_strategies/" class="md-footer__link md-footer__link--next" aria-label="Next: Lab 13/14 — Decoding strategies, measured">
+          <a href="../Lab15_16_speculative_decoding/" class="md-footer__link md-footer__link--next" aria-label="Next: Lab 15/16 — Speculative decoding, measured">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Lab 13/14 — Decoding strategies, measured
+                Lab 15/16 — Speculative decoding, measured
               </div>
             </div>
             <div class="md-footer__button md-icon">

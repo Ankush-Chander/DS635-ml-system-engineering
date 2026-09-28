@@ -1,0 +1,886 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  body { margin: 0; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>Rejection Sampling Bench</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --surface:   #fcfcfb;
+    --panel:     #ffffff;
+    --line:      #e3e2dd;
+    --line-soft: #efeeea;
+    --ink:       #0b0b0b;
+    --ink-2:     #52514e;
+    --ink-3:     #86847d;
+    --p:         #2a78d6;
+    --p-soft:    #cde2fb;
+    --q:         #eb6834;
+    --q-soft:    #fbdfd3;
+    --obs:       #1baf7a;
+    --good:      #0ca30c;
+    --critical:  #d03b3b;
+    --track:     #f1f0ec;
+    --shadow:    0 1px 2px rgba(11,11,11,.06), 0 8px 24px -16px rgba(11,11,11,.28);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --surface:   #1a1a19;
+      --panel:     #212120;
+      --line:      #383835;
+      --line-soft: #2c2c2a;
+      --ink:       #ffffff;
+      --ink-2:     #c3c2b7;
+      --ink-3:     #8f8e85;
+      --p:         #3987e5;
+      --p-soft:    #184f95;
+      --q:         #d95926;
+      --q-soft:    #6d2c11;
+      --obs:       #199e70;
+      --good:      #0ca30c;
+      --critical:  #d03b3b;
+      --track:     #2a2a28;
+      --shadow:    0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface:   #1a1a19;
+    --panel:     #212120;
+    --line:      #383835;
+    --line-soft: #2c2c2a;
+    --ink:       #ffffff;
+    --ink-2:     #c3c2b7;
+    --ink-3:     #8f8e85;
+    --p:         #3987e5;
+    --p-soft:    #184f95;
+    --q:         #d95926;
+    --q-soft:    #6d2c11;
+    --obs:       #199e70;
+    --good:      #0ca30c;
+    --critical:  #d03b3b;
+    --track:     #2a2a28;
+    --shadow:    0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+
+  body {
+    background: var(--surface);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 1120px;
+    margin-inline: auto;
+    padding-inline: 16px;
+    padding-block: 24px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  h1, h2, h3 { margin: 0; text-wrap: balance; }
+  p { margin: 0; }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace; font-variant-numeric: tabular-nums; }
+
+  /* ---------- header ---------- */
+  header { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: flex-end; justify-content: space-between; }
+  h1 { font-size: 26px; font-weight: 600; letter-spacing: -.02em; }
+  .sub { color: var(--ink-2); max-width: 62ch; margin-top: 4px; }
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace; font-size: 11px; font-weight: 500;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3);
+  }
+
+  /* ---------- mode switch ---------- */
+  .switch { display: flex; gap: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--panel); }
+  .switch button {
+    appearance: none; border: 0; background: transparent; cursor: pointer;
+    font: inherit; font-size: 13px; padding: 8px 14px; color: var(--ink-2);
+    border-right: 1px solid var(--line);
+  }
+  .switch button:last-child { border-right: 0; }
+  .switch button[aria-pressed="true"] { background: var(--ink); color: var(--surface); font-weight: 500; }
+  .switch button.danger[aria-pressed="true"] { background: var(--critical); color: #fff; }
+
+  /* ---------- panels ---------- */
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+  }
+  .panel > header { display: block; margin-bottom: 14px; }
+  .panel h2 { font-size: 15px; font-weight: 600; display: flex; align-items: baseline; gap: 8px; }
+  .panel h2 .n { font-family: "IBM Plex Mono", monospace; color: var(--ink-3); font-weight: 500; font-size: 12px; }
+  .hint { color: var(--ink-2); font-size: 13px; margin-top: 4px; }
+
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 860px) { .cols { grid-template-columns: 1fr; } }
+
+  /* ---------- legend ---------- */
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; font-size: 12px; color: var(--ink-2); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .key { width: 10px; height: 10px; border-radius: 2px; flex: none; }
+  .key.p { background: var(--p); }
+  .key.q { background: var(--q); }
+  .key.obs { background: var(--obs); }
+  .key.tgt { width: 12px; height: 0; border-top: 2px dashed var(--p); border-radius: 0; }
+
+  /* ---------- bar groups ---------- */
+  .groups { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .group { display: flex; flex-direction: column; gap: 6px; }
+  .track-pair { display: flex; gap: 2px; height: 132px; align-items: flex-end; max-width: 108px; margin-inline: auto; width: 100%; }
+  .track {
+    position: relative; flex: 1; height: 100%; background: var(--track);
+    border-radius: 3px; cursor: ns-resize; touch-action: none;
+  }
+  .track:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .fill {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    border-radius: 3px 3px 0 0;
+  }
+  body.ready .fill { transition: height .12s ease-out; }
+  .fill.p { background: var(--p); }
+  .fill.q { background: var(--q); }
+  .sym-label { text-align: center; font-size: 12px; color: var(--ink-2); }
+  .sym-label b { color: var(--ink); font-weight: 600; }
+  .vals { display: flex; gap: 2px; font-size: 11px; }
+  .vals span { flex: 1; text-align: center; }
+  .vals .vp { color: var(--p); }
+  .vals .vq { color: var(--q); }
+
+  .blind { color: var(--critical); font-weight: 500; }
+
+  /* ---------- presets ---------- */
+  .presets { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .chip {
+    appearance: none; font: inherit; font-size: 12px; cursor: pointer;
+    background: var(--panel); color: var(--ink-2);
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px;
+  }
+  .chip:hover { border-color: var(--ink-3); color: var(--ink); }
+  .chip:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  /* ---------- ratio gauge ---------- */
+  .draw-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; font-size: 13px; color: var(--ink-2); }
+  .draw-line b { color: var(--ink); }
+  .gauge { margin-top: 14px; }
+  .gauge-track {
+    position: relative; height: 34px; border-radius: 5px; overflow: hidden;
+    background: var(--track); border: 1px solid var(--line);
+  }
+  .accept-zone {
+    position: absolute; inset: 0 auto 0 0;
+    background: color-mix(in srgb, var(--good) 22%, transparent);
+    border-right: 2px solid var(--good);
+  }
+  body.ready .accept-zone { transition: width .18s ease-out; }
+  .r-marker {
+    position: absolute; top: -5px; bottom: -5px; width: 2px; background: var(--ink);
+  }
+  body.ready .r-marker { transition: left .18s ease-out; }
+  .r-marker::after {
+    content: ""; position: absolute; top: -1px; left: -4px;
+    border: 5px solid transparent; border-top-color: var(--ink);
+  }
+  .gauge-axis { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-3); margin-top: 6px; }
+  .verdict {
+    display: inline-flex; align-items: center; gap: 7px; margin-top: 14px;
+    border-radius: 6px; padding: 7px 12px; font-size: 13px; font-weight: 500;
+    border: 1px solid var(--line);
+  }
+  .verdict .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .verdict.acc { color: var(--good); border-color: color-mix(in srgb, var(--good) 45%, var(--line)); }
+  .verdict.acc .dot { background: var(--good); }
+  .verdict.rej { color: var(--critical); border-color: color-mix(in srgb, var(--critical) 45%, var(--line)); }
+  .verdict.rej .dot { background: var(--critical); }
+  .formula {
+    margin-top: 14px; padding: 12px; border-radius: 6px;
+    background: var(--line-soft); font-size: 12.5px; line-height: 1.7;
+    overflow-x: auto; white-space: pre;
+  }
+
+  /* ---------- output histogram ---------- */
+  .hist { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .hist .track-single {
+    position: relative; height: 170px; background: var(--track); border-radius: 3px;
+    max-width: 84px; margin-inline: auto; width: 100%;
+  }
+  .hist .obs-fill {
+    position: absolute; left: 0; right: 0; bottom: 0; background: var(--obs);
+    border-radius: 3px 3px 0 0;
+  }
+  .hist .target {
+    position: absolute; left: -14px; right: -14px; height: 0;
+    border-top: 2px dashed var(--p);
+  }
+  .hist .target span {
+    position: absolute; right: 0; top: -15px; font-size: 10px; color: var(--p);
+    font-family: "IBM Plex Mono", monospace; background: var(--panel); padding-inline: 3px;
+  }
+  .hist .obs-val {
+    position: absolute; left: 0; right: 0; text-align: center; font-size: 11.5px;
+    font-family: "IBM Plex Mono", monospace; color: var(--ink); font-weight: 500;
+  }
+
+  /* ---------- stat tiles ---------- */
+  .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  @media (max-width: 860px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 420px) { .tiles { grid-template-columns: 1fr; } }
+  .tile {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px; display: flex; flex-direction: column; gap: 3px;
+  }
+  .tile .label { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); font-family: "IBM Plex Mono", monospace; }
+  .tile .value { font-size: 24px; font-weight: 600; letter-spacing: -.02em; font-family: "IBM Plex Mono", monospace; }
+  .tile .foot { font-size: 12px; color: var(--ink-2); }
+  .pill {
+    align-self: flex-start; margin-top: 4px; display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11.5px; font-weight: 500; border-radius: 999px; padding: 3px 9px;
+    border: 1px solid var(--line);
+  }
+  .pill.ok { color: var(--good); border-color: color-mix(in srgb, var(--good) 45%, var(--line)); }
+  .pill.bad { color: var(--critical); border-color: color-mix(in srgb, var(--critical) 45%, var(--line)); }
+
+  /* ---------- transport ---------- */
+  .transport {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 10px 12px; box-shadow: var(--shadow);
+  }
+  .btn {
+    appearance: none; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer;
+    border-radius: 7px; padding: 8px 14px; border: 1px solid var(--line);
+    background: var(--panel); color: var(--ink);
+  }
+  .btn:hover { border-color: var(--ink-3); }
+  .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .btn.primary { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+  .spacer { flex: 1 1 auto; }
+  .speed { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-2); }
+
+  /* ---------- log ---------- */
+  .logwrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+  th, td { text-align: right; padding: 6px 10px; border-bottom: 1px solid var(--line-soft); white-space: nowrap; }
+  th { color: var(--ink-3); font-weight: 500; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+  td:first-child, th:first-child { text-align: left; }
+  td.acc { color: var(--good); }
+  td.rej { color: var(--critical); }
+
+  .callout {
+    border-left: 3px solid var(--critical); background: color-mix(in srgb, var(--critical) 8%, transparent);
+    padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 13px; color: var(--ink);
+  }
+  .callout b { color: var(--critical); }
+
+  .backlink {
+    display: inline-flex; align-items: center; gap: 6px; align-self: flex-start;
+    font-size: 12px; color: var(--ink-3); text-decoration: none;
+    border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px;
+  }
+  .backlink:hover { color: var(--ink); border-color: var(--ink-3); }
+  .backlink:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <a class="backlink" href="../">&larr; DS635</a>
+  <header>
+    <div>
+      <div class="eyebrow">Speculative decoding · stage 0</div>
+      <h1>Rejection Sampling Bench</h1>
+      <p class="sub">Draw from the draft <b>q</b>, accept with probability <span class="mono">min(1, p/q)</span>, and on rejection draw from the residual <span class="mono">norm(max(0, p&minus;q))</span>. The output is distributed <b>exactly</b> as <b>p</b>. No neural network involved.</p>
+    </div>
+    <div class="switch" role="group" aria-label="Residual mode">
+      <button id="modeCorrect" aria-pressed="true">Correct residual</button>
+      <button id="modeBroken" class="danger" aria-pressed="false">&minus;&minus;broken</button>
+    </div>
+  </header>
+
+  <div class="transport">
+    <button class="btn primary" id="runBtn">Run</button>
+    <button class="btn" id="stepBtn">Step once</button>
+    <button class="btn" id="burstBtn">+100,000</button>
+    <button class="btn" id="resetBtn">Reset counts</button>
+    <div class="spacer"></div>
+    <label class="speed" for="speedSel">Speed
+      <select id="speedSel" class="btn" style="padding:6px 8px">
+        <option value="1">1 / frame</option>
+        <option value="25">25 / frame</option>
+        <option value="400" selected>400 / frame</option>
+        <option value="5000">5,000 / frame</option>
+      </select>
+    </label>
+  </div>
+
+  <div id="brokenCallout" hidden class="callout">
+    <b>Broken mode.</b> On rejection this resamples from <span class="mono">p</span> instead of the residual. Watch the acceptance rate below &mdash; it does not move. Only the distribution does.
+  </div>
+
+  <div class="cols">
+    <section class="panel">
+      <header>
+        <h2><span class="n">01</span> The two distributions</h2>
+        <p class="hint">Drag any bar to reshape it, or use arrow keys. <b>p</b> is the target model, <b>q</b> is the cheap drafter.</p>
+      </header>
+      <div class="groups" id="sourceBars"></div>
+      <div class="legend">
+        <span><i class="key p"></i> p &mdash; target</span>
+        <span><i class="key q"></i> q &mdash; draft</span>
+      </div>
+      <div class="presets">
+        <button class="chip" data-preset="blind">Blind spot (default)</button>
+        <button class="chip" data-preset="good">Good drafter</button>
+        <button class="chip" data-preset="poor">Poor drafter</button>
+        <button class="chip" data-preset="same">q = p</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <header>
+        <h2><span class="n">02</span> The ratio test</h2>
+        <p class="hint">One draw, drawn out. The accepted region is <span class="mono">[0, min(1, p/q)]</span>; the uniform <span class="mono">r</span> either lands in it or it doesn't.</p>
+      </header>
+      <div class="draw-line" id="drawLine">
+        <span>Press <b>Step once</b> to take a draw.</span>
+      </div>
+      <div class="gauge">
+        <div class="gauge-track">
+          <div class="accept-zone" id="acceptZone" style="width:0%"></div>
+          <div class="r-marker" id="rMarker" style="left:0%"></div>
+        </div>
+        <div class="gauge-axis"><span class="mono">0</span><span class="mono">1</span></div>
+      </div>
+      <div id="verdictBox"></div>
+      <div class="formula mono" id="formulaBox">r &lt; min(1, p(x) / q(x))   ?   accept x
+else                       x' ~ norm(max(0, p &minus; q))</div>
+    </section>
+  </div>
+
+  <section class="panel">
+    <header>
+      <h2><span class="n">03</span> Output vs target</h2>
+      <p class="hint">Filled bars are what the sampler actually emitted. The dashed line is <b>p</b>. They should become indistinguishable.</p>
+    </header>
+    <div class="hist" id="histBars"></div>
+    <div class="legend">
+      <span><i class="key obs"></i> observed output</span>
+      <span><i class="key tgt"></i> p &mdash; target</span>
+    </div>
+  </section>
+
+  <section class="tiles">
+    <div class="tile">
+      <span class="label">Samples</span>
+      <span class="value" id="statN">0</span>
+      <span class="foot">draws taken</span>
+    </div>
+    <div class="tile">
+      <span class="label">Acceptance rate</span>
+      <span class="value" id="statAcc">&mdash;</span>
+      <span class="foot">predicted <span class="mono" id="statAccPred">&mdash;</span> = 1 &minus; TV(p, q)</span>
+    </div>
+    <div class="tile">
+      <span class="label">Chi-square</span>
+      <span class="value" id="statChi">&mdash;</span>
+      <span class="foot">dof <span class="mono" id="statDof">4</span> · p = <span class="mono" id="statPval">&mdash;</span></span>
+    </div>
+    <div class="tile">
+      <span class="label">Output ~ p</span>
+      <span class="value" id="statDev">&mdash;</span>
+      <span class="foot">max |observed &minus; p|</span>
+      <span class="pill" id="statPill">&mdash;</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <header>
+      <h2><span class="n">04</span> Recent draws</h2>
+      <p class="hint">The last twelve steps. <b>Committed</b> is the symbol that actually left the sampler.</p>
+    </header>
+    <div class="logwrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>x ~ q</th><th>min(1, p/q)</th><th>r</th><th>verdict</th><th>committed</th></tr>
+        </thead>
+        <tbody id="logBody">
+          <tr><td colspan="6" style="text-align:center;color:var(--ink-3)">no draws yet</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var K = 5;
+  var PRESETS = {
+    blind: { p: [0.40, 0.25, 0.20, 0.10, 0.05], q: [0.40, 0.15, 0.10, 0.00, 0.35] },
+    good:  { p: [0.40, 0.25, 0.20, 0.10, 0.05], q: [0.38, 0.27, 0.18, 0.12, 0.05] },
+    poor:  { p: [0.40, 0.25, 0.20, 0.10, 0.05], q: [0.05, 0.10, 0.20, 0.30, 0.35] },
+    same:  { p: [0.40, 0.25, 0.20, 0.10, 0.05], q: [0.40, 0.25, 0.20, 0.10, 0.05] }
+  };
+
+  // pW/qW are raw weights the user drags; P/Q are the normalized distributions
+  // everything else reads. Editing a weight never rescales the other bars.
+  var pW = PRESETS.blind.p.slice();
+  var qW = PRESETS.blind.q.slice();
+  var P = pW.slice();
+  var Q = qW.slice();
+  var counts = new Float64Array(K);
+  var n = 0, accepted = 0;
+  var broken = false, running = false, rafId = null;
+  var log = [];
+  var lastDraw = null;
+
+  // ---------- math ----------
+  function normalize(a) {
+    var s = 0, i;
+    for (i = 0; i < a.length; i++) s += a[i];
+    if (s <= 0) return a.map(function () { return 1 / a.length; });
+    return a.map(function (v) { return v / s; });
+  }
+
+  function residual(p, q) {
+    var r = [], s = 0, i;
+    for (i = 0; i < K; i++) { var v = Math.max(p[i] - q[i], 0); r.push(v); s += v; }
+    if (s <= 0) return p.slice();
+    return r.map(function (v) { return v / s; });
+  }
+
+  function sample(dist) {
+    var u = Math.random(), acc = 0, i;
+    for (i = 0; i < K; i++) { acc += dist[i]; if (u < acc) return i; }
+    return K - 1;
+  }
+
+  // Upper tail of the chi-square distribution: Q(dof/2, stat/2).
+  function chi2sf(stat, dof) {
+    if (dof <= 0) return 1;
+    var a = dof / 2, x = stat / 2, i;
+    if (x <= 0) return 1;
+    if (x < a + 1) {
+      var term = 1 / a, total = term;
+      for (i = 1; i < 1000; i++) {
+        term *= x / (a + i);
+        total += term;
+        if (Math.abs(term) < Math.abs(total) * 1e-15) break;
+      }
+      return 1 - total * Math.exp(-x + a * Math.log(x) - lgamma(a));
+    }
+    var b = x + 1 - a, c = 1e300, d = 1 / b, h = d;
+    for (i = 1; i < 1000; i++) {
+      var an = -i * (i - a);
+      b += 2;
+      d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300;
+      c = b + an / c;  if (Math.abs(c) < 1e-300) c = 1e-300;
+      d = 1 / d;
+      var delta = d * c;
+      h *= delta;
+      if (Math.abs(delta - 1) < 1e-15) break;
+    }
+    return h * Math.exp(-x + a * Math.log(x) - lgamma(a));
+  }
+
+  var LG = [76.18009172947146, -86.50532032941677, 24.01409824083091,
+            -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+  function lgamma(z) {
+    var x = z, y = z, tmp = x + 5.5, ser = 1.000000000190015, j;
+    tmp -= (x + 0.5) * Math.log(tmp);
+    for (j = 0; j < 6; j++) ser += LG[j] / ++y;
+    return -tmp + Math.log(2.5066282746310005 * ser / x);
+  }
+
+  function threshold(x) {
+    if (Q[x] <= 0) return 1;
+    return Math.min(1, P[x] / Q[x]);
+  }
+
+  function acceptancePredicted() {
+    var s = 0, i;
+    for (i = 0; i < K; i++) s += Math.min(P[i], Q[i]);
+    return s;
+  }
+
+  // ---------- one draw ----------
+  function draw(record) {
+    var x = sample(Q);
+    var r = Math.random();
+    var thr = threshold(x);
+    var ok = r < thr;
+    var committed;
+    if (ok) {
+      committed = x;
+      accepted++;
+    } else {
+      committed = sample(broken ? P : residual(P, Q));
+    }
+    counts[committed]++;
+    n++;
+    if (record) {
+      lastDraw = { x: x, r: r, thr: thr, ok: ok, committed: committed, i: n };
+      log.unshift(lastDraw);
+      if (log.length > 12) log.pop();
+    }
+    return committed;
+  }
+
+  function burst(count) {
+    var i;
+    for (i = 0; i < count - 1; i++) draw(false);
+    draw(true);
+  }
+
+  // ---------- rendering ----------
+  var sourceBars = document.getElementById("sourceBars");
+  var histBars = document.getElementById("histBars");
+
+  function buildSourceBars() {
+    var html = "", i;
+    for (i = 0; i < K; i++) {
+      html +=
+        '<div class="group">' +
+          '<div class="track-pair">' +
+            '<div class="track" data-dist="p" data-i="' + i + '" tabindex="0" role="slider" ' +
+                 'aria-label="p, symbol ' + i + '" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">' +
+              '<div class="fill p"></div>' +
+            '</div>' +
+            '<div class="track" data-dist="q" data-i="' + i + '" tabindex="0" role="slider" ' +
+                 'aria-label="q, symbol ' + i + '" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">' +
+              '<div class="fill q"></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="vals mono"><span class="vp"></span><span class="vq"></span></div>' +
+          '<div class="sym-label">symbol <b>' + i + '</b></div>' +
+        '</div>';
+    }
+    sourceBars.innerHTML = html;
+  }
+
+  function buildHist() {
+    var html = "", i;
+    for (i = 0; i < K; i++) {
+      html +=
+        '<div class="group">' +
+          '<div class="track-single">' +
+            '<div class="obs-fill"></div>' +
+            '<div class="obs-val"></div>' +
+            '<div class="target"><span></span></div>' +
+          '</div>' +
+          '<div class="sym-label">symbol <b>' + i + '</b></div>' +
+        '</div>';
+    }
+    histBars.innerHTML = html;
+  }
+
+  var MAXY = 0.55; // shared scale for every distribution bar
+
+  function renderSources() {
+    var groups = sourceBars.children, i;
+    for (i = 0; i < K; i++) {
+      var g = groups[i];
+      var tracks = g.querySelectorAll(".track");
+      var fills = g.querySelectorAll(".fill");
+      fills[0].style.height = (Math.min(P[i] / MAXY, 1) * 100) + "%";
+      fills[1].style.height = (Math.min(Q[i] / MAXY, 1) * 100) + "%";
+      tracks[0].setAttribute("aria-valuenow", (P[i] * 100).toFixed(0));
+      tracks[1].setAttribute("aria-valuenow", (Q[i] * 100).toFixed(0));
+      var vals = g.querySelectorAll(".vals span");
+      vals[0].textContent = P[i].toFixed(2);
+      vals[1].textContent = Q[i].toFixed(2);
+      var lab = g.querySelector(".sym-label");
+      if (Q[i] === 0) {
+        lab.innerHTML = 'symbol <b>' + i + '</b> <span class="blind">blind</span>';
+      } else {
+        lab.innerHTML = 'symbol <b>' + i + '</b>';
+      }
+    }
+  }
+
+  function renderHist() {
+    var groups = histBars.children, i;
+    for (i = 0; i < K; i++) {
+      var g = groups[i];
+      var obs = n > 0 ? counts[i] / n : 0;
+      var fill = g.querySelector(".obs-fill");
+      var val = g.querySelector(".obs-val");
+      var tgt = g.querySelector(".target");
+      var hPct = Math.min(obs / MAXY, 1) * 100;
+      fill.style.height = hPct + "%";
+      val.style.bottom = "calc(" + hPct + "% + 6px)";
+      val.textContent = n > 0 ? obs.toFixed(3) : "";
+      var tPct = Math.min(P[i] / MAXY, 1) * 100;
+      tgt.style.bottom = tPct + "%";
+      tgt.querySelector("span").textContent = P[i].toFixed(2);
+    }
+  }
+
+  function renderStats() {
+    document.getElementById("statN").textContent = n.toLocaleString();
+    document.getElementById("statAccPred").textContent = acceptancePredicted().toFixed(4);
+    document.getElementById("statAcc").textContent = n > 0 ? (accepted / n).toFixed(4) : "—";
+
+    var chiEl = document.getElementById("statChi");
+    var pvalEl = document.getElementById("statPval");
+    var dofEl = document.getElementById("statDof");
+    var devEl = document.getElementById("statDev");
+    var pill = document.getElementById("statPill");
+
+    if (n < 100) {
+      chiEl.textContent = "—";
+      pvalEl.textContent = "—";
+      devEl.textContent = "—";
+      pill.className = "pill";
+      pill.textContent = "need 100+ draws";
+      return;
+    }
+
+    // Pool categories whose expected count falls below 5.
+    var obsKept = [], expKept = [], tailObs = 0, tailExp = 0, i;
+    for (i = 0; i < K; i++) {
+      var e = P[i] * n;
+      if (e >= 5) { obsKept.push(counts[i]); expKept.push(e); }
+      else { tailObs += counts[i]; tailExp += e; }
+    }
+    if (tailExp > 0) { obsKept.push(tailObs); expKept.push(tailExp); }
+
+    var stat = 0;
+    for (i = 0; i < obsKept.length; i++) {
+      stat += Math.pow(obsKept[i] - expKept[i], 2) / expKept[i];
+    }
+    var dof = obsKept.length - 1;
+    var pval = chi2sf(stat, dof);
+
+    var maxDev = 0;
+    for (i = 0; i < K; i++) maxDev = Math.max(maxDev, Math.abs(counts[i] / n - P[i]));
+
+    chiEl.textContent = stat < 10000 ? stat.toFixed(1) : stat.toExponential(1);
+    dofEl.textContent = dof;
+    pvalEl.textContent = pval < 0.0001 ? "<0.0001" : pval.toFixed(4);
+    devEl.textContent = maxDev.toFixed(4);
+
+    if (pval > 0.01) {
+      pill.className = "pill ok";
+      pill.textContent = "✓ matches p";
+    } else {
+      pill.className = "pill bad";
+      pill.textContent = "✕ does not match p";
+    }
+  }
+
+  function renderDraw() {
+    var line = document.getElementById("drawLine");
+    var zone = document.getElementById("acceptZone");
+    var marker = document.getElementById("rMarker");
+    var box = document.getElementById("verdictBox");
+
+    if (!lastDraw) {
+      line.innerHTML = "<span>Press <b>Step once</b> to take a draw.</span>";
+      zone.style.width = "0%";
+      marker.style.left = "0%";
+      box.innerHTML = "";
+      return;
+    }
+    var d = lastDraw;
+    line.innerHTML =
+      '<span>drew <b class="mono">x = ' + d.x + '</b> from q</span>' +
+      '<span class="mono" style="color:var(--ink-3)">|</span>' +
+      '<span>p(' + d.x + ') = <b class="mono">' + P[d.x].toFixed(3) + '</b></span>' +
+      '<span>q(' + d.x + ') = <b class="mono">' + Q[d.x].toFixed(3) + '</b></span>' +
+      '<span>threshold = <b class="mono">' + d.thr.toFixed(3) + '</b></span>';
+
+    zone.style.width = (d.thr * 100) + "%";
+    marker.style.left = (d.r * 100) + "%";
+
+    if (d.ok) {
+      box.innerHTML = '<div class="verdict acc"><i class="dot"></i>' +
+        'r = ' + d.r.toFixed(3) + ' &lt; ' + d.thr.toFixed(3) +
+        ' &nbsp;→&nbsp; accept, commit <b class="mono">' + d.committed + '</b></div>';
+    } else {
+      var src = broken ? "p (broken)" : "norm(max(0, p − q))";
+      box.innerHTML = '<div class="verdict rej"><i class="dot"></i>' +
+        'r = ' + d.r.toFixed(3) + ' ≥ ' + d.thr.toFixed(3) +
+        ' &nbsp;→&nbsp; reject, redraw from ' + src +
+        ', commit <b class="mono">' + d.committed + '</b></div>';
+    }
+  }
+
+  function renderLog() {
+    var body = document.getElementById("logBody");
+    if (!log.length) {
+      body.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--ink-3)">no draws yet</td></tr>';
+      return;
+    }
+    var html = "", i;
+    for (i = 0; i < log.length; i++) {
+      var d = log[i];
+      html += '<tr class="mono">' +
+        "<td>" + d.i.toLocaleString() + "</td>" +
+        "<td>" + d.x + "</td>" +
+        "<td>" + d.thr.toFixed(3) + "</td>" +
+        "<td>" + d.r.toFixed(3) + "</td>" +
+        '<td class="' + (d.ok ? "acc" : "rej") + '">' + (d.ok ? "accept" : "reject") + "</td>" +
+        "<td>" + d.committed + "</td>" +
+        "</tr>";
+    }
+    body.innerHTML = html;
+  }
+
+  function renderAll() {
+    renderSources();
+    renderHist();
+    renderStats();
+    renderDraw();
+    renderLog();
+  }
+
+  // ---------- interaction ----------
+  function recompute() {
+    P = normalize(pW);
+    Q = normalize(qW);
+  }
+
+  function setValue(dist, i, value) {
+    var w = dist === "p" ? pW : qW;
+    w[i] = Math.max(0, Math.min(MAXY, value));
+    recompute();
+    resetCounts();
+    renderAll();
+  }
+
+  function trackValueFromEvent(track, clientY) {
+    var rect = track.getBoundingClientRect();
+    var frac = 1 - (clientY - rect.top) / rect.height;
+    return Math.max(0, Math.min(1, frac)) * MAXY;
+  }
+
+  var dragging = null;
+  sourceBars.addEventListener("pointerdown", function (e) {
+    var track = e.target.closest(".track");
+    if (!track) return;
+    dragging = track;
+    track.setPointerCapture(e.pointerId);
+    setValue(track.dataset.dist, +track.dataset.i, trackValueFromEvent(track, e.clientY));
+  });
+  sourceBars.addEventListener("pointermove", function (e) {
+    if (!dragging) return;
+    setValue(dragging.dataset.dist, +dragging.dataset.i, trackValueFromEvent(dragging, e.clientY));
+  });
+  sourceBars.addEventListener("pointerup", function () { dragging = null; });
+  sourceBars.addEventListener("pointercancel", function () { dragging = null; });
+
+  sourceBars.addEventListener("keydown", function (e) {
+    var track = e.target.closest(".track");
+    if (!track) return;
+    var arr = track.dataset.dist === "p" ? pW : qW;
+    var i = +track.dataset.i;
+    var step = e.shiftKey ? 0.05 : 0.01;
+    if (e.key === "ArrowUp" || e.key === "ArrowRight") { setValue(track.dataset.dist, i, arr[i] + step); e.preventDefault(); }
+    else if (e.key === "ArrowDown" || e.key === "ArrowLeft") { setValue(track.dataset.dist, i, arr[i] - step); e.preventDefault(); }
+    else if (e.key === "Home") { setValue(track.dataset.dist, i, 0); e.preventDefault(); }
+  });
+
+  function resetCounts() {
+    counts = new Float64Array(K);
+    n = 0;
+    accepted = 0;
+    log = [];
+    lastDraw = null;
+  }
+
+  function setRunning(on) {
+    running = on;
+    var btn = document.getElementById("runBtn");
+    btn.textContent = on ? "Pause" : "Run";
+    if (on) {
+      rafId = requestAnimationFrame(tick);
+    } else if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  }
+
+  function tick() {
+    if (!running) return;
+    var per = +document.getElementById("speedSel").value;
+    burst(per);
+    renderHist();
+    renderStats();
+    renderDraw();
+    renderLog();
+    rafId = requestAnimationFrame(tick);
+  }
+
+  document.getElementById("runBtn").addEventListener("click", function () { setRunning(!running); });
+  document.getElementById("stepBtn").addEventListener("click", function () {
+    setRunning(false);
+    draw(true);
+    renderHist(); renderStats(); renderDraw(); renderLog();
+  });
+  document.getElementById("burstBtn").addEventListener("click", function () {
+    burst(100000);
+    renderHist(); renderStats(); renderDraw(); renderLog();
+  });
+  document.getElementById("resetBtn").addEventListener("click", function () {
+    resetCounts();
+    renderAll();
+  });
+
+  function setBroken(v) {
+    broken = v;
+    document.getElementById("modeCorrect").setAttribute("aria-pressed", String(!v));
+    document.getElementById("modeBroken").setAttribute("aria-pressed", String(v));
+    document.getElementById("brokenCallout").hidden = !v;
+    document.getElementById("formulaBox").innerHTML = v
+      ? "r &lt; min(1, p(x) / q(x))   ?   accept x\nelse                       x' ~ p          ← wrong"
+      : "r &lt; min(1, p(x) / q(x))   ?   accept x\nelse                       x' ~ norm(max(0, p − q))";
+    resetCounts();
+    renderAll();
+  }
+  document.getElementById("modeCorrect").addEventListener("click", function () { setBroken(false); });
+  document.getElementById("modeBroken").addEventListener("click", function () { setBroken(true); });
+
+  document.querySelectorAll("[data-preset]").forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      var preset = PRESETS[chip.dataset.preset];
+      pW = preset.p.slice();
+      qW = preset.q.slice();
+      recompute();
+      resetCounts();
+      renderAll();
+    });
+  });
+
+  // ---------- boot ----------
+  buildSourceBars();
+  buildHist();
+  recompute();
+  burst(20000); // open in a working state, not an empty shell
+  renderAll();
+  // Transitions start only after the resting frame is painted, so a thumbnail
+  // never catches the gauge mid-animation.
+  requestAnimationFrame(function () { document.body.classList.add("ready"); });
+})();
+</script>
+</body>
+</html>

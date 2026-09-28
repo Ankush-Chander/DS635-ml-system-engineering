@@ -16,7 +16,7 @@
         <link rel="prev" href="../Lecture11_12/">
       
       
-        <link rel="next" href="../../labs/">
+        <link rel="next" href="../Lecture15_16/">
       
       
         
@@ -191,6 +191,26 @@
   
   
   Labs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../viz/acceptance-rule.html" class="md-tabs__link">
+          
+  
+  
+  Demos
 
         </a>
       </li>
@@ -895,6 +915,45 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#constrained-decoding-the-third-mask" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constrained decoding — the third mask
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Constrained decoding — the third mask">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#which-automaton-and-why-the-choice-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which automaton, and why the choice matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-stack-masks-eos-too" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The stack masks &lt;eos&gt; too
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#in-practice-the-knobs-compose" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -936,6 +995,62 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture15_16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15_16:Speculative Decoding
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture17_18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17_18:Speculative Decoding Variants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1252,6 +1367,149 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab15_16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15_16:Speculative Decoding
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab15_16_speculative_decoding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 15/16 — Speculative decoding, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../viz/acceptance-rule.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Speculative decoding: the acceptance rule
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1465,6 +1723,45 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#constrained-decoding-the-third-mask" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constrained decoding — the third mask
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Constrained decoding — the third mask">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#which-automaton-and-why-the-choice-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which automaton, and why the choice matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-stack-masks-eos-too" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The stack masks &lt;eos&gt; too
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#in-practice-the-knobs-compose" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1551,6 +1848,7 @@
 <script type="math/tex; mode=display">P(w_1, \ldots, w_n) = \prod_{i=1}^{n} P(w_i \mid w_1, \ldots, w_{i-1})</script>
 </div>
 <p>A product of numbers below 1 shrinks fast: a 100-token continuation where every step is a confident <span class="arithmatex"><span class="MathJax_Preview">P = 0.5</span><script type="math/tex">P = 0.5</script></span> still has sequence probability <span class="arithmatex"><span class="MathJax_Preview">2^{-100}</span><script type="math/tex">2^{-100}</script></span>. <strong>Every long text is individually improbable</strong> — so "pick probable text" cannot mean "pick text with high absolute probability"; it can only mean choosing well <em>relative to the alternatives at each step</em>.</p>
+<p>Serving APIs expose the per-step conditionals directly: request <code>logprobs: true, top_logprobs: k</code> and every generated token comes back with its own <span class="arithmatex"><span class="MathJax_Preview">\log P</span><script type="math/tex">\log P</script></span> plus the <span class="arithmatex"><span class="MathJax_Preview">k</span><script type="math/tex">k</script></span> strongest alternatives. That is how the distribution behind a <em>served</em> model is inspected — the same numbers the notebook reads off a local <code>gpt2</code>, at production scale.</p>
 <h3 id="the-two-families">The two families</h3>
 <table>
 <thead>
@@ -1714,6 +2012,174 @@ Source: <a href="https://huggingface.co/blog/how-to-generate">von Platen, How to
 <p>Top-k keeps 50 both times: in the peaked case that is the right token plus 49 junk candidates it just re-armed; in the flat case it discards ~450 perfectly reasonable options. Top-p keeps the top token alone in the peaked case (0.95 ≥ 0.9 immediately) and ~450 tokens in the flat case (0.9 / 0.002). The adaptive set is the entire point.</p>
 </details>
 </div>
+<h3 id="constrained-decoding-the-third-mask">Constrained decoding — the third mask</h3>
+<p>Top-k keeps tokens by <strong>rank</strong>, top-p by <strong>cumulative mass</strong>. A grammar keeps tokens by <strong>legality</strong>: the same cut-renormalise-sample operator, with a criterion that comes from the output format instead of the distribution.</p>
+<!-- figure: one step's distribution cut three ways — top-k, top-p, grammar (only the schema's legal tokens survive) -->
+
+<p>The mechanism is a state machine over tokens. A JSON schema (or regex, or enum) compiles to an automaton; at every step the engine asks which tokens keep the automaton alive, sets every other logit to <span class="arithmatex"><span class="MathJax_Preview">-\infty</span><script type="math/tex">-\infty</script></span>, renormalises, and hands the result to whatever sampler the request asked for. Temperature and top-p still apply — inside the legal set. vLLM does this with xgrammar; the request carries it as one field:</p>
+<div class="highlight"><pre><span></span><code><span class="n">response_format</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;json_schema&quot;</span><span class="p">,</span> <span class="s2">&quot;json_schema&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;record&quot;</span><span class="p">,</span> <span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">}}}</span>
+</code></pre></div>
+<p>Over the wire it is one more field on an ordinary chat-completions request. Each tab below is a different constraint language against the same server, run at <code>temperature: 0</code> so the printed output is reproducible — which is also what §6 recommends for structured work. The <code>jq</code> pipe drops the response envelope and prints <code>.choices[0].message.content</code> alone; every command is shown with the output it returns.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">JSON schema</label><label for="__tabbed_1_2">Enum</label><label for="__tabbed_1_3">Regex</label><label for="__tabbed_1_4">EBNF grammar</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-sS<span class="w"> </span>http://localhost:8020/v1/chat/completions<span class="w"> </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;model&quot;: &quot;Qwen/Qwen3.8-27B-FP8&quot;,</span>
+<span class="s1">  &quot;messages&quot;: [{&quot;role&quot;:&quot;user&quot;,&quot;content&quot;:&quot;Ada Lovelace, born 1815 in London, wrote the first algorithm.&quot;}],</span>
+<span class="s1">  &quot;response_format&quot;: {&quot;type&quot;:&quot;json_schema&quot;,&quot;json_schema&quot;:{&quot;name&quot;:&quot;person&quot;,&quot;schema&quot;:{</span>
+<span class="s1">    &quot;type&quot;:&quot;object&quot;,</span>
+<span class="s1">    &quot;properties&quot;:{&quot;name&quot;:{&quot;type&quot;:&quot;string&quot;},&quot;birth_year&quot;:{&quot;type&quot;:&quot;integer&quot;},&quot;city&quot;:{&quot;type&quot;:&quot;string&quot;}},</span>
+<span class="s1">    &quot;required&quot;:[&quot;name&quot;,&quot;birth_year&quot;,&quot;city&quot;],</span>
+<span class="s1">    &quot;additionalProperties&quot;: false}}},</span>
+<span class="s1">  &quot;max_tokens&quot;: 120,</span>
+<span class="s1">  &quot;temperature&quot;: 0,</span>
+<span class="s1">  &quot;chat_template_kwargs&quot;: {&quot;enable_thinking&quot;: false}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.choices[0].message.content&#39;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ada_Lovelace&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;birth_year&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1815</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;city&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;London&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Note the underscore. <code>"type": "string"</code> makes <code>Ada_Lovelace</code> perfectly legal, so nothing in the automaton objects — the guarantee table below, one paragraph early.</p>
+</div>
+<div class="tabbed-block">
+<p>One state per option. The model cannot preface the answer with "Sure! The sentiment is" — those tokens are not in the legal set.</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-sS<span class="w"> </span>http://localhost:8020/v1/chat/completions<span class="w"> </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;model&quot;: &quot;Qwen/Qwen3.8-27B-FP8&quot;,</span>
+<span class="s1">  &quot;messages&quot;: [{&quot;role&quot;:&quot;user&quot;,&quot;content&quot;:&quot;Classify: the delivery was late and the box was crushed.&quot;}],</span>
+<span class="s1">  &quot;structured_outputs&quot;: {&quot;choice&quot;: [&quot;positive&quot;,&quot;negative&quot;,&quot;neutral&quot;]},</span>
+<span class="s1">  &quot;max_tokens&quot;: 10,</span>
+<span class="s1">  &quot;temperature&quot;: 0,</span>
+<span class="s1">  &quot;chat_template_kwargs&quot;: {&quot;enable_thinking&quot;: false}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.choices[0].message.content&#39;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>negative
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>The automaton drawn above, compiled and applied once per token.</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-sS<span class="w"> </span>http://localhost:8020/v1/chat/completions<span class="w"> </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;model&quot;: &quot;Qwen/Qwen3.8-27B-FP8&quot;,</span>
+<span class="s1">  &quot;messages&quot;: [{&quot;role&quot;:&quot;user&quot;,&quot;content&quot;:&quot;The bill came to twenty three dollars and forty eight cents.&quot;}],</span>
+<span class="s1">  &quot;structured_outputs&quot;: {&quot;regex&quot;: &quot;\\$[0-9]+\\.[0-9]{2}&quot;},</span>
+<span class="s1">  &quot;max_tokens&quot;: 16,</span>
+<span class="s1">  &quot;temperature&quot;: 0,</span>
+<span class="s1">  &quot;chat_template_kwargs&quot;: {&quot;enable_thinking&quot;: false}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.choices[0].message.content&#39;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>$23.48
+</code></pre></div>
+<p>The regex reaches vLLM as <code>\$[0-9]+\.[0-9]{2}</code> — JSON eats one layer of backslashes, so every <code>\</code> in the pattern is written <code>\\</code>.</p>
+</div>
+<div class="tabbed-block">
+<p>The stack case. No regex above can express it, because the nesting depth is not fixed.</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-sS<span class="w"> </span>http://localhost:8020/v1/chat/completions<span class="w"> </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;model&quot;: &quot;Qwen/Qwen3.8-27B-FP8&quot;,</span>
+<span class="s1">  &quot;messages&quot;: [{&quot;role&quot;:&quot;user&quot;,&quot;content&quot;:&quot;Nest the number 5 inside two levels of brackets.&quot;}],</span>
+<span class="s1">  &quot;structured_outputs&quot;: {&quot;grammar&quot;: &quot;root ::= \&quot;[\&quot; inner \&quot;]\&quot;\ninner ::= \&quot;[\&quot; inner \&quot;]\&quot; | num\nnum ::= [0-9]+&quot;},</span>
+<span class="s1">  &quot;max_tokens&quot;: 20,</span>
+<span class="s1">  &quot;temperature&quot;: 0,</span>
+<span class="s1">  &quot;chat_template_kwargs&quot;: {&quot;enable_thinking&quot;: false}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.choices[0].message.content&#39;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>[[5]]
+</code></pre></div>
+<p>The grammar is one JSON string, so its newlines are <code>\n</code> and its literal quotes are <code>\"</code>. Unescaped it reads:</p>
+<div class="highlight"><pre><span></span><code>root  ::= &quot;[&quot; inner &quot;]&quot;
+inner ::= &quot;[&quot; inner &quot;]&quot; | num
+num   ::= [0-9]+
+</code></pre></div>
+</div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Two traps on a live server</p>
+<p><strong>The <code>guided_*</code> fields are silently ignored.</strong> <code>guided_json</code>, <code>guided_regex</code> and <code>guided_choice</code> are the form most tutorials still show. On vLLM 0.28 they return <strong>200 OK with an unconstrained answer</strong> — no error, no warning. Asking <em>"capital of France?"</em> under <code>guided_choice: ["RED","GREEN","BLUE"]</code> returns <code>Paris</code>. Use <code>structured_outputs</code> instead, and <strong>verify with a prompt whose natural answer violates the constraint</strong> — a constraint that "works" on a cooperative prompt has proved nothing.</p>
+<p><strong>A reasoning model spends the budget before the grammar applies.</strong> The mask governs the content, not the thinking. Without <code>chat_template_kwargs: {"enable_thinking": false}</code>, a Qwen3 request with <code>max_tokens: 10</code> comes back <code>finish_reason: length</code>, <code>content: null</code>, <code>reasoning_tokens: 10</code> — the answer never started.</p>
+<p>Structured output is available on <code>/v1/chat/completions</code> only; <code>/v1/completions</code> accepts the field and ignores it.</p>
+</div>
+<h4 id="which-automaton-and-why-the-choice-matters">Which automaton, and why the choice matters</h4>
+<p>"Compiles to an automaton" hides a ladder. The constraint language decides how much <strong>memory</strong> the engine gets:</p>
+<table>
+<thead>
+<tr>
+<th>Constraint</th>
+<th>Compiles to</th>
+<th>Memory</th>
+<th>Enforces</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Regex</strong></td>
+<td>finite state machine</td>
+<td>current state only</td>
+<td>flat character patterns — <code>$23.48</code>, <code>YYYY-MM-DD</code></td>
+</tr>
+<tr>
+<td><strong>CFG</strong></td>
+<td>pushdown automaton — an FSM plus a stack</td>
+<td>a stack</td>
+<td>nesting — matched brackets, code, arithmetic</td>
+</tr>
+<tr>
+<td><strong>JSON schema</strong></td>
+<td>both, running in parallel</td>
+<td>stack <strong>and</strong> per-value FSMs</td>
+<td>the stack closes <code>{</code> and <code>[</code>; the FSMs type the values inside</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Finite state machine for a currency amount — the digit count lives in chained states, not a loop" src="../../images/decoding/fsm_example.png" /></p>
+<p>Read the tail of that chain. "Exactly two decimal digits" is enforced by <strong>chaining q3 → q4 → q5</strong>, not by a loop — a loop would accept one digit or fifty. <em>The count lives in the states.</em> This is why a 4-digit <code>user_id</code> needs four states and not one self-loop, and it is the entire reason an FSM can enforce a fixed-width field at all.</p>
+<p>Now look at what that buys and what it costs. An FSM is <strong>memoryless</strong> — its whole memory is <em>which state it is in</em>. It knows a <code>]</code> may legally follow a <code>5</code>; it does not know how many <code>[</code> are still open. Given <code>[[5]</code> it will happily accept a stop. Counting to four is fine, because four is fixed at compile time. Counting to <em>however many brackets happen to open</em> is not.</p>
+<p>That single limitation is why nesting needs a stack, and why <strong>no regex can enforce JSON</strong>.</p>
+<p><img alt="Pushdown automaton for aⁿbⁿ — a finite state machine plus a stack" src="../../images/decoding/pda_example.png" /></p>
+<p><strong>aⁿbⁿ</strong> is the standard demonstration of exactly this gap — <strong>no FSM recognises it</strong>, because <em>n</em> is unbounded. Substitute <code>[</code> for <code>a</code> and <code>]</code> for <code>b</code> and the diagram is the bracket matcher: push on every opener, pop on every closer, and reach the accept state only when the stack is back to Z₀.</p>
+<p>The run table in the corner is the mechanism the constraint engine executes once per generated token. The <strong>stack depth after each token is the state the mask is computed from.</strong></p>
+<h4 id="the-stack-masks-eos-too">The stack masks <code>&lt;eos&gt;</code> too</h4>
+<p>The end-of-sequence token is a token, so it is subject to the same mask. With <code>[[5]</code> emitted, one <code>[</code> remains on the stack, the automaton is in a non-accepting state, and <code>&lt;eos&gt;</code> is therefore illegal — masked to −∞ alongside every other invalid token. <strong>The model cannot stop mid-structure.</strong></p>
+<p>The practical consequence: under a grammar, truncated JSON is never a grammar failure. The automaton would not have permitted it. It is a <code>max_tokens</code> failure — the length cap sits outside the automaton and cuts generation regardless of what the stack still holds.</p>
+<div class="admonition question">
+<p class="admonition-title">💬 A JSON grammar is active, <code>user_id</code> must be a 4-digit integer, and the model has emitted <code>{"user_id": 92</code>. Which tokens are legal, and which machine rules out each of the others?</p>
+<details class="hint">
+<summary>Answer</summary>
+<p>Only the digits <code>0</code>–<code>9</code>. The <strong>FSM</strong> for the value has consumed two of its four digits, so it rules out <code>}</code>, <code>,</code> and any non-digit — the value is not yet well-formed. The <strong>stack</strong> independently rules out <code>&lt;eos&gt;</code>, since the opening <code>{</code> is still unclosed. Both machines are advanced on every token and the legal set is their intersection, recomputed each step — the mask is a function of what has been emitted, not a fixed property of the schema.</p>
+</details>
+</div>
+<p>What the mask guarantees, and what it does not:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Guaranteed?</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Parseable output</strong></td>
+<td>always</td>
+<td>illegal tokens have probability zero before the draw</td>
+</tr>
+<tr>
+<td><strong>Correct output</strong></td>
+<td>never</td>
+<td>the legal tokens keep their original probabilities; the model's uncertainty is untouched</td>
+</tr>
+</tbody>
+</table>
+<p>The second row is the one to remember. Force a binary field the model is unsure about — <code>enum: [A, B]</code> with the model near 60/40 — and greedy emits the majority label <em>every time</em>, hiding the 40. Sampling reveals the split and, on a field with a right answer, <strong>lowers accuracy</strong>, because it now draws the minority label four times in ten.</p>
+<div class="admonition question">
+<p class="admonition-title">💬 A schema-forced yes/no field: 100% of responses parse, 66% are correct under greedy, 50–68% under sampling. What did the mask fix, and what did it hide?</p>
+<details class="hint">
+<summary>Answer</summary>
+<p>It fixed the <em>format</em>: no refusals, no prose around the answer, no parse failures. It hid the <em>fact</em>: the model was roughly 60/40 on many rows, and argmax over a 60/40 slot always says the 60. Greedy accuracy is the accuracy of the distribution's mode; sampled accuracy is the accuracy of a draw from it. Neither is the model's knowledge — the per-row <code>logprobs</code> are.</p>
+</details>
+</div>
+<p>The systems view: a grammar is the <strong>heaviest per-request state in the hot loop</strong>. Temperature is one float per row; a grammar is an automaton advanced once per generated token, per row of the batch, with a vocabulary-sized mask materialised each step. It composes with everything in §6 — and it is the reason "extraction → greedy" in §6's table is only half the recipe.</p>
 <h3 id="in-practice-the-knobs-compose">In practice: the knobs compose</h3>
 <p>A serving request carries all of these at once, applied in sequence to each step's logits — temperature first, then truncation, then the draw:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># vLLM</span>
@@ -1736,6 +2202,11 @@ Source: <a href="https://huggingface.co/blog/how-to-generate">von Platen, How to
 <td>Code generation, math, extraction, translation</td>
 <td>closed-ended — one (near-)correct output</td>
 <td>greedy / <code>T ≈ 0</code>; beam search where sequence likelihood is the metric</td>
+</tr>
+<tr>
+<td>Extraction, tool calls, structured output</td>
+<td>closed-ended <em>format</em> — the shape is fixed, the content may not be</td>
+<td>greedy / <code>T ≈ 0</code> <strong>+ grammar</strong>; the mask guarantees the shape, the logprobs report the content</td>
 </tr>
 <tr>
 <td>Summarisation</td>
@@ -1812,13 +2283,13 @@ token on a peaked step and <strong>1,913</strong> on a flat one.</p>
         
         
           
-          <a href="../../labs/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+          <a href="../Lecture15_16/" class="md-footer__link md-footer__link--next" aria-label="Next: 15_16:Speculative Decoding">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Overview
+                15_16:Speculative Decoding
               </div>
             </div>
             <div class="md-footer__button md-icon">

@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://DS635.ankushchander.com/labs/Lab13_14_decoding_strategies/">
+        <link rel="canonical" href="https://DS635.ankushchander.com/labs/Lab15_16_speculative_decoding/">
       
       
-        <link rel="prev" href="../Lab13_14/">
+        <link rel="prev" href="../Lab15_16/">
       
       
-        <link rel="next" href="../Lab15_16/">
+        <link rel="next" href="../../viz/acceptance-rule.html">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Lab 13/14 — Decoding strategies, measured - DS635 - Machine Learning System Engineering | DAU</title>
+        <title>Lab 15/16 — Speculative decoding, measured - DS635 - Machine Learning System Engineering | DAU</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#lab-1314-decoding-strategies-measured" class="md-skip">
+        <a href="#lab-1516-speculative-decoding-measured" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Lab 13/14 — Decoding strategies, measured
+              Lab 15/16 — Speculative decoding, measured
             
           </span>
         </div>
@@ -1040,37 +1040,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Lab 13/14 — Decoding strategies, measured
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../Lab13_14_decoding_strategies/" class="md-nav__link">
         
   
   
@@ -1086,92 +1059,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Setup
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#part-1-the-distribution-and-greedy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Part 1 — The distribution and greedy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#part-2-temperature" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Part 2 — Temperature
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#part-3-truncation-top-k-vs-nucleus-top-p" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Part 3 — Truncation: top-k vs nucleus (top-p)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#part-4-beam-vs-greedy-the-honest-one" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Part 4 — Beam vs greedy (the honest one)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#submit" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Submit
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1209,10 +1096,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../Lab15_16_speculative_decoding/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 15/16 — Speculative decoding, measured
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1228,6 +1142,92 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup-dummy-data-the-model-pair-given" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup — dummy data + the model pair (given)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-1-the-acceptance-branch-dummy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 1 — The acceptance branch (dummy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2-rejection-sampling-the-residual-dummy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 2 — Rejection sampling: the residual (dummy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-3-vectorised-verification-dummy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 3 — Vectorised verification (dummy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-4-the-real-stitch-gpt2-verified-against-distilgpt2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 4 — The real stitch: gpt2 verified against distilgpt2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#submit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Submit
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1354,10 +1354,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#setup" class="md-nav__link">
+  <a href="#setup-dummy-data-the-model-pair-given" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Setup
+        Setup — dummy data + the model pair (given)
       
     </span>
   </a>
@@ -1365,10 +1365,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#part-1-the-distribution-and-greedy" class="md-nav__link">
+  <a href="#part-1-the-acceptance-branch-dummy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Part 1 — The distribution and greedy
+        Part 1 — The acceptance branch (dummy)
       
     </span>
   </a>
@@ -1376,10 +1376,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#part-2-temperature" class="md-nav__link">
+  <a href="#part-2-rejection-sampling-the-residual-dummy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Part 2 — Temperature
+        Part 2 — Rejection sampling: the residual (dummy)
       
     </span>
   </a>
@@ -1387,10 +1387,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#part-3-truncation-top-k-vs-nucleus-top-p" class="md-nav__link">
+  <a href="#part-3-vectorised-verification-dummy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Part 3 — Truncation: top-k vs nucleus (top-p)
+        Part 3 — Vectorised verification (dummy)
       
     </span>
   </a>
@@ -1398,10 +1398,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#part-4-beam-vs-greedy-the-honest-one" class="md-nav__link">
+  <a href="#part-4-the-real-stitch-gpt2-verified-against-distilgpt2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Part 4 — Beam vs greedy (the honest one)
+        Part 4 — The real stitch: gpt2 verified against distilgpt2
       
     </span>
   </a>
@@ -2157,22 +2157,23 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=145c7517">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1882a1ae">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="lab-1314-decoding-strategies-measured">Lab 13/14 — Decoding strategies, measured<a class="anchor-link" href="#lab-1314-decoding-strategies-measured">¶</a></h1><p>Turn the lecture's decoding rules into <strong>measurements</strong>: the distribution a model emits, and what each
-strategy does to it. Read the <a href="Lab13_14.md">lab brief</a> first. You are marked on <strong>relationships between
-your own numbers</strong> — the sampling parts are seeded from your roll number, so your numbers are yours.</p>
-<p><strong>Before you run anything:</strong> set your identity in the next cell. Fill every prediction and explanation cell. Run top to bottom,
-then run the final export cell and submit the two files it names.</p>
+<h1 id="lab-1516-speculative-decoding-measured">Lab 15/16 — Speculative decoding, measured<a class="anchor-link" href="#lab-1516-speculative-decoding-measured">¶</a></h1><p>Build the speculative-decoding rule yourself — first on <strong>dummy distributions</strong> (where correctness is
+provable), then as a <strong>real two-model stitch</strong> (gpt2 verified against distilgpt2, a same-tokenizer pair).
+Read the <a href="Lab15_16.md">lab brief</a> first. Marked on <strong>relationships between your own numbers</strong>; the
+sampling parts are seeded from your roll number, so your numbers are yours.</p>
+<p><strong>Before you run anything:</strong> set your identity below. Fill every 📝 cell. Run top to bottom, then run the
+final export cell and submit the two files it names. CPU is enough (<code>gpt2</code> + <code>distilgpt2</code>).</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2ab106de">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=75532104">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2193,16 +2194,10 @@ then run the final export cell and submit the two files it names.</p>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">ROLL_NUMBER</span> <span class="o">=</span> <span class="s2">""</span>      <span class="c1"># &lt;- your roll number, e.g. "202512345"</span>
 <span class="n">NAME</span>        <span class="o">=</span> <span class="s2">""</span>      <span class="c1"># &lt;- your name</span>
 
-<span class="c1"># You may change PROMPT to a sentence of your own — a personal one makes your numbers more clearly yours.</span>
-<span class="n">PROMPT</span> <span class="o">=</span> <span class="s2">"I enjoy walking with my cute dog"</span>
-
 <span class="k">assert</span> <span class="n">ROLL_NUMBER</span> <span class="ow">and</span> <span class="n">NAME</span><span class="p">,</span> <span class="s2">"Set ROLL_NUMBER and NAME before running the rest."</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-1">ROLL_NUMBER = ""      # &lt;- your roll number, e.g. "202512345"
 NAME        = ""      # &lt;- your name
-
-# You may change PROMPT to a sentence of your own — a personal one makes your numbers more clearly yours.
-PROMPT = "I enjoy walking with my cute dog"
 
 assert ROLL_NUMBER and NAME, "Set ROLL_NUMBER and NAME before running the rest."</div>
 </div>
@@ -2211,18 +2206,18 @@ assert ROLL_NUMBER and NAME, "Set ROLL_NUMBER and NAME before running the rest."
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c9dca10f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=134cff00">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="setup">Setup<a class="anchor-link" href="#setup">¶</a></h2>
+<h2 id="setup-dummy-data-the-model-pair-given">Setup — dummy data + the model pair (given)<a class="anchor-link" href="#setup-dummy-data-the-model-pair-given">¶</a></h2>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=316f32a2">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=5c613a0f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2242,75 +2237,93 @@ assert ROLL_NUMBER and NAME, "Set ROLL_NUMBER and NAME before running the rest."
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span><span class="o">,</span><span class="w"> </span><span class="nn">platform</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">hashlib</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span><span class="o">,</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">transformers</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">AutoModelForCausalLM</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">transformers.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">logging</span> <span class="k">as</span> <span class="n">hf_logging</span>
 <span class="n">hf_logging</span><span class="o">.</span><span class="n">set_verbosity_error</span><span class="p">();</span> <span class="n">hf_logging</span><span class="o">.</span><span class="n">disable_progress_bar</span><span class="p">()</span>
 
-<span class="n">MODEL</span> <span class="o">=</span> <span class="s2">"gpt2"</span>
-<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">MODEL</span><span class="p">)</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">MODEL</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-<span class="n">model</span><span class="o">.</span><span class="n">generation_config</span><span class="o">.</span><span class="n">pad_token_id</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token_id</span>
+<span class="n">SEED</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">ROLL_NUMBER</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span> <span class="mi">16</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">31</span><span class="p">)</span>   <span class="c1"># your seed</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
 
-<span class="n">SEED</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">ROLL_NUMBER</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span> <span class="mi">16</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">31</span><span class="p">)</span>   <span class="c1"># your sampling seed</span>
-<span class="n">inputs</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">PROMPT</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s2">"pt"</span><span class="p">)</span>
-<span class="n">PLEN</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">"input_ids"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="c1"># --- dummy distributions (Parts 1-3): 5-symbol toy, one row per drafted position (+ bonus row) ---</span>
+<span class="n">VOCAB</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"cat"</span><span class="p">,</span> <span class="s2">"sat"</span><span class="p">,</span> <span class="s2">"on"</span><span class="p">,</span> <span class="s2">"the"</span><span class="p">,</span> <span class="s2">"mat"</span><span class="p">];</span> <span class="n">V</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">VOCAB</span><span class="p">);</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.50</span><span class="p">,</span><span class="mf">0.20</span><span class="p">,</span><span class="mf">0.10</span><span class="p">,</span><span class="mf">0.10</span><span class="p">,</span><span class="mf">0.10</span><span class="p">],</span>
+              <span class="p">[</span><span class="mf">0.10</span><span class="p">,</span><span class="mf">0.60</span><span class="p">,</span><span class="mf">0.10</span><span class="p">,</span><span class="mf">0.10</span><span class="p">,</span><span class="mf">0.10</span><span class="p">],</span>
+              <span class="p">[</span><span class="mf">0.10</span><span class="p">,</span><span class="mf">0.10</span><span class="p">,</span><span class="mf">0.20</span><span class="p">,</span><span class="mf">0.50</span><span class="p">,</span><span class="mf">0.10</span><span class="p">],</span>
+              <span class="p">[</span><span class="mf">0.20</span><span class="p">,</span><span class="mf">0.20</span><span class="p">,</span><span class="mf">0.20</span><span class="p">,</span><span class="mf">0.20</span><span class="p">,</span><span class="mf">0.20</span><span class="p">]])</span>   <span class="c1"># (k+1, V) target; row k = bonus</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.70</span><span class="p">,</span><span class="mf">0.10</span><span class="p">,</span><span class="mf">0.10</span><span class="p">,</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.05</span><span class="p">],</span>
+              <span class="p">[</span><span class="mf">0.10</span><span class="p">,</span><span class="mf">0.50</span><span class="p">,</span><span class="mf">0.20</span><span class="p">,</span><span class="mf">0.10</span><span class="p">,</span><span class="mf">0.10</span><span class="p">],</span>
+              <span class="p">[</span><span class="mf">0.10</span><span class="p">,</span><span class="mf">0.10</span><span class="p">,</span><span class="mf">0.60</span><span class="p">,</span><span class="mf">0.10</span><span class="p">,</span><span class="mf">0.10</span><span class="p">]])</span>   <span class="c1"># (k, V) draft (over-proposes cat, on)</span>
+<span class="n">drafts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">next_logits</span><span class="p">(</span><span class="n">prompt</span><span class="p">):</span>
-    <span class="n">ids</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s2">"pt"</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">ids</span><span class="p">)</span><span class="o">.</span><span class="n">logits</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="c1"># --- the real model pair (Part 4): same tokenizer, both small, CPU-fast ---</span>
+<span class="n">TARGET</span><span class="p">,</span> <span class="n">DRAFT</span> <span class="o">=</span> <span class="s2">"gpt2"</span><span class="p">,</span> <span class="s2">"distilgpt2"</span>
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">TARGET</span><span class="p">)</span>
+<span class="n">target</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">TARGET</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">draft</span>  <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">DRAFT</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">target</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">==</span> <span class="n">draft</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span> <span class="s2">"the stitch needs a shared vocabulary"</span>
 
 <span class="n">RESULTS</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"model"</span><span class="p">,</span> <span class="n">MODEL</span><span class="p">,</span> <span class="s2">"| vocab"</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span> <span class="s2">"| seed"</span><span class="p">,</span> <span class="n">SEED</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"dummy vocab"</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="s2">"| models"</span><span class="p">,</span> <span class="n">TARGET</span><span class="p">,</span> <span class="s2">"&lt;-"</span><span class="p">,</span> <span class="n">DRAFT</span><span class="p">,</span> <span class="s2">"| shared vocab"</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span> <span class="s2">"| seed"</span><span class="p">,</span> <span class="n">SEED</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-2">import json, platform, sys, hashlib
 from pathlib import Path
+import numpy as np
 import torch, torch.nn.functional as F
 import transformers
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from transformers.utils import logging as hf_logging
 hf_logging.set_verbosity_error(); hf_logging.disable_progress_bar()
 
-MODEL = "gpt2"
-tokenizer = AutoTokenizer.from_pretrained(MODEL)
-model = AutoModelForCausalLM.from_pretrained(MODEL).eval()
-model.generation_config.pad_token_id = tokenizer.eos_token_id
+SEED = int(hashlib.sha256(ROLL_NUMBER.encode()).hexdigest(), 16) % (2**31)   # your seed
+rng = np.random.default_rng(SEED)
 
-SEED = int(hashlib.sha256(ROLL_NUMBER.encode()).hexdigest(), 16) % (2**31)   # your sampling seed
-inputs = tokenizer(PROMPT, return_tensors="pt")
-PLEN = inputs["input_ids"].shape[1]
+# --- dummy distributions (Parts 1-3): 5-symbol toy, one row per drafted position (+ bonus row) ---
+VOCAB = ["cat", "sat", "on", "the", "mat"]; V = len(VOCAB); k = 3
+p = np.array([[0.50,0.20,0.10,0.10,0.10],
+              [0.10,0.60,0.10,0.10,0.10],
+              [0.10,0.10,0.20,0.50,0.10],
+              [0.20,0.20,0.20,0.20,0.20]])   # (k+1, V) target; row k = bonus
+q = np.array([[0.70,0.10,0.10,0.05,0.05],
+              [0.10,0.50,0.20,0.10,0.10],
+              [0.10,0.10,0.60,0.10,0.10]])   # (k, V) draft (over-proposes cat, on)
+drafts = [0, 1, 2]
+assert np.allclose(p.sum(1),1) and np.allclose(q.sum(1),1)
 
-def next_logits(prompt):
-    ids = tokenizer(prompt, return_tensors="pt")
-    with torch.no_grad():
-        return model(**ids).logits[0, -1]
+# --- the real model pair (Part 4): same tokenizer, both small, CPU-fast ---
+TARGET, DRAFT = "gpt2", "distilgpt2"
+tokenizer = AutoTokenizer.from_pretrained(TARGET)
+target = AutoModelForCausalLM.from_pretrained(TARGET).eval()
+draft  = AutoModelForCausalLM.from_pretrained(DRAFT).eval()
+assert target.config.vocab_size == draft.config.vocab_size, "the stitch needs a shared vocabulary"
 
 RESULTS = {}
-print("model", MODEL, "| vocab", model.config.vocab_size, "| seed", SEED)</div>
+print("dummy vocab", V, "| models", TARGET, "&lt;-", DRAFT, "| shared vocab", target.config.vocab_size, "| seed", SEED)</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=aef3a9cf">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cdfd9f36">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
-<h2 id="part-1-the-distribution-and-greedy">Part 1 — The distribution and greedy<a class="anchor-link" href="#part-1-the-distribution-and-greedy">¶</a></h2><p>📝 <strong>Predict.</strong> The model scores every token in a ~50k vocabulary. Roughly what fraction of the
-probability mass do you expect the <strong>top 50</strong> tokens to hold? Run greedy decoding twice — will the two
-outputs be identical? Will greedy's first token be the <strong>argmax</strong> of the distribution?</p>
+<h2 id="part-1-the-acceptance-branch-dummy">Part 1 — The acceptance branch (dummy)<a class="anchor-link" href="#part-1-the-acceptance-branch-dummy">¶</a></h2><p>Accept a drafted token <code>x</code> at position <code>i</code> with probability <code>min(1, p[i,x] / q[i,x])</code>.</p>
+<p>📝 <strong>Predict.</strong> When is the accept probability exactly <strong>1</strong>? Position 0 drafted <code>"cat"</code> with <code>q=0.70</code>,
+<code>p=0.50</code> — what is its accept probability, and why does over-proposing get <strong>throttled</strong>?</p>
 <p><em>(your predictions here)</em></p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=178b382e">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a3bf998a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2328,71 +2341,70 @@ outputs be identical? Will greedy's first token be the <strong>argmax</strong> o
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">logits</span> <span class="o">=</span> <span class="n">next_logits</span><span class="p">(</span><span class="n">PROMPT</span><span class="p">)</span>
-<span class="n">probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">top50_mass</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">is_accepted</span><span class="p">(</span><span class="n">p_i</span><span class="p">,</span> <span class="n">q_i</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Ratio test for ONE drafted token. u is a uniform(0,1) draw passed in for reproducibility.</span>
+<span class="sd">    Accept with probability min(1, p_i[x] / q_i[x]); return True/False."""</span>
+    <span class="c1"># TODO: your code here</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-<span class="n">g1</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">do_sample</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="n">PLEN</span><span class="p">:]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="n">g2</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">do_sample</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="n">PLEN</span><span class="p">:]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
-<span class="n">RESULTS</span><span class="p">[</span><span class="s2">"dist"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">vocab_size</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">),</span> <span class="n">top50_mass</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="n">top50_mass</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
-                       <span class="n">greedy_ids_run1</span><span class="o">=</span><span class="n">g1</span><span class="p">,</span> <span class="n">greedy_ids_run2</span><span class="o">=</span><span class="n">g2</span><span class="p">,</span>
-                       <span class="n">greedy_first_id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">g1</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">argmax_id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">logits</span><span class="p">)))</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"top-50 mass            : </span><span class="si">{</span><span class="n">top50_mass</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"greedy runs identical  : </span><span class="si">{</span><span class="n">g1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">g2</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"greedy first == argmax : </span><span class="si">{</span><span class="n">g1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">logits</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"greedy text:"</span><span class="p">,</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">g1</span><span class="p">))</span>
+<span class="c1"># harness (given): empirical accept rate per position should track min(1, p/q)</span>
+<span class="n">emp</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">is_accepted</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">drafts</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">20000</span><span class="p">)]))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span>
+<span class="n">theo</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">drafts</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">/</span><span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">drafts</span><span class="p">[</span><span class="n">i</span><span class="p">]]))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span>
+<span class="n">RESULTS</span><span class="p">[</span><span class="s2">"accept"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">positions</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">)),</span> <span class="n">empirical</span><span class="o">=</span><span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">emp</span><span class="p">],</span>
+                         <span class="n">theoretical</span><span class="o">=</span><span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">theo</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"pos </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">VOCAB</span><span class="p">[</span><span class="n">drafts</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="si">}</span><span class="s2">): empirical </span><span class="si">{</span><span class="n">emp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">  vs  min(1,p/q) </span><span class="si">{</span><span class="n">theo</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3">logits = next_logits(PROMPT)
-probs = F.softmax(logits, dim=-1)
-top50_mass = torch.topk(probs, 50).values.sum().item()
+<div class="clipboard-copy-txt" id="cell-3">def is_accepted(p_i, q_i, x, u):
+    """Ratio test for ONE drafted token. u is a uniform(0,1) draw passed in for reproducibility.
+    Accept with probability min(1, p_i[x] / q_i[x]); return True/False."""
+    # TODO: your code here
+    raise NotImplementedError
 
-g1 = model.generate(**inputs, max_new_tokens=40, do_sample=False)[0, PLEN:].tolist()
-g2 = model.generate(**inputs, max_new_tokens=40, do_sample=False)[0, PLEN:].tolist()
 
-RESULTS["dist"] = dict(vocab_size=int(model.config.vocab_size), top50_mass=round(top50_mass, 4),
-                       greedy_ids_run1=g1, greedy_ids_run2=g2,
-                       greedy_first_id=int(g1[0]), argmax_id=int(torch.argmax(logits)))
-print(f"top-50 mass            : {top50_mass:.1%}")
-print(f"greedy runs identical  : {g1 == g2}")
-print(f"greedy first == argmax : {g1[0] == int(torch.argmax(logits))}")
-print("greedy text:", tokenizer.decode(g1))</div>
+# harness (given): empirical accept rate per position should track min(1, p/q)
+emp = [float(np.mean([is_accepted(p[i], q[i], drafts[i], u) for u in rng.random(20000)])) for i in range(k)]
+theo = [float(min(1.0, p[i, drafts[i]]/q[i, drafts[i]])) for i in range(k)]
+RESULTS["accept"] = dict(positions=list(range(k)), empirical=[round(x,3) for x in emp],
+                         theoretical=[round(x,3) for x in theo])
+for i in range(k): print(f"pos {i} ({VOCAB[drafts[i]]}): empirical {emp[i]:.3f}  vs  min(1,p/q) {theo[i]:.3f}")</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=23c6e306">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7b892027">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>📝 <strong>Explain.</strong> Why are two greedy runs identical while two sampling runs (Part 2) will not be? Why
-must greedy's first token equal the argmax? What does the top-50 mass tell you about the <strong>long tail</strong>
-that the truncation strategies in Part 3 exist to cut?</p>
+<p>📝 <strong>Explain.</strong> Why is the accept probability capped at 1? What does over-proposing (<code>q &gt; p</code>) do to
+the long-run accept rate, and why is that the <em>right</em> correction?</p>
 <p><em>(your explanation here)</em></p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=233df16a">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d3ee0fb9">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
-<h2 id="part-2-temperature">Part 2 — Temperature<a class="anchor-link" href="#part-2-temperature">¶</a></h2><p>📝 <strong>Predict.</strong> As temperature <code>T</code> rises, what happens to the probability of the single most likely
-token? And to the <strong>diversity</strong> of sampled continuations (fraction of distinct tokens)? Predict the
-<em>direction</em> of each change before you measure.</p>
+<h2 id="part-2-rejection-sampling-the-residual-dummy">Part 2 — Rejection sampling: the residual (dummy)<a class="anchor-link" href="#part-2-rejection-sampling-the-residual-dummy">¶</a></h2><p>A reject resamples from the <strong>residual</strong> <code>norm(max(0, p − q))</code>, <strong>not</strong> from <code>p</code>. That correction is what
+makes the emitted stream exactly <code>p</code> — and a version that resamples from <code>p</code> has the <em>same acceptance rate</em>
+but a silently wrong output.</p>
+<p>📝 <strong>Predict.</strong> Over many single-step emissions, what distribution should the first emitted token follow?
+What will the <strong>broken</strong> version (resample from <code>p</code>) get wrong that the acceptance rate cannot reveal?</p>
 <p><em>(your predictions here)</em></p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a5f30b10">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=0a3fd2f5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2410,80 +2422,114 @@ token? And to the <strong>diversity</strong> of sampled continuations (fraction 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">Ts</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
-<span class="n">p_top</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span> <span class="o">/</span> <span class="n">T</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">for</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">Ts</span><span class="p">]</span>     <span class="c1"># same logits, reshaped</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">residual</span><span class="p">(</span><span class="n">p_i</span><span class="p">,</span> <span class="n">q_i</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Distribution to sample from after a rejection: proportional to max(0, p_i - q_i), renormalised."""</span>
+    <span class="c1"># TODO: your code here</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">distinct_ratio</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
-    <span class="n">toks</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-        <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">SEED</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>                                 <span class="c1"># seeded from your roll number</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">do_sample</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                             <span class="n">temperature</span><span class="o">=</span><span class="n">T</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">top_p</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-        <span class="n">toks</span> <span class="o">+=</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">PLEN</span><span class="p">:]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">toks</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">toks</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_on_reject</span><span class="p">(</span><span class="n">p_i</span><span class="p">,</span> <span class="n">q_i</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Draw a replacement token id from residual(p_i, q_i) using rng."""</span>
+    <span class="c1"># TODO: your code here (use residual + rng.choice)</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-<span class="n">div_Ts</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">]</span>
-<span class="n">distinct</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">distinct_ratio</span><span class="p">(</span><span class="n">T</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span> <span class="k">for</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">div_Ts</span><span class="p">]</span>
 
-<span class="n">RESULTS</span><span class="p">[</span><span class="s2">"temperature"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">Ts</span><span class="o">=</span><span class="n">Ts</span><span class="p">,</span> <span class="n">p_top</span><span class="o">=</span><span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">p_top</span><span class="p">],</span>
-                              <span class="n">div_Ts</span><span class="o">=</span><span class="n">div_Ts</span><span class="p">,</span> <span class="n">distinct_ratio</span><span class="o">=</span><span class="n">distinct</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"P(top token) at T ="</span><span class="p">,</span> <span class="n">Ts</span><span class="p">,</span> <span class="s2">"-&gt;"</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">p_top</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"distinct-token ratio at T ="</span><span class="p">,</span> <span class="n">div_Ts</span><span class="p">,</span> <span class="s2">"-&gt;"</span><span class="p">,</span> <span class="n">distinct</span><span class="p">)</span>
+<span class="c1"># reference single-position emitter (given): draft x ~ q0, accept/reject, emit ~ p0</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">emit_once</span><span class="p">(</span><span class="n">sampler</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="n">is_accepted</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">,</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">()):</span>
+        <span class="k">return</span> <span class="n">x</span>
+    <span class="k">return</span> <span class="n">sampler</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>              <span class="c1"># rejected -&gt; replacement from the residual</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">broken_sampler</span><span class="p">(</span><span class="n">p_i</span><span class="p">,</span> <span class="n">q_i</span><span class="p">):</span>               <span class="c1"># the silent bug: resample from p, not the residual</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p_i</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">dist_of</span><span class="p">(</span><span class="n">sampler</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">60000</span><span class="p">):</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span> <span class="n">c</span><span class="p">[</span><span class="n">emit_once</span><span class="p">(</span><span class="n">sampler</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">c</span> <span class="o">/</span> <span class="n">c</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="n">emp_p</span>   <span class="o">=</span> <span class="n">dist_of</span><span class="p">(</span><span class="n">sample_on_reject</span><span class="p">)</span>
+<span class="n">brk_p</span>   <span class="o">=</span> <span class="n">dist_of</span><span class="p">(</span><span class="n">broken_sampler</span><span class="p">)</span>
+<span class="n">tv</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="mf">0.5</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<span class="n">RESULTS</span><span class="p">[</span><span class="s2">"emit"</span><span class="p">]</span>   <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">target_p0</span><span class="o">=</span><span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">empirical</span><span class="o">=</span><span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">emp_p</span><span class="p">],</span>
+                         <span class="n">tv_distance</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="n">tv</span><span class="p">(</span><span class="n">emp_p</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">RESULTS</span><span class="p">[</span><span class="s2">"broken"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">tv_distance</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="n">tv</span><span class="p">(</span><span class="n">brk_p</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"target p0        :"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"correct emitted  :"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">emp_p</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="s2">" TV ="</span><span class="p">,</span> <span class="n">RESULTS</span><span class="p">[</span><span class="s2">"emit"</span><span class="p">][</span><span class="s2">"tv_distance"</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"broken  emitted  :"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">brk_p</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="s2">" TV ="</span><span class="p">,</span> <span class="n">RESULTS</span><span class="p">[</span><span class="s2">"broken"</span><span class="p">][</span><span class="s2">"tv_distance"</span><span class="p">],</span> <span class="s2">" &lt;- should be far larger"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4">Ts = [0.5, 1.0, 2.0]
-p_top = [F.softmax(logits / T, dim=-1).max().item() for T in Ts]     # same logits, reshaped
+<div class="clipboard-copy-txt" id="cell-4">def residual(p_i, q_i):
+    """Distribution to sample from after a rejection: proportional to max(0, p_i - q_i), renormalised."""
+    # TODO: your code here
+    raise NotImplementedError
 
-def distinct_ratio(T, n=16, k=20):
-    toks = []
-    for i in range(n):
-        torch.manual_seed(SEED + i)                                 # seeded from your roll number
-        out = model.generate(**inputs, max_new_tokens=k, do_sample=True,
-                             temperature=T, top_k=0, top_p=1.0)
-        toks += out[0, PLEN:].tolist()
-    return len(set(toks)) / len(toks)
+def sample_on_reject(p_i, q_i):
+    """Draw a replacement token id from residual(p_i, q_i) using rng."""
+    # TODO: your code here (use residual + rng.choice)
+    raise NotImplementedError
 
-div_Ts = [0.7, 1.0, 1.5]
-distinct = [round(distinct_ratio(T), 4) for T in div_Ts]
 
-RESULTS["temperature"] = dict(Ts=Ts, p_top=[round(x, 4) for x in p_top],
-                              div_Ts=div_Ts, distinct_ratio=distinct)
-print("P(top token) at T =", Ts, "-&gt;", [f"{x:.2%}" for x in p_top])
-print("distinct-token ratio at T =", div_Ts, "-&gt;", distinct)</div>
+# reference single-position emitter (given): draft x ~ q0, accept/reject, emit ~ p0
+def emit_once(sampler):
+    x = int(rng.choice(V, p=q[0]))
+    if is_accepted(p[0], q[0], x, rng.random()):
+        return x
+    return sampler(p[0], q[0])              # rejected -&gt; replacement from the residual
+
+def broken_sampler(p_i, q_i):               # the silent bug: resample from p, not the residual
+    return int(rng.choice(V, p=p_i))
+
+def dist_of(sampler, n=60000):
+    c = np.zeros(V)
+    for _ in range(n): c[emit_once(sampler)] += 1
+    return c / c.sum()
+
+emp_p   = dist_of(sample_on_reject)
+brk_p   = dist_of(broken_sampler)
+tv = lambda a, b: 0.5*float(np.abs(a-b).sum())
+RESULTS["emit"]   = dict(target_p0=[round(x,3) for x in p[0]], empirical=[round(x,3) for x in emp_p],
+                         tv_distance=round(tv(emp_p, p[0]), 4))
+RESULTS["broken"] = dict(tv_distance=round(tv(brk_p, p[0]), 4))
+print("target p0        :", np.round(p[0],3))
+print("correct emitted  :", np.round(emp_p,3), " TV =", RESULTS["emit"]["tv_distance"])
+print("broken  emitted  :", np.round(brk_p,3), " TV =", RESULTS["broken"]["tv_distance"], " &lt;- should be far larger")</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3d3dd81c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=baf9631d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>📝 <strong>Explain.</strong> Temperature divides the logits before softmax. Using the ratio
-<code>P_i / P_j = exp((l_i − l_j) / T)</code>, explain <strong>why</strong> raising <code>T</code> flattens the distribution and <strong>why</strong>
-that raises diversity. What happens in the limit <code>T → 0</code>?</p>
-<p><em>(your explanation here)</em></p>
+<p>📝 <strong>Explain (the paragraph that carries this part).</strong> Why the residual and not <code>p</code>? An implementation
+that resamples from <code>p</code> has an <em>identical acceptance rate</em> — name what it gets wrong and why only a
+distribution test (not a latency or acceptance dashboard) catches it.</p>
+<p><em>(your answer here)</em></p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=214e0ef7">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ae7d7137">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
-<h2 id="part-3-truncation-top-k-vs-nucleus-top-p">Part 3 — Truncation: top-k vs nucleus (top-p)<a class="anchor-link" href="#part-3-truncation-top-k-vs-nucleus-top-p">¶</a></h2><p>📝 <strong>Predict.</strong> On a <strong>peaked</strong> prompt (one obvious next word) versus a <strong>flat</strong> prompt (many options):
-how many tokens will nucleus (top-p) keep in each? How many will top-k keep in each? Which one <em>adapts</em>?</p>
+<h2 id="part-3-vectorised-verification-dummy">Part 3 — Vectorised verification (dummy)<a class="anchor-link" href="#part-3-vectorised-verification-dummy">¶</a></h2><p>Verification is <strong>one pass over k+1 positions</strong>, so the <code>k</code> ratio tests should be array ops, not a python
+loop; only the <em>cut</em> at the first reject stays sequential.</p>
+<p>📝 <strong>Predict.</strong> How do you turn a boolean accept-vector into the <strong>first-reject index</strong> in one step? Which
+part must stay sequential, and how does that mirror "verification is a prefill"?</p>
 <p><em>(your predictions here)</em></p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=164fed0d">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=698fec1f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2501,87 +2547,90 @@ how many tokens will nucleus (top-p) keep in each? How many will top-k keep in e
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">PEAKED</span> <span class="o">=</span> <span class="s2">"The United States of"</span>     <span class="c1"># one obvious next token</span>
-<span class="n">FLAT</span>   <span class="o">=</span> <span class="s2">"My favourite food is"</span>     <span class="c1"># many reasonable ones</span>
-<span class="n">P</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mi">50</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">verify_vectorised</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">drafts</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Verify all k drafts at once. p:(k+1,V) q:(k,V) drafts:(k,) u:(k,) uniforms.</span>
+<span class="sd">    Return (n_accepted, next_token): n_accepted in 0..k; next_token is a residual draw at the</span>
+<span class="sd">    cut, or a bonus draw from p[k] if all k accepted. Vectorise the TEST; the cut is sequential."""</span>
+    <span class="c1"># TODO: your code here</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">topp_stats</span><span class="p">(</span><span class="n">lg</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
-    <span class="n">s</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">lg</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">descending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">torch</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span>               <span class="c1"># smallest set reaching p</span>
-    <span class="n">kept</span> <span class="o">=</span> <span class="n">s</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-    <span class="n">kept_minus_last</span> <span class="o">=</span> <span class="n">s</span><span class="p">[:</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="mf">0.0</span>
-    <span class="k">return</span> <span class="n">n</span><span class="p">,</span> <span class="n">kept</span><span class="p">,</span> <span class="n">kept_minus_last</span>
 
-<span class="n">n_peak</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">topp_stats</span><span class="p">(</span><span class="n">next_logits</span><span class="p">(</span><span class="n">PEAKED</span><span class="p">),</span> <span class="n">P</span><span class="p">)</span>
-<span class="n">n_flat</span><span class="p">,</span> <span class="n">kept_flat</span><span class="p">,</span> <span class="n">kept_flat_minus1</span> <span class="o">=</span> <span class="n">topp_stats</span><span class="p">(</span><span class="n">next_logits</span><span class="p">(</span><span class="n">FLAT</span><span class="p">),</span> <span class="n">P</span><span class="p">)</span>
+<span class="c1"># harness (given): must agree with a scalar reference built on your Part 1-2 functions</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">verify_scalar</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">drafts</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">drafts</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">/</span><span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">drafts</span><span class="p">[</span><span class="n">i</span><span class="p">]]):</span> <span class="k">continue</span>
+        <span class="k">return</span> <span class="n">i</span><span class="p">,</span> <span class="n">sample_on_reject</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">k</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span>
 
-<span class="n">RESULTS</span><span class="p">[</span><span class="s2">"truncation"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">peaked_prompt</span><span class="o">=</span><span class="n">PEAKED</span><span class="p">,</span> <span class="n">flat_prompt</span><span class="o">=</span><span class="n">FLAT</span><span class="p">,</span> <span class="n">nucleus_p</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">topk_k</span><span class="o">=</span><span class="n">K</span><span class="p">,</span>
-                             <span class="n">nucleus_peaked</span><span class="o">=</span><span class="n">n_peak</span><span class="p">,</span> <span class="n">nucleus_flat</span><span class="o">=</span><span class="n">n_flat</span><span class="p">,</span>
-                             <span class="n">topk_peaked</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">topk_flat</span><span class="o">=</span><span class="n">K</span><span class="p">,</span>                     <span class="c1"># top-k is fixed by definition</span>
-                             <span class="n">topp_kept_mass</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="n">kept_flat</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
-                             <span class="n">topp_kept_minus_last</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="n">kept_flat_minus1</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"nucleus p=</span><span class="si">{</span><span class="n">P</span><span class="si">}</span><span class="s2">: peaked keeps </span><span class="si">{</span><span class="n">n_peak</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> tokens | flat keeps </span><span class="si">{</span><span class="n">n_flat</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> tokens"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"top-k  k=</span><span class="si">{</span><span class="n">K</span><span class="si">}</span><span class="s2">: keeps </span><span class="si">{</span><span class="n">K</span><span class="si">}</span><span class="s2"> on both (fixed)"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"flat nucleus kept mass = </span><span class="si">{</span><span class="n">kept_flat</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> (&gt;= </span><span class="si">{</span><span class="n">P</span><span class="si">}</span><span class="s2">?) ; without its last token = </span><span class="si">{</span><span class="n">kept_flat_minus1</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> (&lt; </span><span class="si">{</span><span class="n">P</span><span class="si">}</span><span class="s2">?)"</span><span class="p">)</span>
+<span class="n">agree</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">3000</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">na_v</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">verify_vectorised</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">drafts</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+    <span class="n">na_s</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">verify_scalar</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">drafts</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>   <span class="c1"># compare the CUT (n_accepted); the token draw is random</span>
+    <span class="n">agree</span> <span class="o">+=</span> <span class="p">(</span><span class="n">na_v</span> <span class="o">==</span> <span class="n">na_s</span><span class="p">)</span>
+<span class="n">RESULTS</span><span class="p">[</span><span class="s2">"vector"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">agreement</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="n">agree</span><span class="o">/</span><span class="n">N</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">n_checks</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"vectorised vs scalar cut agreement: </span><span class="si">{</span><span class="n">agree</span><span class="o">/</span><span class="n">N</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  (</span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2"> checks)"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5">PEAKED = "The United States of"     # one obvious next token
-FLAT   = "My favourite food is"     # many reasonable ones
-P, K = 0.9, 50
+<div class="clipboard-copy-txt" id="cell-5">def verify_vectorised(p, q, drafts, u):
+    """Verify all k drafts at once. p:(k+1,V) q:(k,V) drafts:(k,) u:(k,) uniforms.
+    Return (n_accepted, next_token): n_accepted in 0..k; next_token is a residual draw at the
+    cut, or a bonus draw from p[k] if all k accepted. Vectorise the TEST; the cut is sequential."""
+    # TODO: your code here
+    raise NotImplementedError
 
-def topp_stats(lg, p):
-    s, _ = torch.sort(F.softmax(lg, dim=-1), descending=True)
-    n = int((torch.cumsum(s, dim=-1) &lt; p).sum()) + 1               # smallest set reaching p
-    kept = s[:n].sum().item()
-    kept_minus_last = s[:n-1].sum().item() if n &gt; 1 else 0.0
-    return n, kept, kept_minus_last
 
-n_peak, _, _ = topp_stats(next_logits(PEAKED), P)
-n_flat, kept_flat, kept_flat_minus1 = topp_stats(next_logits(FLAT), P)
+# harness (given): must agree with a scalar reference built on your Part 1-2 functions
+def verify_scalar(p, q, drafts, u):
+    for i in range(k):
+        if u[i] &lt; min(1.0, p[i, drafts[i]]/q[i, drafts[i]]): continue
+        return i, sample_on_reject(p[i], q[i])
+    return k, int(rng.choice(V, p=p[k]))
 
-RESULTS["truncation"] = dict(peaked_prompt=PEAKED, flat_prompt=FLAT, nucleus_p=P, topk_k=K,
-                             nucleus_peaked=n_peak, nucleus_flat=n_flat,
-                             topk_peaked=K, topk_flat=K,                     # top-k is fixed by definition
-                             topp_kept_mass=round(kept_flat, 4),
-                             topp_kept_minus_last=round(kept_flat_minus1, 4))
-print(f"nucleus p={P}: peaked keeps {n_peak:&gt;4} tokens | flat keeps {n_flat:&gt;4} tokens")
-print(f"top-k  k={K}: keeps {K} on both (fixed)")
-print(f"flat nucleus kept mass = {kept_flat:.3f} (&gt;= {P}?) ; without its last token = {kept_flat_minus1:.3f} (&lt; {P}?)")</div>
+agree = 0; N = 3000
+for _ in range(N):
+    u = rng.random(k)
+    na_v, _ = verify_vectorised(p, q, drafts, u)
+    na_s, _ = verify_scalar(p, q, drafts, u)   # compare the CUT (n_accepted); the token draw is random
+    agree += (na_v == na_s)
+RESULTS["vector"] = dict(agreement=round(agree/N, 4), n_checks=N)
+print(f"vectorised vs scalar cut agreement: {agree/N:.4f}  ({N} checks)")</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5c67293d">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8d6f04b4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>📝 <strong>Explain.</strong> Why does nucleus keep a different number of tokens on the two prompts while top-k
-keeps the same number on both? Name the failure each one fixes — and the failure each one still has.</p>
+<p>📝 <strong>Explain.</strong> What is embarrassingly parallel here and what is not? Tie it to Lecture 15/16's
+"verification is a prefill".</p>
 <p><em>(your explanation here)</em></p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=be3a2c3f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=77344bb2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
-<h2 id="part-4-beam-vs-greedy-the-honest-one">Part 4 — Beam vs greedy (the honest one)<a class="anchor-link" href="#part-4-beam-vs-greedy-the-honest-one">¶</a></h2><p>Folklore says beam search, by keeping the <code>k</code> best partial sequences, finds a <strong>higher-probability</strong>
-sequence than greedy. Measure whether it actually does on <em>your</em> run.</p>
-<p>📝 <strong>Predict.</strong> Will beam's total sequence log-probability beat greedy's? Why might a <em>heuristic</em>
-(non-exhaustive) search fail to?</p>
+<h2 id="part-4-the-real-stitch-gpt2-verified-against-distilgpt2">Part 4 — The real stitch: gpt2 verified against distilgpt2<a class="anchor-link" href="#part-4-the-real-stitch-gpt2-verified-against-distilgpt2">¶</a></h2><p>Now the same rule on real models, in the <strong>greedy</strong> case (<code>T=0</code>), where correctness is <em>exactly</em> checkable:
+speculative-greedy output must equal plain-greedy output, token for token — in <strong>fewer target passes</strong>.</p>
+<p>Greedy collapses the accept test to an equality: accept the draft iff it equals the target's argmax.</p>
+<p>📝 <strong>Predict.</strong> Will the two token streams be identical? Will speculative decoding use fewer <strong>target
+forward passes</strong> than tokens generated? Why is the block yield bounded in <code>[1, k+1]</code>?</p>
 <p><em>(your predictions here)</em></p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=aa2f7ccc">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=cc8587d7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2599,88 +2648,103 @@ sequence than greedy. Measure whether it actually does on <em>your</em> run.</p>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">seq_logprob</span><span class="p">(</span><span class="n">full_ids</span><span class="p">):</span>
-    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
-        <span class="n">lp</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">full_ids</span><span class="p">)</span><span class="o">.</span><span class="n">logits</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">tgt</span> <span class="o">=</span> <span class="n">full_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span>
-    <span class="k">return</span> <span class="n">lp</span><span class="p">[</span><span class="n">PLEN</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">tgt</span><span class="p">[</span><span class="n">PLEN</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>   <span class="c1"># log-prob of the generated tokens</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">PROMPT</span><span class="p">,</span> <span class="n">N_TOKENS</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="s2">"The capital of France is"</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">4</span>
+<span class="n">ids0</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">PROMPT</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s2">"pt"</span><span class="p">)</span><span class="o">.</span><span class="n">input_ids</span>
 
-<span class="n">greedy_out</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">do_sample</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">beam_out</span>   <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">num_beams</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-                            <span class="n">do_sample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">length_penalty</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">early_stopping</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">gl</span><span class="p">,</span> <span class="n">bl</span> <span class="o">=</span> <span class="n">seq_logprob</span><span class="p">(</span><span class="n">greedy_out</span><span class="p">),</span> <span class="n">seq_logprob</span><span class="p">(</span><span class="n">beam_out</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plain_greedy</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>                    <span class="c1"># reference (given): n target passes, n tokens</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="n">ids</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span> <span class="n">nt</span> <span class="o">=</span> <span class="n">target</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span><span class="o">.</span><span class="n">logits</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">ids</span><span class="p">,</span> <span class="n">nt</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)],</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ids</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">n</span><span class="p">:]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
-<span class="n">RESULTS</span><span class="p">[</span><span class="s2">"beam"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">num_beams</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">greedy_logprob</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="n">gl</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">beam_logprob</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="n">bl</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
-                       <span class="n">beam_won</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">bl</span> <span class="o">&gt;=</span> <span class="n">gl</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"greedy log-prob : </span><span class="si">{</span><span class="n">gl</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"beam   log-prob : </span><span class="si">{</span><span class="n">bl</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"beam won (&gt;= greedy)?"</span><span class="p">,</span> <span class="n">bl</span> <span class="o">&gt;=</span> <span class="n">gl</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">speculative_greedy</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Greedy speculative decode. Return (tokens, target_passes, accept_lengths):</span>
+<span class="sd">       - draft k tokens autoregressively from `draft` (argmax each step)</span>
+<span class="sd">       - ONE `target` forward pass over the k drafts -&gt; logits at each position</span>
+<span class="sd">       - accept while target's argmax == the draft; at the first mismatch emit target's argmax and stop;</span>
+<span class="sd">         if all k accepted, emit the bonus (target's argmax at position k)</span>
+<span class="sd">       - count ONE target pass per block; record the accepted-run length per block</span>
+<span class="sd">    """</span>
+    <span class="c1"># TODO: your code here</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+
+<span class="n">plain</span> <span class="o">=</span> <span class="n">plain_greedy</span><span class="p">(</span><span class="n">ids0</span><span class="p">,</span> <span class="n">N_TOKENS</span><span class="p">)</span>
+<span class="n">spec</span><span class="p">,</span> <span class="n">passes</span><span class="p">,</span> <span class="n">acc_lens</span> <span class="o">=</span> <span class="n">speculative_greedy</span><span class="p">(</span><span class="n">ids0</span><span class="p">,</span> <span class="n">N_TOKENS</span><span class="p">,</span> <span class="n">K</span><span class="p">)</span>
+<span class="n">RESULTS</span><span class="p">[</span><span class="s2">"stitch"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">TARGET</span><span class="p">,</span> <span class="n">draft</span><span class="o">=</span><span class="n">DRAFT</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">n_tokens</span><span class="o">=</span><span class="n">N_TOKENS</span><span class="p">,</span>
+                         <span class="n">identical_to_greedy</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">spec</span><span class="p">[:</span><span class="n">N_TOKENS</span><span class="p">]</span> <span class="o">==</span> <span class="n">plain</span><span class="p">),</span>
+                         <span class="n">target_passes</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">passes</span><span class="p">),</span>
+                         <span class="n">accept_lengths</span><span class="o">=</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">acc_lens</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"identical to plain greedy:"</span><span class="p">,</span> <span class="n">RESULTS</span><span class="p">[</span><span class="s2">"stitch"</span><span class="p">][</span><span class="s2">"identical_to_greedy"</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"target passes: </span><span class="si">{</span><span class="n">passes</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="n">N_TOKENS</span><span class="si">}</span><span class="s2"> tokens  (plain greedy would use </span><span class="si">{</span><span class="n">N_TOKENS</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"accepted-run lengths per block:"</span><span class="p">,</span> <span class="n">acc_lens</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6">def seq_logprob(full_ids):
-    with torch.no_grad():
-        lp = F.log_softmax(model(full_ids).logits[0, :-1], dim=-1)
-    tgt = full_ids[0, 1:]
-    return lp[PLEN-1:].gather(1, tgt[PLEN-1:].unsqueeze(1)).sum().item()   # log-prob of the generated tokens
+<div class="clipboard-copy-txt" id="cell-6">PROMPT, N_TOKENS, K = "The capital of France is", 24, 4
+ids0 = tokenizer(PROMPT, return_tensors="pt").input_ids
 
-greedy_out = model.generate(**inputs, max_new_tokens=30, do_sample=False)
-beam_out   = model.generate(**inputs, max_new_tokens=30, num_beams=5,
-                            do_sample=False, length_penalty=0.0, early_stopping=False)
-gl, bl = seq_logprob(greedy_out), seq_logprob(beam_out)
+def plain_greedy(ids, n):                    # reference (given): n target passes, n tokens
+    ids = ids.clone()
+    for _ in range(n):
+        with torch.no_grad(): nt = target(ids).logits[0,-1].argmax()
+        ids = torch.cat([ids, nt.view(1,1)], 1)
+    return ids[0, -n:].tolist()
 
-RESULTS["beam"] = dict(num_beams=5, greedy_logprob=round(gl, 3), beam_logprob=round(bl, 3),
-                       beam_won=bool(bl &gt;= gl))
-print(f"greedy log-prob : {gl:.2f}")
-print(f"beam   log-prob : {bl:.2f}")
-print("beam won (&gt;= greedy)?", bl &gt;= gl)</div>
+def speculative_greedy(ids, n, k):
+    """Greedy speculative decode. Return (tokens, target_passes, accept_lengths):
+       - draft k tokens autoregressively from `draft` (argmax each step)
+       - ONE `target` forward pass over the k drafts -&gt; logits at each position
+       - accept while target's argmax == the draft; at the first mismatch emit target's argmax and stop;
+         if all k accepted, emit the bonus (target's argmax at position k)
+       - count ONE target pass per block; record the accepted-run length per block
+    """
+    # TODO: your code here
+    raise NotImplementedError
+
+
+plain = plain_greedy(ids0, N_TOKENS)
+spec, passes, acc_lens = speculative_greedy(ids0, N_TOKENS, K)
+RESULTS["stitch"] = dict(target=TARGET, draft=DRAFT, k=K, n_tokens=N_TOKENS,
+                         identical_to_greedy=bool(spec[:N_TOKENS] == plain),
+                         target_passes=int(passes),
+                         accept_lengths=[int(a) for a in acc_lens])
+print("identical to plain greedy:", RESULTS["stitch"]["identical_to_greedy"])
+print(f"target passes: {passes} for {N_TOKENS} tokens  (plain greedy would use {N_TOKENS})")
+print("accepted-run lengths per block:", acc_lens)</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0bdbd8ba">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ae6084ae">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>📝 <strong>The paragraph that carries this part.</strong> Did beam beat greedy on <em>your</em> run? Beam is not
-exhaustive — it prunes low-scoring prefixes. Explain how greedy's path can be <strong>dropped</strong> from the beam
-even though greedy would have recovered, and what that says about "higher probability = better output".
-If beam <em>did</em> win, say what it found that greedy could not see.</p>
+<p>📝 <strong>Explain (the write-up).</strong> Acceptance ≠ speedup: on this CPU, is speculative decoding actually
+<em>faster</em> in wall-clock than plain greedy? Fewer target passes, yet the drafter runs its own passes —
+reconcile the two. And: why does a bad drafter cost speed but <strong>never</strong> accuracy?</p>
 <p><em>(your answer here)</em></p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8710bb6f">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>📝 <strong>Closing — choose and justify.</strong> For <strong>code generation</strong>, a <strong>chatbot reply</strong>, and <strong>machine
-translation</strong>: name the decoding strategy you would serve each with, in one line each, and tie the
-choice to a number you measured above.</p>
-<p><em>(your answer here)</em></p>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=90060d07">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=04afac6d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
-<h2 id="submit">Submit<a class="anchor-link" href="#submit">¶</a></h2><p>Run this last. It writes <code>submission_lab13_14_&lt;roll&gt;.json</code>. Submit <strong>two files</strong>: that JSON and this
-<strong>executed notebook</strong> with every prediction and explanation cell filled in.</p>
+<h2 id="submit">Submit<a class="anchor-link" href="#submit">¶</a></h2><p>Run this last. It writes <code>submission_lab15_16_&lt;roll&gt;.json</code>. Submit <strong>two files</strong>: that JSON and this
+executed notebook with every 📝 cell filled.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=93654f86">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=680be407">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2700,25 +2764,23 @@ choice to a number you measured above.</p>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">platform</span><span class="o">=</span><span class="n">platform</span><span class="o">.</span><span class="n">platform</span><span class="p">(),</span> <span class="n">python</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
            <span class="n">torch</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="n">transformers</span><span class="o">=</span><span class="n">transformers</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
-           <span class="n">model</span><span class="o">=</span><span class="n">MODEL</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">SEED</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="n">PROMPT</span><span class="p">,</span> <span class="n">linux</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"linux"</span><span class="p">))</span>
+           <span class="n">numpy</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">SEED</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">TARGET</span><span class="p">,</span> <span class="n">draft</span><span class="o">=</span><span class="n">DRAFT</span><span class="p">,</span>
+           <span class="n">linux</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"linux"</span><span class="p">))</span>
 <span class="n">sub</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">roll</span><span class="o">=</span><span class="n">ROLL_NUMBER</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">NAME</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="n">RESULTS</span><span class="p">)</span>
-
-<span class="n">out</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">"submission_lab13_14_</span><span class="si">{</span><span class="n">ROLL_NUMBER</span><span class="si">}</span><span class="s2">.json"</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">"submission_lab15_16_</span><span class="si">{</span><span class="n">ROLL_NUMBER</span><span class="si">}</span><span class="s2">.json"</span><span class="p">)</span>
 <span class="n">out</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"wrote"</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"  parts recorded:"</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">RESULTS</span><span class="p">))</span>
-<span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">RESULTS</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="p">{</span><span class="s2">"dist"</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">,</span> <span class="s2">"truncation"</span><span class="p">,</span> <span class="s2">"beam"</span><span class="p">},</span> <span class="s2">"run every part before exporting"</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"wrote"</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="s2">"| parts:"</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">RESULTS</span><span class="p">))</span>
+<span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">RESULTS</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="p">{</span><span class="s2">"accept"</span><span class="p">,</span><span class="s2">"emit"</span><span class="p">,</span><span class="s2">"broken"</span><span class="p">,</span><span class="s2">"vector"</span><span class="p">,</span><span class="s2">"stitch"</span><span class="p">},</span> <span class="s2">"run every part before exporting"</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-7">env = dict(platform=platform.platform(), python=sys.version.split()[0],
            torch=torch.__version__, transformers=transformers.__version__,
-           model=MODEL, seed=SEED, prompt=PROMPT, linux=sys.platform.startswith("linux"))
+           numpy=np.__version__, seed=SEED, target=TARGET, draft=DRAFT,
+           linux=sys.platform.startswith("linux"))
 sub = dict(roll=ROLL_NUMBER, name=NAME, env=env, results=RESULTS)
-
-out = Path(f"submission_lab13_14_{ROLL_NUMBER}.json")
+out = Path(f"submission_lab15_16_{ROLL_NUMBER}.json")
 out.write_text(json.dumps(sub, indent=2))
-print("wrote", out)
-print("  parts recorded:", list(RESULTS))
-assert set(RESULTS) &gt;= {"dist", "temperature", "truncation", "beam"}, "run every part before exporting"</div>
+print("wrote", out, "| parts:", list(RESULTS))
+assert set(RESULTS) &gt;= {"accept","emit","broken","vector","stitch"}, "run every part before exporting"</div>
 </div>
 </div>
 </div>
@@ -2761,7 +2823,7 @@ assert set(RESULTS) &gt;= {"dist", "temperature", "truncation", "beam"}, "run ev
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../Lab13_14/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 13_14:Decoding Strategies, Measured">
+          <a href="../Lab15_16/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 15_16:Speculative Decoding">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2771,20 +2833,20 @@ assert set(RESULTS) &gt;= {"dist", "temperature", "truncation", "beam"}, "run ev
                 Previous
               </span>
               <div class="md-ellipsis">
-                13_14:Decoding Strategies, Measured
+                15_16:Speculative Decoding
               </div>
             </div>
           </a>
         
         
           
-          <a href="../Lab15_16/" class="md-footer__link md-footer__link--next" aria-label="Next: 15_16:Speculative Decoding">
+          <a href="../../viz/acceptance-rule.html" class="md-footer__link md-footer__link--next" aria-label="Next: Speculative decoding: the acceptance rule">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                15_16:Speculative Decoding
+                Speculative decoding: the acceptance rule
               </div>
             </div>
             <div class="md-footer__button md-icon">

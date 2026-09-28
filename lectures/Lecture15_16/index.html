@@ -1,0 +1,2424 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Home of DS635 - Machine Learning System Engineering, DAU">
+      
+      
+      
+        <link rel="canonical" href="https://DS635.ankushchander.com/lectures/Lecture15_16/">
+      
+      
+        <link rel="prev" href="../Lecture13_14/">
+      
+      
+        <link rel="next" href="../Lecture17_18/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>15_16:Speculative Decoding - DS635 - Machine Learning System Engineering | DAU</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#speculative-decoding" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-header__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DS635 - Machine Learning System Engineering | DAU
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              15_16:Speculative Decoding
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Lecture0/" class="md-tabs__link">
+          
+  
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../labs/" class="md-tabs__link">
+          
+  
+  
+  Labs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../viz/acceptance-rule.html" class="md-tabs__link">
+          
+  
+  
+  Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-nav__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DS635 - Machine Learning System Engineering | DAU
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lectures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lectures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0:Course Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1:Machine Learning Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:Hardware Accelerators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture3_4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3_4:Memory Hierarchy & Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture5_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU job submission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7:Matmul to Silicon — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7a:From Python to a Kernel Launch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7b:The Throughput Machine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7c:SIMT, Tiles & Occupancy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8:Inside the GPU — Memory & the Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture9_10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9_10:Inference Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture11_12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11_12:Model Artifacts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture13_14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13_14:Decoding Strategies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15_16:Speculative Decoding
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15_16:Speculative Decoding
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-draft-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The draft model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-draft-decodes-target-verifies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Draft decodes, target verifies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-verification-is-a-prefill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Verification is a prefill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-what-it-promises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. What it promises
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-what-it-does-not-promise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. What it does not promise
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. What it does not promise">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lossless-is-a-property-of-the-acceptance-rule-not-of-speculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Lossless" is a property of the acceptance rule, not of speculation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#it-is-not-a-throughput-win-under-load" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        It is not a throughput win under load
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#it-is-not-free-in-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        It is not free in memory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#it-is-not-workload-independent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        It is not workload-independent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#it-is-not-automatic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        It is not automatic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-key-measurements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Key measurements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Key measurements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#acceptance-is-a-chain-not-an-average" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance is a chain, not an average
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-k" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing k
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-number-available-before-you-run-anything" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The number available before you run anything
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-the-mathematical-guarantee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. The mathematical guarantee
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-speculative-decoding-across-decoding-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Speculative decoding across decoding strategies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Speculative decoding across decoding strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#greedy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Greedy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#temperature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temperature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top-k-and-top-p" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-k and top-p
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constrained-decoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constrained decoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-in-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. In practice
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. In practice">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-deployment-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A deployment checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture17_18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17_18:Speculative Decoding Variants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Labs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Labs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab5_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU Job Submission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab5_6_gpu_job_submission/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5/6 — The GPU submission protocol, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:The Concurrency Budget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab2_concurrency_budget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2 — The concurrency budget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab11_12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11_12:Three Formats, One Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab11_12_model_artifacts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 11/12 — The three formats, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab13_14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13_14:Decoding Strategies, Measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab13_14_decoding_strategies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 13/14 — Decoding strategies, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab15_16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15_16:Speculative Decoding
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab15_16_speculative_decoding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 15/16 — Speculative decoding, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../viz/acceptance-rule.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Speculative decoding: the acceptance rule
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-draft-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The draft model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-draft-decodes-target-verifies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Draft decodes, target verifies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-verification-is-a-prefill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Verification is a prefill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-what-it-promises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. What it promises
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-what-it-does-not-promise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. What it does not promise
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. What it does not promise">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lossless-is-a-property-of-the-acceptance-rule-not-of-speculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Lossless" is a property of the acceptance rule, not of speculation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#it-is-not-a-throughput-win-under-load" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        It is not a throughput win under load
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#it-is-not-free-in-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        It is not free in memory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#it-is-not-workload-independent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        It is not workload-independent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#it-is-not-automatic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        It is not automatic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-key-measurements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Key measurements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Key measurements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#acceptance-is-a-chain-not-an-average" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance is a chain, not an average
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-k" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing k
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-number-available-before-you-run-anything" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The number available before you run anything
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-the-mathematical-guarantee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. The mathematical guarantee
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-speculative-decoding-across-decoding-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Speculative decoding across decoding strategies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Speculative decoding across decoding strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#greedy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Greedy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#temperature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temperature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top-k-and-top-p" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-k and top-p
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constrained-decoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constrained decoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-in-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. In practice
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. In practice">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-deployment-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A deployment checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="speculative-decoding">Speculative decoding</h1>
+<blockquote>
+<p><strong>Module thesis:</strong> decoding is <strong>serial and memory-bound</strong> — one forward pass over the whole weight set buys exactly one token, and the arithmetic units sit idle while the memory bus runs flat out. Verification is <strong>parallel and compute-bound</strong> — one pass over k+1 positions reads the same weights as a pass over one. Speculative decoding is the trade between them: let something cheap guess ahead, then spend a single target pass checking every guess at once. Same weights, same output distribution, fewer passes.</p>
+</blockquote>
+<p>Lecture 13/14 covered how one distribution becomes one token. These notes are about emitting <strong>several tokens per target pass</strong> without changing what the model says.</p>
+<p><strong>Prerequisites:</strong> <a href="../Lecture9_10/">Prefill vs decode and the memory wall</a> · <a href="../Lecture13_14/">Decoding strategies</a></p>
+<hr />
+<div class="admonition abstract">
+<p class="admonition-title">Part 1 — The big picture</p>
+<p>The draft model, the loop it runs, why verification is a <strong>prefill</strong>, and the honest boundary of what speculation buys.</p>
+</div>
+<h2 id="1-the-draft-model">1. The draft model</h2>
+<p>Speculation needs a second predictor that is <strong>much cheaper than the target yet agrees with it often</strong>. That is the whole design space.</p>
+<p>One constraint is not negotiable: <strong>the drafter must share the target's tokenizer.</strong> The accept test compares <code>p(x)</code> and <code>q(x)</code> for the same integer <code>x</code>; if the two models mean different things by <code>x</code>, the comparison is meaningless. A mismatched tokenizer does not raise an error — it shows up as acceptance near zero.</p>
+<p>Which predictor to use — n-gram lookup, a trained head, a block drafter — is a design space in its own right, and is <a href="../Lecture17_18/">Lecture 17/18</a>. These notes assume one exists and is loaded.</p>
+<p>The two drafters measured throughout these notes, both for <code>Qwen3.8-27B-FP8</code>:</p>
+<ul>
+<li><strong>MTP head</strong>, in-checkpoint, run at <code>k=4</code></li>
+<li><strong>DFlash2</strong> (<code>z-lab/Qwen3.8-27B-DFlash2</code>) — a 3.85 GB block drafter, 5 layers, trained <code>block_size: 8</code>, so <code>k=7</code></li>
+</ul>
+<hr />
+<h2 id="2-draft-decodes-target-verifies">2. Draft decodes, target verifies</h2>
+<p><img alt="Speculative decoding: the draft model proposes k tokens, the target verifies them in one parallel pass, and tokens are accepted up to the first mismatch" src="../../images/decoding/speculative_decoding_workflow.png" /></p>
+<p><em>Image credit: ChatGPT.</em></p>
+<p>A walkthrough with <code>k = 3</code>, where the target's continuation is <em>"the cat sat on the mat"</em>:</p>
+<table>
+<thead>
+<tr>
+<th>Position</th>
+<th>Draft proposed</th>
+<th>Target wanted</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>cat</code></td>
+<td><code>cat</code></td>
+<td>accept</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>sat</code></td>
+<td><code>sat</code></td>
+<td>accept</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>down</code></td>
+<td><code>on</code></td>
+<td><strong>reject</strong> → emit <code>on</code>, discard the rest</td>
+</tr>
+</tbody>
+</table>
+<p>Three tokens (<code>cat</code>, <code>sat</code>, <code>on</code>) out of <strong>one</strong> verification pass. Had all three been accepted, a fourth would come free — the pass already computed the distribution for the position after the last draft. That is the <strong>bonus token</strong>, and it is why a block yields <code>k+1</code> rather than <code>k</code>.</p>
+<p><strong>A block never yields zero.</strong> Even when the first draft is rejected, the target contributes its own next token — exactly what plain decoding would have produced. So <code>k</code> drafts yield between <strong>1 and k+1</strong> tokens.</p>
+<div class="admonition danger">
+<p class="admonition-title">The bug that deletes the speedup</p>
+<p>Verification is <strong>one pass over k+1 positions</strong>. Running the target once per draft token produces identical output and passes every correctness test — while doing exactly the work speculation exists to avoid. Whenever you implement or debug this, count target forward passes, not tokens.</p>
+</div>
+<hr />
+<h2 id="3-verification-is-a-prefill">3. Verification is a prefill</h2>
+<p>This is the section that explains why any of it works.</p>
+<p><img alt="Prefill processes the whole prompt at once and is compute-bound; each decode step emits one token and is memory bandwidth-bound" src="../../images/inference_optimization/prefill_decode.png" /></p>
+<p>Single-stream decode is <a href="../Lecture9_10/">memory-bound</a>:</p>
+<div class="highlight"><pre><span></span><code>                   memory bandwidth
+   tokens/sec  ≈  ──────────────────
+                   bytes moved per token
+</code></pre></div>
+<p>Every pass re-reads every weight to produce one token. Arithmetic intensity is near <strong>1 multiply-accumulate per byte fetched</strong>, so a card capable of hundreds of TFLOPs spends decode almost entirely idle, waiting on memory.</p>
+<p>Now the pivotal observation:</p>
+<blockquote>
+<p><strong>A forward pass that scores 4 positions reads the same weights as a forward pass that scores 1.</strong></p>
+</blockquote>
+<p>The weight read is the cost. The positions are nearly free. Ordinary decoding throws that capacity away one token at a time; speculation converts it into tokens.</p>
+<p><strong>So verification is structurally a prefill.</strong> It is many positions scored in one pass against one weight read — the left-hand box in the figure, not the right-hand chain. That is the whole economic argument, and it also draws the boundary:</p>
+<ul>
+<li><strong>Decode has a surplus to sell.</strong> Memory-bound, compute idle.</li>
+<li><strong>Prefill does not.</strong> Already compute-bound, already scoring many positions.</li>
+</ul>
+<p>Which yields a prediction worth stating explicitly: <strong>speculation does nothing for time-to-first-token.</strong> The prefill phase has no idle arithmetic to convert. Speculation shortens the decode phase only.</p>
+<div class="admonition question">
+<p class="admonition-title">💬 Why does checking 4 drafted tokens cost roughly the same as generating 1?</p>
+<details class="hint">
+<summary>Answer</summary>
+<p>Because the expensive part of a decode pass is <strong>reading the weights out of memory</strong>, and that read is identical whether the pass scores one position or five. At batch 1 the arithmetic units are nearly idle, so the extra positions are absorbed by hardware that was doing nothing. The cost only reappears once k+1 positions grow large enough to saturate the arithmetic units — at which point the pass has become compute-bound and further positions are no longer free.</p>
+</details>
+</div>
+<hr />
+<h2 id="4-what-it-promises">4. What it promises</h2>
+<p><strong>The output distribution is exactly the target's.</strong> Not approximately, not "close at low temperature". The drafter proposes; the target disposes. Every emitted token is one the target selected, under a rule proven to preserve <code>p</code> — see §7.</p>
+<p>The engineering consequence is the one worth memorising:</p>
+<blockquote>
+<p><strong>A bad drafter costs speed, never accuracy.</strong> If acceptance falls to zero you have wasted compute and produced precisely the output you would have produced anyway.</p>
+</blockquote>
+<p>That asymmetry is why speculation is safe to switch on before measuring anything: the downside is bounded at <em>slightly slower</em>, never <em>subtly wrong</em>. Contrast with quantisation or distillation, which trade quality for speed by construction.</p>
+<p>It also <strong>composes</strong>. Speculation is orthogonal to quantisation, paged attention, prefix caching and the rest of the Lecture 9/10 stack — it spends a different surplus.</p>
+<hr />
+<h2 id="5-what-it-does-not-promise">5. What it does not promise</h2>
+<p>Equal weight to §4. This is where deployments go wrong.</p>
+<h3 id="lossless-is-a-property-of-the-acceptance-rule-not-of-speculation">"Lossless" is a property of the acceptance rule, not of speculation</h3>
+<p>Relaxed acceptance variants trade the guarantee for speed, and they are easy to enable by accident:</p>
+<ul>
+<li>A threshold rule that accepts any draft token clearing a target probability bar follows the <em>draft's</em> preference among valid answers. At temperature 0 this is still exact; at temperature 1 the output distribution shifts and is <strong>no longer lossless</strong>.</li>
+<li>SGLang's <code>--speculative-accept-threshold-single</code> defaults to <code>1.0</code>, which is exact rejection sampling. Lowering it buys speed by giving up the guarantee.</li>
+</ul>
+<h3 id="it-is-not-a-throughput-win-under-load">It is not a throughput win under load</h3>
+<p>Speculation and <a href="../Lecture9_10/">batching</a> are <strong>substitutes</strong> — both fill idle compute per weight read. At batch 1 the surplus is entirely available; by batch 32 real requests have consumed it, and rejected drafts start displacing useful work.</p>
+<p><strong>Speculation is an optimisation for interactive, low-concurrency serving.</strong> A saturated throughput-oriented deployment should usually leave it off.</p>
+<h3 id="it-is-not-free-in-memory">It is not free in memory</h3>
+<p>Draft weights and draft KV slots come out of the same pool as your context window:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>MTP <code>k=4</code></th>
+<th>DFlash2 <code>k=7</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Weights</td>
+<td>28.95 GiB</td>
+<td><strong>32.28 GiB</strong></td>
+</tr>
+<tr>
+<td>KV pool</td>
+<td>309,329 tokens</td>
+<td><strong>168,340 tokens</strong></td>
+</tr>
+<tr>
+<td>Max concurrency at 131k context</td>
+<td>2.36x</td>
+<td><strong>1.28x</strong></td>
+</tr>
+</tbody>
+</table>
+<p>3.3 GiB of drafter halved concurrency at full context. On long-context agentic workloads this is often the binding constraint, not the speed.</p>
+<h3 id="it-is-not-workload-independent">It is not workload-independent</h3>
+<p>Acceptance is a property of the <strong>pair and the text</strong>, not the model alone. Two runs of the same short-prompt configuration measured <strong>70.92 and 56.07 tok/s</strong> — 26% apart — with acceptance length moving 3.88 → 3.12, while the non-speculative baseline reproduced to 0.4%. <strong>The variance is in what gets generated</strong>, not in the hardware or the harness.</p>
+<h3 id="it-is-not-automatic">It is not automatic</h3>
+<p>A wrong tokenizer or a drafter that never loaded presents as "no speedup", not as an error. Check the startup log for a resolved drafter architecture.</p>
+<div class="admonition question">
+<p class="admonition-title">💬 Acceptance is high but throughput did not improve. First thing to check?</p>
+<details class="hint">
+<summary>Answer</summary>
+<p><strong>Batch size.</strong> At high concurrency, batching has already amortised the weight read across real requests, so there is no idle compute left for speculation to sell — and the drafts you do run compete with useful work. High acceptance with no speedup is the signature of the crossover, not of a bad drafter. Second thing to check: whether the measurement fixed the output length on both arms, since comparing different token counts compares different amounts of work.</p>
+</details>
+</div>
+<hr />
+<div class="admonition abstract">
+<p class="admonition-title">Part 2 — Measurement, guarantee, and composition</p>
+<p>Which numbers predict a speedup, why the output distribution is provably exact, and how the rule specialises per decoding strategy.</p>
+</div>
+<h2 id="6-key-measurements">6. Key measurements</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Definition</th>
+<th>Range</th>
+<th>Diagnoses</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Acceptance rate</strong></td>
+<td>Fraction of drafted tokens kept</td>
+<td>0–1</td>
+<td><em>Drafter quality</em></td>
+</tr>
+<tr>
+<td><strong>Acceptance length</strong></td>
+<td>Mean tokens emitted per verification pass</td>
+<td>1 to k+1</td>
+<td><em>Speedup</em></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Acceptance length is the headline.</strong> It already folds in the bonus token and the sequential structure:</p>
+<div class="highlight"><pre><span></span><code>speedup  ≈  acceptance length / (1 + overhead)
+</code></pre></div>
+<p>with overhead covering the draft passes and the verification of tokens that get discarded.</p>
+<h3 id="acceptance-is-a-chain-not-an-average">Acceptance is a chain, not an average</h3>
+<p>The most common modelling error is averaging per-position rates. Position 2 is only evaluated if position 1 was accepted, so the rates <strong>multiply</strong>:</p>
+<div class="highlight"><pre><span></span><code>E[tokens per pass]  =  1 + a₁ + a₁a₂ + a₁a₂a₃ + …
+                       ↑
+                  the token plain decoding would have produced
+</code></pre></div>
+<p>Per-position acceptance for a single-layer draft head at <code>k=2</code>, measured on a 27B target:</p>
+<table>
+<thead>
+<tr>
+<th>Workload</th>
+<th>a₁</th>
+<th>a₂</th>
+<th>Chain predicts</th>
+<th>Measured</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Code generation</td>
+<td>0.89</td>
+<td>0.81</td>
+<td><code>1 + 0.89 + 0.72</code> = <strong>2.61</strong></td>
+<td>2.67–2.70</td>
+</tr>
+<tr>
+<td>Prose / reasoning</td>
+<td>0.72</td>
+<td>0.53</td>
+<td><code>1 + 0.72 + 0.38</code> = <strong>2.10</strong></td>
+<td>1.98–2.42</td>
+</tr>
+</tbody>
+</table>
+<p>Both land within measurement noise, so the formula is worth trusting to plan <code>k</code> before spending a restart on it.</p>
+<p>Note what averaging would do to the code row: mean acceptance is 0.85, and <code>1 + 2 × 0.85</code> predicts <strong>2.70</strong> against a chain value of 2.61. The gap is small at <code>k=2</code> and compounds fast — every additional position multiplies one more sub-1 factor, so the error grows exactly where you would be deciding whether to raise <code>k</code>.</p>
+<h3 id="choosing-k">Choosing k</h3>
+<p>Payoff decays geometrically while drafting cost grows — linearly for any drafter that drafts autoregressively. The curves cross around <code>k ≈ 3–4</code> for such drafters. A <strong>block drafter holds cost flat in <code>k</code></strong> and runs its full trained window instead.</p>
+<p>Measured, MTP <code>k=4</code> against DFlash2 <code>k=7</code>, tok/s:</p>
+<table>
+<thead>
+<tr>
+<th>Prompt tokens</th>
+<th>MTP <code>k=4</code></th>
+<th>DFlash2 <code>k=7</code></th>
+<th>Delta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>32</td>
+<td>53.95 / 53.74</td>
+<td>70.92 / 56.07</td>
+<td><strong>+18%</strong></td>
+</tr>
+<tr>
+<td>15,422</td>
+<td>44.63 / 43.72</td>
+<td>52.93 / 50.96</td>
+<td><strong>+17%</strong></td>
+</tr>
+<tr>
+<td>30,922</td>
+<td>46.57 / 45.44</td>
+<td>44.38 / 47.81</td>
+<td>~flat</td>
+</tr>
+<tr>
+<td>101,320</td>
+<td>34.95 / 35.08</td>
+<td>43.16 / 42.52</td>
+<td><strong>+22%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Each configuration was measured twice and the baseline re-measured afterwards, reproducing within 2% — so the deltas are not thermal drift. <strong>Read the drafter's architecture before trusting any rule of thumb about <code>k</code>.</strong></p>
+<h3 id="the-number-available-before-you-run-anything">The number available before you run anything</h3>
+<p>The acceptance rate has a closed form in the two distributions:</p>
+<div class="highlight"><pre><span></span><code>acceptance rate  =  Σ min(p(x), q(x))  =  1 − TV(p, q)
+</code></pre></div>
+<p><strong>The trap:</strong> the <code>k</code> with the longest acceptance length is not necessarily the <code>k</code> with the highest throughput. Sweep and look at both.</p>
+<!-- figure: k sweep — acceptance length rising, throughput peaking then falling (two panels, shared k axis) -->
+
+<p><strong>Lab:</strong> <code>code/spec_decode/measure.py</code> sweeps <code>k</code> and writes <code>results/sweep.csv</code>.</p>
+<hr />
+<h2 id="7-the-mathematical-guarantee">7. The mathematical guarantee</h2>
+<p>Conceptually, one drafted position:</p>
+<div class="highlight"><pre><span></span><code>                   draft model
+                        │
+                        ▼
+                   sample x ~ q
+                        │
+                        ▼
+             accept with probability
+                min(1, p[x] / q[x])
+                     /        \
+                accept        reject
+                   │             │
+                   │             ▼
+                   │        sample from
+                   │      residual(p, q)
+                   │             │
+                   └──────┬──────┘
+                          ▼
+                       output
+</code></pre></div>
+<p>Repeat for <code>i = 1 … k</code>, stopping at the first reject. If all <code>k</code> accept, a <strong>bonus</strong> token is drawn from <code>pₖ₊₁</code> — the verification pass already computed it.</p>
+<p>The lab's implementation, <code>code/spec_decode/stage4_sampled_spec.py</code>, is the same shape:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">accept_reject</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">q</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">drafts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns (tokens accepted, the one token that follows them).&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">drafts</span><span class="p">):</span>
+        <span class="n">ratio</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="o">/</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">])</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(())</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">&lt;</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">ratio</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">return</span> <span class="n">i</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">multinomial</span><span class="p">(</span><span class="n">residual</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">drafts</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">multinomial</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">drafts</span><span class="p">)],</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1"># bonus token</span>
+</code></pre></div>
+<p><strong>Two exits, and both emit a token.</strong> Reject commits a draw from the residual; running the loop out commits the bonus. A block never returns empty — which is why acceptance length is bounded below by 1, not 0.</p>
+<p>Three things this rule buys, each worked through on the live pages rather than here:</p>
+<ul>
+<li><strong><code>max(0, p − q)</code> renormalised</strong> is what makes the emitted distribution exactly <code>p</code>. Where the drafter over-proposes a token, acceptance is throttled in proportion; the residual hands back the mass the drafter never supplied.</li>
+<li><strong>The bonus token</strong> is free — <code>p_{k+1}</code> was computed by the same pass.</li>
+<li><strong>The failure is silent.</strong> An implementation that resamples from <code>p</code> instead of the residual has an <em>identical acceptance rate</em> and an output distribution that is quietly wrong.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Work through it interactively</p>
+<p><a href="../../viz/acceptance-rule.html"><strong>The acceptance rule</strong></a> — one proposal at a time: q proposes, the ratio test rules, the residual corrects. Watch where the probability mass goes.</p>
+<p><a href="../../viz/rejection-sampling.html"><strong>Convergence bench</strong></a> — run it a million times and watch the output settle onto <code>p</code>; flip to <code>--broken</code> and watch the chi-square catch a bug the acceptance rate cannot see.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Lab — implement the mechanics yourself</p>
+<p><a href="../../labs/Lab15_16/"><strong>Lab 15/16 — Speculative decoding, measured</strong></a> has you implement the three moving parts on dummy data — the <strong>acceptance branch</strong> (<code>min(1, p/q)</code>), the <strong>rejection-sampling residual</strong> (<code>max(0, p − q)</code>), and a <strong>vectorised verification</strong> over all <code>k</code> positions — then a real <code>gpt2 ← distilgpt2</code> stitch. Check your emitted distribution settles onto <code>p</code>.</p>
+</div>
+<p>Original algorithm: Leviathan et al. (<a href="https://arxiv.org/abs/2211.17192">arXiv:2211.17192</a>) and, independently, Chen et al. (<a href="https://arxiv.org/abs/2302.01318">arXiv:2302.01318</a>).</p>
+<hr />
+<h2 id="8-speculative-decoding-across-decoding-strategies">8. Speculative decoding across decoding strategies</h2>
+<p>The rule in §7 is the general case. Each strategy from Lecture 13/14 specialises it.</p>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>What the accept test becomes</th>
+<th>What "lossless" is measured against</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Greedy</strong> (<code>T=0</code>)</td>
+<td><code>accept while argmax(pᵢ) == xᵢ</code></td>
+<td>Plain greedy output, <strong>token for token</strong></td>
+</tr>
+<tr>
+<td><strong>Temperature</strong></td>
+<td><code>min(1, p/q)</code> with <code>T</code> applied to <strong>both</strong> p and q</td>
+<td>The temperature-shaped <code>p</code></td>
+</tr>
+<tr>
+<td><strong>Top-k / top-p</strong></td>
+<td>Same test; the same truncation applied to <strong>both</strong></td>
+<td>The truncated-and-renormalised <code>p</code></td>
+</tr>
+<tr>
+<td><strong>Constrained (grammar)</strong></td>
+<td>Same test; the same mask applied to <strong>both</strong></td>
+<td>The masked-and-renormalised <code>p</code></td>
+</tr>
+</tbody>
+</table>
+<p>One rule underlies every row: <strong>whatever reshaping the request asks for must be applied to the drafter too, before the ratio is taken.</strong></p>
+<h3 id="greedy">Greedy</h3>
+<p><code>p</code> collapses to a one-hot vector: probability 1 on the argmax, 0 elsewhere. The ratio test degenerates to an equality check — accept the draft iff it equals the target's argmax, otherwise emit the argmax and stop. No probability theory required, and the output is exactly checkable against plain greedy.</p>
+<p>This is why stage 3 of the lab asserts <em>token-for-token identity</em> rather than a statistical property. It is the strongest correctness test available, and it is only available at <code>T=0</code>.</p>
+<p><img alt="Greedy speculative step: the draft is argmax(q); accept iff it equals argmax(p), otherwise emit argmax(p) — no residual" src="../../images/decoding/spec_dec_greedy.png" /></p>
+<p><em>Image credit: ChatGPT.</em></p>
+<h3 id="temperature">Temperature</h3>
+<p>Scale the logits of <strong>both</strong> models before the softmax. Scaling only <code>p</code> leaves <code>q</code> proposing for a different distribution — the guarantee still technically holds against the shaped <code>p</code>, but acceptance collapses, because you are now comparing two models that disagree by construction.</p>
+<p><img alt="Temperature speculative step: divide both p and q logits by the same T before sampling and before the ratio test and residual" src="../../images/decoding/spec_dec_temperature.png" /></p>
+<p><em>Image credit: ChatGPT.</em></p>
+<h3 id="top-k-and-top-p">Top-k and top-p</h3>
+<p>Truncation makes this sharper. Suppose the filter is applied to <code>p</code> only. If <code>q</code> proposes a token outside <code>p</code>'s surviving set, then <code>p(x) = 0</code>, the ratio is 0, and the token is <strong>always rejected</strong>. Correctness survives — the residual still delivers a valid token from <code>p</code>'s set — but the drafter is now spending passes on proposals that cannot possibly be accepted.</p>
+<p>The fix is the general rule: apply the same <code>top_k</code> / <code>top_p</code> to <code>q</code> during drafting. Since <code>q</code> approximates <code>p</code>, the two surviving sets overlap heavily, and the occasional miss is handled by the maths rather than by a wasted block.</p>
+<p><img alt="Top-k / top-p speculative step: apply the same truncation to both p and q before sampling, so proposals and residual stay inside the kept set" src="../../images/decoding/spec_dec_topk_p.png" /></p>
+<p><em>Image credit: ChatGPT.</em></p>
+<h3 id="constrained-decoding">Constrained decoding</h3>
+<p>The same argument, one step more severe. The grammar mask from Lecture 13/14 zeroes every illegal token in <code>p</code>. An unmasked drafter proposes freely, and every illegal proposal has <code>p(x) = 0</code> — guaranteed rejection. Acceptance collapses toward zero precisely on the structured workloads where speculation would otherwise shine, because the drafter spends its passes proposing tokens the automaton already forbade. Engines therefore advance the same automaton over the drafter.</p>
+<p><img alt="Constrained speculative step: advance the same grammar automaton over both p and q, so only grammar-legal tokens are proposed and carry residual mass" src="../../images/decoding/spec_dec_constrained_decoding.png" /></p>
+<p><em>Image credit: ChatGPT.</em></p>
+<div class="admonition question">
+<p class="admonition-title">💬 Temperature is applied to the target but not the drafter. What breaks?</p>
+<details class="hint">
+<summary>Answer</summary>
+<p><strong>Not correctness — acceptance.</strong> The test <code>min(1, p/q)</code> is valid for <em>any</em> <code>q</code>, so the emitted distribution is still exactly the temperature-shaped <code>p</code>. But <code>q</code> is now proposing from an unshaped distribution while <code>p</code> has been sharpened or flattened, so the two disagree far more often than the models themselves do. The rejection rate climbs, acceptance length falls toward 1, and you pay the drafter's passes for nothing. This is the general shape of every mistake in this section: <strong>mismatched reshaping is a throughput bug, not a correctness bug</strong> — which is exactly what makes it hard to notice.</p>
+</details>
+</div>
+<hr />
+<h2 id="9-in-practice">9. In practice</h2>
+<p>vLLM takes the drafter as one config block:</p>
+<div class="highlight"><pre><span></span><code>--speculative-config<span class="w"> </span><span class="s1">&#39;{&quot;method&quot;:&quot;dflash&quot;,&quot;model&quot;:&quot;z-lab/Qwen3.8-27B-DFlash2&quot;,&quot;num_speculative_tokens&quot;:7}&#39;</span>
+</code></pre></div>
+<p>Startup confirms the drafter actually resolved — the check that catches the silent-failure mode in §5:</p>
+<div class="highlight"><pre><span></span><code>Resolved architecture: DFlash2DraftModel
+Capturing model for DFlash2 speculator...
+</code></pre></div>
+<h3 id="a-deployment-checklist">A deployment checklist</h3>
+<ol>
+<li><strong>Confirm the precondition</strong> — is decode actually bandwidth-bound at batch 1? If not, there is no surplus to sell.</li>
+<li><strong>Baseline first</strong>, with fixed output length on both arms. Different token counts are different amounts of work.</li>
+<li><strong>Verify the drafter loaded.</strong> A silently inert drafter looks like "no speedup", not like an error.</li>
+<li><strong>Read acceptance, not just throughput.</strong> Acceptance length near 1.0 is pure overhead — turn it off.</li>
+<li><strong>Measure the memory cost</strong> — KV pool capacity with speculation on and off.</li>
+<li><strong>Re-measure at your real concurrency</strong>, not just batch 1.</li>
+</ol>
+<h3 id="failure-modes">Failure modes</h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No speedup, acceptance ~0</td>
+<td>Drafter never loaded, or tokenizer mismatch</td>
+</tr>
+<tr>
+<td>No speedup, acceptance high</td>
+<td>Concurrency too high; batching already took the surplus</td>
+</tr>
+<tr>
+<td>Speedup at batch 1, slower under load</td>
+<td>The crossover — taper <code>k</code> with batch size, or disable</td>
+</tr>
+<tr>
+<td>Startup OOM after enabling</td>
+<td>Draft weights plus draft KV slots exceeded the budget</td>
+</tr>
+<tr>
+<td>Context window shrank</td>
+<td>The memory tax; lower <code>k</code> or accept the trade</td>
+</tr>
+<tr>
+<td>Position 2+ acceptance far below position 1</td>
+<td>One draft layer reused for extra positions; lower <code>k</code></td>
+</tr>
+</tbody>
+</table>
+<p>Startup time is worth budgeting for: 142–217 s with a block drafter against 66–148 s without, the difference being drafter load plus <code>torch.compile</code> of its head and selector.</p>
+<hr />
+<h2 id="references">References</h2>
+<ol>
+<li>Leviathan et al., <a href="https://arxiv.org/abs/2211.17192"><em>Fast Inference from Transformers via Speculative Decoding</em></a> (ICML 2023) — the accept/reject rule and the residual</li>
+<li>Chen et al., <a href="https://arxiv.org/abs/2302.01318"><em>Accelerating Large Language Model Decoding with Speculative Sampling</em></a> (2023) — the independent derivation</li>
+<li>Cai et al., <a href="https://arxiv.org/abs/2401.10774"><em>Medusa</em></a> (2024) — multiple heads; the threshold rule that gives up losslessness above <code>T=0</code></li>
+<li><a href="../Lecture9_10/">Lecture 9/10</a> — prefill vs decode, the memory wall this technique exploits</li>
+<li><a href="../Lecture13_14/">Lecture 13/14</a> — the decoding strategies §8 composes with</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../Lecture13_14/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 13_14:Decoding Strategies">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                13_14:Decoding Strategies
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../Lecture17_18/" class="md-footer__link md-footer__link--next" aria-label="Next: 17_18:Speculative Decoding Variants">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                17_18:Speculative Decoding Variants
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Ankush Chander
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.expand", "navigation.footer", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
