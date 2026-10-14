@@ -72,5 +72,11 @@ def test_mul_rounds_half_up():
     assert (FP(0.0625) * FP(0.5)).raw == 1  # exactly half a step
 
 
+def test_mul_rounds_half_up_with_custom_fractional_bits():
+    a = FP(0.25, frac_bits=2)
+    b = FP(0.5, frac_bits=2)
+    assert (a * b).raw == 1  # 0.125 is half a step when scale is 4
+
+
 def test_mul_saturates():
     assert (FP(4.0) * FP(4.0)).raw == 127
