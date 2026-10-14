@@ -32,6 +32,7 @@ nav:
       - 13_14:Decoding Strategies: 'lectures/Lecture13_14.md'
       - 15_16:Speculative Decoding: 'lectures/Lecture15_16.md'
       - 17_18:Speculative Decoding Variants: 'lectures/Lecture17_18.md'
+      - 19_20:Number Formats: 'lectures/Lecture19_20.md'
       # - 4:Tensor Cores & Precision: 'lectures/Lecture4.md'
   - Labs:
       - Overview: 'labs/index.md'
