@@ -1,0 +1,2002 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Home of DS635 - Machine Learning System Engineering, DAU">
+      
+      
+      
+        <link rel="canonical" href="https://DS635.ankushchander.com/lectures/Lecture19_20/">
+      
+      
+        <link rel="prev" href="../Lecture17_18/">
+      
+      
+        <link rel="next" href="../../labs/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>19_20:Number Formats - DS635 - Machine Learning System Engineering | DAU</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#number-formats-fixed-point-and-floating-point" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-header__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DS635 - Machine Learning System Engineering | DAU
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              19_20:Number Formats
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Lecture0/" class="md-tabs__link">
+          
+  
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../labs/" class="md-tabs__link">
+          
+  
+  
+  Labs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../viz/acceptance-rule.html" class="md-tabs__link">
+          
+  
+  
+  Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-nav__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DS635 - Machine Learning System Engineering | DAU
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lectures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lectures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0:Course Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1:Machine Learning Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:Hardware Accelerators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture3_4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3_4:Memory Hierarchy & Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture5_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU job submission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7:Matmul to Silicon — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7a:From Python to a Kernel Launch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7b:The Throughput Machine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7c:SIMT, Tiles & Occupancy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8:Inside the GPU — Memory & the Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture9_10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9_10:Inference Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture11_12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11_12:Model Artifacts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture13_14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13_14:Decoding Strategies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture15_16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15_16:Speculative Decoding
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture17_18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17_18:Speculative Decoding Variants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    19_20:Number Formats
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    19_20:Number Formats
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-fixed-point-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Fixed point notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Fixed point notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classroom-exercise-build-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Classroom exercise — build it
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-range-vs-precision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Range vs precision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-truncating-vs-rounding-off" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Truncating vs rounding off
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Truncating vs rounding off">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#errors-that-do-not-cancel-accumulate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errors that do not cancel accumulate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-floating-point-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Floating point notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Floating point notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-step-grows-with-magnitude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The step grows with magnitude
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-different-numerical-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Different numerical formats
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Labs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Labs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab5_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU Job Submission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab5_6_gpu_job_submission/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5/6 — The GPU submission protocol, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:The Concurrency Budget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab2_concurrency_budget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2 — The concurrency budget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab11_12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11_12:Three Formats, One Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab11_12_model_artifacts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 11/12 — The three formats, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab13_14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13_14:Decoding Strategies, Measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab13_14_decoding_strategies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 13/14 — Decoding strategies, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab15_16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15_16:Speculative Decoding
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab15_16_speculative_decoding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 15/16 — Speculative decoding, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../viz/acceptance-rule.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Speculative decoding: the acceptance rule
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-fixed-point-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Fixed point notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Fixed point notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classroom-exercise-build-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Classroom exercise — build it
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-range-vs-precision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Range vs precision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-truncating-vs-rounding-off" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Truncating vs rounding off
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Truncating vs rounding off">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#errors-that-do-not-cancel-accumulate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errors that do not cancel accumulate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-floating-point-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Floating point notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Floating point notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-step-grows-with-magnitude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The step grows with magnitude
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-different-numerical-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Different numerical formats
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="number-formats-fixed-point-and-floating-point">Number formats: fixed point and floating point</h1>
+<blockquote>
+<p><strong>Module thesis:</strong> <a href="../Lecture9_10/">Lecture 9/10</a> showed that decode speed is set by bytes moved per token. Quantization cuts those bytes by storing each number in fewer bits. Every format spends its bits on two competing goods: <strong>range</strong> (how large a value fits) and <strong>precision</strong> (how finely values are spaced). Fixed point fixes that split once for the whole number line; floating point re-splits it at every power of two.</p>
+</blockquote>
+<p><strong>Prerequisite:</strong> <a href="../Lecture9_10/">Inference optimization</a></p>
+<hr />
+<h2 id="1-fixed-point-notation">1. Fixed point notation</h2>
+<p>A fixed-point number is <strong>an integer plus an agreed scale</strong>. The hardware sees only the integer; the scale lives in the programmer's head.</p>
+<div class="highlight"><pre><span></span><code>real value = raw / 2^F
+</code></pre></div>
+<p><strong>Q-format</strong> names the split. <code>Qm.n</code> means <code>m</code> integer bits and <code>n</code> fraction bits, plus one sign bit.</p>
+<div class="highlight"><pre><span></span><code>Q3.4, 8 bits:   s  i i i . f f f f
+1.5         =   0  0 0 1 . 1 0 0 0   →  raw = 24  (1.5 × 16)
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>On the raw integers</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Encode</strong></td>
+<td><code>raw = round(x × 2^F)</code></td>
+<td>move the binary point right by <code>F</code></td>
+</tr>
+<tr>
+<td><strong>Decode</strong></td>
+<td><code>x = raw / 2^F</code></td>
+<td>move it back</td>
+</tr>
+<tr>
+<td><strong>Add</strong></td>
+<td><code>raw_a + raw_b</code></td>
+<td>both share one scale, so it is plain integer addition</td>
+</tr>
+<tr>
+<td><strong>Multiply</strong></td>
+<td><code>(raw_a × raw_b) &gt;&gt; F</code></td>
+<td>the product carries scale <code>2^(2F)</code>; shifting by <code>F</code> restores <code>2^F</code></td>
+</tr>
+<tr>
+<td><strong>Overflow</strong></td>
+<td>clamp to <code>[min, max]</code></td>
+<td><strong>saturate</strong>; two's-complement wraparound turns <code>7 + 7</code> into a negative number</td>
+</tr>
+</tbody>
+</table>
+<h3 id="code-example">Code example</h3>
+<p>The class built in the classroom exercise behaves like this:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">fixed_point</span><span class="w"> </span><span class="kn">import</span> <span class="n">FixedPoint</span> <span class="k">as</span> <span class="n">FP</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">FP</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="mf">1.5</span> <span class="p">(</span><span class="n">Raw</span><span class="p">:</span> <span class="mi">24</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">FP</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span> <span class="o">+</span> <span class="n">FP</span><span class="p">(</span><span class="mf">2.25</span><span class="p">)</span>
+<span class="mf">3.75</span> <span class="p">(</span><span class="n">Raw</span><span class="p">:</span> <span class="mi">60</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">FP</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">FP</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="mf">3.0</span> <span class="p">(</span><span class="n">Raw</span><span class="p">:</span> <span class="mi">48</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">FP</span><span class="p">(</span><span class="mf">7.0</span><span class="p">)</span> <span class="o">+</span> <span class="n">FP</span><span class="p">(</span><span class="mf">7.0</span><span class="p">)</span>          <span class="c1"># saturates at the top of Q3.4</span>
+<span class="mf">7.9375</span> <span class="p">(</span><span class="n">Raw</span><span class="p">:</span> <span class="mi">127</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">FP</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>                    <span class="c1"># 0.1 is not on the grid</span>
+<span class="mf">0.125</span> <span class="p">(</span><span class="n">Raw</span><span class="p">:</span> <span class="mi">2</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="classroom-exercise-build-it">Classroom exercise — build it</h3>
+<p><a href="https://codespaces.new/Ankush-Chander/DS635-ml-system-engineering?devcontainer_path=.devcontainer/fixed-point/devcontainer.json"><img alt="Open in GitHub Codespaces" src="https://github.com/codespaces/badge.svg" /></a></p>
+<p>Fill TODOs A–F in <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/tree/main/code/quantization/fixed_point"><code>code/quantization/fixed_point/fixed_point.py</code></a>: scale, range, saturation, addition, and a rounded multiply. <code>pytest -q</code> runs 16 self-checks, each named after the TODO it covers.</p>
+<hr />
+<h2 id="2-range-vs-precision">2. Range vs precision</h2>
+<p>With <code>B</code> bits, one sign bit, <code>I</code> integer bits and <code>F = B − 1 − I</code> fraction bits:</p>
+<div class="highlight"><pre><span></span><code>step  Δ = 2^-F
+range   = [ -2^I , 2^I - Δ ]
+</code></pre></div>
+<p><strong>Every bit moved from fraction to integer doubles the range and doubles the step.</strong> The total number of representable values is fixed at <code>2^B</code>; the format only chooses where they sit.</p>
+<table>
+<thead>
+<tr>
+<th>8-bit format</th>
+<th>Step Δ</th>
+<th>Range</th>
+<th>Good for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q7.0</td>
+<td>1</td>
+<td>[−128, 127]</td>
+<td>counts, indices</td>
+</tr>
+<tr>
+<td>Q3.4</td>
+<td>0.0625</td>
+<td>[−8, 7.9375]</td>
+<td>moderate activations</td>
+</tr>
+<tr>
+<td>Q0.7</td>
+<td>0.0078125</td>
+<td>[−1, 0.9921875]</td>
+<td>weights normalised to [−1, 1]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Two failure modes, one at each end:</strong></p>
+<ul>
+<li><strong>Clipping</strong> — a value beyond the range saturates. Error is unbounded in principle: <code>100.0</code> in Q3.4 is stored as <code>7.9375</code>.</li>
+<li><strong>Rounding</strong> — a value inside the range snaps to the nearest grid point. Error is at most <code>Δ/2</code>.</li>
+</ul>
+<p>A larger range shrinks clipping error and grows rounding error. Choosing the split is choosing which error to pay.</p>
+<div class="admonition question">
+<p class="admonition-title">Pick a format</p>
+<p>A layer's weights lie in [−0.9, 0.9] except for one value at 6.0. Which 8-bit Q-format do you pick, and what happens to the other weights? This is the outlier problem that per-channel and per-group scales exist to solve.</p>
+</div>
+<hr />
+<h2 id="3-truncating-vs-rounding-off">3. Truncating vs rounding off</h2>
+<p>After a multiply, the low <code>F</code> bits of the product must go. There are two ways to drop them.</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Code</th>
+<th>Error per op</th>
+<th>Mean error</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Truncate</strong></td>
+<td><code>p &gt;&gt; F</code></td>
+<td>in <code>(−Δ, 0]</code></td>
+<td><strong>≈ −Δ/2, always the same sign</strong></td>
+</tr>
+<tr>
+<td><strong>Round half up</strong></td>
+<td><code>(p + (1 &lt;&lt; (F-1))) &gt;&gt; F</code></td>
+<td>in <code>(−Δ/2, Δ/2]</code></td>
+<td>≈ 0, except ties go up</td>
+</tr>
+<tr>
+<td><strong>Round half to even</strong></td>
+<td>ties go to the even neighbour</td>
+<td>in <code>[−Δ/2, Δ/2]</code></td>
+<td>≈ 0</td>
+</tr>
+</tbody>
+</table>
+<p>In Python, <code>&gt;&gt;</code> on a negative integer floors toward −∞, so truncation by shift always rounds down, never toward zero.</p>
+<h3 id="errors-that-do-not-cancel-accumulate">Errors that do not cancel accumulate</h3>
+<p>A dot product sums thousands of products. Zero-mean errors partly cancel; a biased error grows linearly with the length.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">F</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="o">-</span><span class="mi">64</span><span class="p">,</span> <span class="mi">63</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10_000</span><span class="p">)]</span>
+<span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="o">-</span><span class="mi">64</span><span class="p">,</span> <span class="mi">63</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10_000</span><span class="p">)]</span>
+
+<span class="n">exact</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">F</span><span class="p">))</span>
+<span class="n">trunc</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">F</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">F</span><span class="p">)</span>
+<span class="n">rnd</span>   <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">F</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span> <span class="o">&gt;&gt;</span> <span class="n">F</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">F</span><span class="p">)</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th style="text-align: right;">Sum</th>
+<th style="text-align: right;">Error</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Exact</td>
+<td style="text-align: right;">687.09</td>
+<td style="text-align: right;">—</td>
+</tr>
+<tr>
+<td>Truncate</td>
+<td style="text-align: right;">434.00</td>
+<td style="text-align: right;"><strong>−253.09</strong></td>
+</tr>
+<tr>
+<td>Round half up</td>
+<td style="text-align: right;">725.31</td>
+<td style="text-align: right;">+38.22</td>
+</tr>
+<tr>
+<td>Round half to even</td>
+<td style="text-align: right;">684.25</td>
+<td style="text-align: right;">−2.84</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Truncation</strong> loses between 0 and <code>Δ = 0.0625</code> on every product, 0.025 on average here, and 10,000 of them add up to −253.</li>
+<li><strong>Round half up</strong> is close, but 1,266 of the 10,000 products land exactly on a tie, and every tie goes up.</li>
+<li><strong>Round half to even</strong> sends half the ties each way, and the bias disappears. IEEE 754 uses this mode by default.</li>
+</ul>
+<hr />
+<h2 id="4-floating-point-notation">4. Floating point notation</h2>
+<p>Fixed point spaces its values evenly. Floating point spaces them <strong>evenly in relative terms</strong>: the same number of values between 1 and 2 as between 1024 and 2048.</p>
+<div class="highlight"><pre><span></span><code>value = (-1)^s × 1.m × 2^(e - bias)
+
+FP32:   s | eeeeeeee | mmmmmmmmmmmmmmmmmmmmmmm
+        1 |    8     |          23
+</code></pre></div>
+<ul>
+<li><strong>Exponent bits buy range.</strong> Each extra bit squares the largest representable magnitude.</li>
+<li><strong>Mantissa bits buy precision.</strong> <code>M</code> mantissa bits give <code>2^M</code> steps in every power-of-two interval.</li>
+<li><strong>The step grows with the value.</strong> Relative error stays near <code>2^-(M+1)</code>; absolute error does not.</li>
+</ul>
+<h3 id="the-step-grows-with-magnitude">The step grows with magnitude</h3>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="mi">16777217</span><span class="p">)</span>                 <span class="c1"># 2^24 + 1</span>
+<span class="mf">16777216.0</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">(</span><span class="mi">2048</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>     <span class="c1"># FP16 step at 2048 is 2</span>
+<span class="mf">2048.0</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">(</span><span class="mf">70000.0</span><span class="p">)</span>                  <span class="c1"># beyond FP16 max</span>
+<span class="n">inf</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">(</span><span class="mf">1e-8</span><span class="p">)</span>                     <span class="c1"># below FP16&#39;s smallest subnormal</span>
+<span class="mf">0.0</span>
+</code></pre></div>
+<p><strong>Special values:</strong> an all-ones exponent encodes ±∞ and NaN, and an all-zeros exponent encodes zero and the <strong>subnormals</strong>, which trade precision for a gentler underflow.</p>
+<hr />
+<h2 id="5-different-numerical-formats">5. Different numerical formats</h2>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Bits (s / e / m)</th>
+<th style="text-align: right;">Max</th>
+<th style="text-align: right;">Step at 1.0 (eps)</th>
+<th>Where it is used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FP32</strong></td>
+<td>1 / 8 / 23</td>
+<td style="text-align: right;">3.4 × 10³⁸</td>
+<td style="text-align: right;">1.2 × 10⁻⁷</td>
+<td>master weights, optimiser state</td>
+</tr>
+<tr>
+<td><strong>FP16</strong></td>
+<td>1 / 5 / 10</td>
+<td style="text-align: right;">65,504</td>
+<td style="text-align: right;">9.8 × 10⁻⁴</td>
+<td>inference; training with loss scaling</td>
+</tr>
+<tr>
+<td><strong>BF16</strong></td>
+<td>1 / 8 / 7</td>
+<td style="text-align: right;">3.4 × 10³⁸</td>
+<td style="text-align: right;">7.8 × 10⁻³</td>
+<td>training: FP32's range at half the bytes</td>
+</tr>
+<tr>
+<td><strong>FP8 E4M3</strong></td>
+<td>1 / 4 / 3</td>
+<td style="text-align: right;">448</td>
+<td style="text-align: right;">0.125</td>
+<td>weights and activations</td>
+</tr>
+<tr>
+<td><strong>FP8 E5M2</strong></td>
+<td>1 / 5 / 2</td>
+<td style="text-align: right;">57,344</td>
+<td style="text-align: right;">0.25</td>
+<td>gradients, which need range</td>
+</tr>
+<tr>
+<td><strong>FP4 E2M1</strong></td>
+<td>1 / 2 / 1</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.5</td>
+<td>block-scaled weights (MXFP4, NVFP4)</td>
+</tr>
+<tr>
+<td><strong>INT8</strong></td>
+<td>8-bit integer</td>
+<td style="text-align: right;">127 × scale</td>
+<td style="text-align: right;">1 × scale</td>
+<td>weights and activations with a scale</td>
+</tr>
+<tr>
+<td><strong>INT4</strong></td>
+<td>4-bit integer</td>
+<td style="text-align: right;">7 × scale</td>
+<td style="text-align: right;">1 × scale</td>
+<td>weight-only LLM quantization</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>BF16 vs FP16:</strong> the same 16 bits split two ways. BF16 keeps FP32's exponent, so a value that fits in FP32 does not overflow; it gives up three mantissa bits to do it.</li>
+<li><strong>The two FP8s:</strong> E4M3 has no infinities, which buys back range up to 448. E5M2 keeps FP16's exponent range.</li>
+<li><strong>FP4 E2M1</strong> has only eight magnitudes: <code>0, 0.5, 1, 1.5, 2, 3, 4, 6</code>. It is usable only because a shared scale per block of 16 or 32 values moves that grid to where the data sits.</li>
+<li><strong>INT8 and INT4 are fixed point with an external scale.</strong> Generalise Section 1's power-of-two scale <code>2^-F</code> to any real scale, chosen per tensor, per channel or per group, and you have symmetric integer quantization.</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">Bytes to speed</p>
+<p>A 27B-parameter model is stored in BF16, then in FP8, then in INT4. Using Lecture 9/10's decode ceiling (<code>bandwidth ÷ model size</code>), what speedup does each step predict, and what does each format give up to get it?</p>
+</div>
+<hr />
+<h2 id="references">References</h2>
+<ol>
+<li>IEEE, <em>IEEE Standard for Floating-Point Arithmetic</em> (IEEE 754-2019)</li>
+<li>Micikevicius et al., <a href="https://arxiv.org/abs/2209.05433"><em>FP8 Formats for Deep Learning</em></a> (2022) — E4M3 and E5M2</li>
+<li>Open Compute Project, <a href="https://www.opencompute.org/documents/ocp-microscaling-formats-mx-v1-0-spec-final-pdf"><em>Microscaling Formats (MX) Specification v1.0</em></a> (2023) — block-scaled FP8, FP6, FP4</li>
+<li>Goldberg, <a href="https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html"><em>What Every Computer Scientist Should Know About Floating-Point Arithmetic</em></a> (1991)</li>
+<li><a href="../Lecture9_10/">Lecture 9/10</a> — why bytes per parameter set decode speed</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../Lecture17_18/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 17_18:Speculative Decoding Variants">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                17_18:Speculative Decoding Variants
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../labs/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Ankush Chander
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.expand", "navigation.footer", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
