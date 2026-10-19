@@ -1,0 +1,17 @@
+{
+  "name": "DS635 affine quantization",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "postCreateCommand": "pip install --user pytest numpy",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/code/quantization/affine",
+  "customizations": {
+    "codespaces": {
+      "openFiles": ["affine_quantizer.py"]
+    },
+    "vscode": {
+      "extensions": ["ms-python.python"],
+      "settings": {
+        "python.testing.pytestEnabled": true
+      }
+    }
+  }
+}
