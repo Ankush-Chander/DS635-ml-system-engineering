@@ -16,7 +16,7 @@
         <link rel="prev" href="../Lecture17_18/">
       
       
-        <link rel="next" href="../../labs/">
+        <link rel="next" href="../Lecture21_22/">
       
       
         
@@ -820,15 +820,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-fixed-point-notation" class="md-nav__link">
+  <a href="#1-fractional-binary-numbers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Fixed point notation
+        1. Fractional binary numbers
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="1. Fixed point notation">
+    <nav class="md-nav" aria-label="1. Fractional binary numbers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decimal-to-binary-12375" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decimal to binary: 12.375
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#some-decimals-never-terminate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Some decimals never terminate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-fixed-point-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Fixed point notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Fixed point notation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -859,10 +898,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-range-vs-precision" class="md-nav__link">
+  <a href="#3-range-vs-precision" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Range vs precision
+        3. Range vs precision
       
     </span>
   </a>
@@ -870,15 +909,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-truncating-vs-rounding-off" class="md-nav__link">
+  <a href="#4-truncating-vs-rounding-off" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Truncating vs rounding off
+        4. Truncating vs rounding off
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="3. Truncating vs rounding off">
+    <nav class="md-nav" aria-label="4. Truncating vs rounding off">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -898,15 +937,143 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-floating-point-notation" class="md-nav__link">
+  <a href="#5-floating-point-notation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Floating point notation
+        5. Floating point notation
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4. Floating point notation">
+    <nav class="md-nav" aria-label="5. Floating point notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-the-exponent-buys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the exponent buys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standard-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard formats
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-inside-an-ieee-754-float" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Inside an IEEE 754 float
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Inside an IEEE 754 float">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#normalisation-one-number-one-encoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Normalisation: one number, one encoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biased-exponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biased exponent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worked-example-975-in-fp32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: 9.75 in FP32
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#normalized-subnormal-and-special-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Normalized, subnormal and special values
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Normalized, subnormal and special values">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-subnormals-are-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why subnormals are needed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-e-1-bias-not-0-bias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why E = 1 − bias, not 0 − bias
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Implications
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Implications">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -920,16 +1087,38 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#casting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Casting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mixing-signed-and-unsigned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mixing signed and unsigned
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-different-numerical-formats" class="md-nav__link">
+  <a href="#8-different-numerical-formats" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Different numerical formats
+        8. Different numerical formats
       
     </span>
   </a>
@@ -951,6 +1140,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture21_22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    21_22:Affine Quantization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1444,15 +1661,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-fixed-point-notation" class="md-nav__link">
+  <a href="#1-fractional-binary-numbers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Fixed point notation
+        1. Fractional binary numbers
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="1. Fixed point notation">
+    <nav class="md-nav" aria-label="1. Fractional binary numbers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decimal-to-binary-12375" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decimal to binary: 12.375
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#some-decimals-never-terminate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Some decimals never terminate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-fixed-point-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Fixed point notation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Fixed point notation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1483,10 +1739,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-range-vs-precision" class="md-nav__link">
+  <a href="#3-range-vs-precision" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Range vs precision
+        3. Range vs precision
       
     </span>
   </a>
@@ -1494,15 +1750,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-truncating-vs-rounding-off" class="md-nav__link">
+  <a href="#4-truncating-vs-rounding-off" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Truncating vs rounding off
+        4. Truncating vs rounding off
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="3. Truncating vs rounding off">
+    <nav class="md-nav" aria-label="4. Truncating vs rounding off">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1522,15 +1778,143 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-floating-point-notation" class="md-nav__link">
+  <a href="#5-floating-point-notation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Floating point notation
+        5. Floating point notation
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4. Floating point notation">
+    <nav class="md-nav" aria-label="5. Floating point notation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-the-exponent-buys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the exponent buys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standard-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard formats
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-inside-an-ieee-754-float" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Inside an IEEE 754 float
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Inside an IEEE 754 float">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#normalisation-one-number-one-encoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Normalisation: one number, one encoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biased-exponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biased exponent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worked-example-975-in-fp32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: 9.75 in FP32
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#normalized-subnormal-and-special-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Normalized, subnormal and special values
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Normalized, subnormal and special values">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-subnormals-are-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why subnormals are needed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-e-1-bias-not-0-bias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why E = 1 − bias, not 0 − bias
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Implications
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Implications">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1544,16 +1928,38 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#casting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Casting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mixing-signed-and-unsigned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mixing signed and unsigned
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-different-numerical-formats" class="md-nav__link">
+  <a href="#8-different-numerical-formats" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Different numerical formats
+        8. Different numerical formats
       
     </span>
   </a>
@@ -1593,8 +1999,74 @@
 <p><strong>Module thesis:</strong> <a href="../Lecture9_10/">Lecture 9/10</a> showed that decode speed is set by bytes moved per token. Quantization cuts those bytes by storing each number in fewer bits. Every format spends its bits on two competing goods: <strong>range</strong> (how large a value fits) and <strong>precision</strong> (how finely values are spaced). Fixed point fixes that split once for the whole number line; floating point re-splits it at every power of two.</p>
 </blockquote>
 <p><strong>Prerequisite:</strong> <a href="../Lecture9_10/">Inference optimization</a></p>
+<p>A computer stores only integers. A fractional value is an integer plus a convention about where the <strong>binary point</strong> sits. Fixed point keeps that convention in the program, the same for every number. Floating point writes it into every number as the exponent.</p>
 <hr />
-<h2 id="1-fixed-point-notation">1. Fixed point notation</h2>
+<h2 id="1-fractional-binary-numbers">1. Fractional binary numbers</h2>
+<p>Binary positional notation extends to the right of the point exactly as decimal does, with negative powers of two:</p>
+<div class="highlight"><pre><span></span><code>b = Σ  b_i · 2^i      for i = -n … m
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Binary digit</th>
+<th>1</th>
+<th>0</th>
+<th>.</th>
+<th>1</th>
+<th>1</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Position i</strong></td>
+<td>1</td>
+<td>0</td>
+<td></td>
+<td>−1</td>
+<td>−2</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Weight 2^i</strong></td>
+<td>2</td>
+<td>1</td>
+<td></td>
+<td>&frac12;</td>
+<td>&frac14;</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Contribution</strong></td>
+<td>2</td>
+<td>0</td>
+<td></td>
+<td>&frac12;</td>
+<td>&frac14;</td>
+<td><strong>= 2.75</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="decimal-to-binary-12375">Decimal to binary: 12.375</h3>
+<p><strong>Integer part:</strong> divide by 2 and read the remainders bottom-up.</p>
+<div class="highlight"><pre><span></span><code>12 ÷ 2 = 6  r 0
+ 6 ÷ 2 = 3  r 0
+ 3 ÷ 2 = 1  r 1
+ 1 ÷ 2 = 0  r 1      →  12 = 1100₂
+</code></pre></div>
+<p><strong>Fractional part:</strong> multiply by 2 and read the integer parts top-down.</p>
+<div class="highlight"><pre><span></span><code>0.375 × 2 = 0.75   → 0
+0.75  × 2 = 1.50   → 1
+0.50  × 2 = 1.00   → 1      →  0.375 = 0.011₂
+</code></pre></div>
+<p><strong>12.375₁₀ = 1100.011₂.</strong></p>
+<h3 id="some-decimals-never-terminate">Some decimals never terminate</h3>
+<p>The same procedure on 0.1 never reaches zero:</p>
+<div class="highlight"><pre><span></span><code>0.1₁₀ = 0.0001100110011…₂      (0011 repeats forever)
+</code></pre></div>
+<p><strong>A value is exact in binary only if it is a sum of powers of two.</strong> 0.375 = &frac14; + &#8539; is exact; 0.1 is not, in any binary format, at any width. Every format below stores the nearest point on its grid.</p>
+<hr />
+<h2 id="2-fixed-point-notation">2. Fixed point notation</h2>
 <p>A fixed-point number is <strong>an integer plus an agreed scale</strong>. The hardware sees only the integer; the scale lives in the programmer's head.</p>
 <div class="highlight"><pre><span></span><code>real value = raw / 2^F
 </code></pre></div>
@@ -1656,7 +2128,7 @@
 <p><a href="https://codespaces.new/Ankush-Chander/DS635-ml-system-engineering?devcontainer_path=.devcontainer/fixed-point/devcontainer.json"><img alt="Open in GitHub Codespaces" src="https://github.com/codespaces/badge.svg" /></a></p>
 <p>Fill TODOs A–F in <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/tree/main/code/quantization/fixed_point"><code>code/quantization/fixed_point/fixed_point.py</code></a>: scale, range, saturation, addition, and a rounded multiply. <code>pytest -q</code> runs 16 self-checks, each named after the TODO it covers.</p>
 <hr />
-<h2 id="2-range-vs-precision">2. Range vs precision</h2>
+<h2 id="3-range-vs-precision">3. Range vs precision</h2>
 <p>With <code>B</code> bits, one sign bit, <code>I</code> integer bits and <code>F = B − 1 − I</code> fraction bits:</p>
 <div class="highlight"><pre><span></span><code>step  Δ = 2^-F
 range   = [ -2^I , 2^I - Δ ]
@@ -1703,7 +2175,7 @@ range   = [ -2^I , 2^I - Δ ]
 <p>A layer's weights lie in [−0.9, 0.9] except for one value at 6.0. Which 8-bit Q-format do you pick, and what happens to the other weights? This is the outlier problem that per-channel and per-group scales exist to solve.</p>
 </div>
 <hr />
-<h2 id="3-truncating-vs-rounding-off">3. Truncating vs rounding off</h2>
+<h2 id="4-truncating-vs-rounding-off">4. Truncating vs rounding off</h2>
 <p>After a multiply, the low <code>F</code> bits of the product must go. There are two ways to drop them.</p>
 <table>
 <thead>
@@ -1785,19 +2257,337 @@ range   = [ -2^I , 2^I - Δ ]
 <li><strong>Round half to even</strong> sends half the ties each way, and the bias disappears. IEEE 754 uses this mode by default.</li>
 </ul>
 <hr />
-<h2 id="4-floating-point-notation">4. Floating point notation</h2>
-<p>Fixed point spaces its values evenly. Floating point spaces them <strong>evenly in relative terms</strong>: the same number of values between 1 and 2 as between 1024 and 2048.</p>
-<div class="highlight"><pre><span></span><code>value = (-1)^s × 1.m × 2^(e - bias)
-
-FP32:   s | eeeeeeee | mmmmmmmmmmmmmmmmmmmmmmm
-        1 |    8     |          23
+<h2 id="5-floating-point-notation">5. Floating point notation</h2>
+<p>Fixed point spaces its values evenly. Floating point spaces them <strong>evenly in relative terms</strong>: the same number of values between 1 and 2 as between 1024 and 2048. The IEEE 754 standard writes every number as</p>
+<div class="highlight"><pre><span></span><code>V = (−1)^s × M × 2^E
 </code></pre></div>
 <ul>
-<li><strong>Exponent bits buy range.</strong> Each extra bit squares the largest representable magnitude.</li>
-<li><strong>Mantissa bits buy precision.</strong> <code>M</code> mantissa bits give <code>2^M</code> steps in every power-of-two interval.</li>
-<li><strong>The step grows with the value.</strong> Relative error stays near <code>2^-(M+1)</code>; absolute error does not.</li>
+<li><strong>Sign <code>s</code></strong> — 0 for positive, 1 for negative. Zero has both a +0 and a −0.</li>
+<li><strong>Significand <code>M</code></strong> — a fractional binary number, in <code>[1, 2)</code> for normal values and in <code>[0, 1)</code> for the subnormals near zero.</li>
+<li><strong>Exponent <code>E</code></strong> — weights the value by a power of two, positive or negative.</li>
 </ul>
+<h3 id="what-the-exponent-buys">What the exponent buys</h3>
+<p>Store <code>5 × 2^100</code>:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Fixed point</th>
+<th>Floating point</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Form</strong></td>
+<td><code>Σ b_i · 2^i</code></td>
+<td><code>M × 2^E</code></td>
+</tr>
+<tr>
+<td><strong>Bits needed</strong></td>
+<td><code>101</code> followed by 100 zeros: <strong>103 bits</strong></td>
+<td><code>M = 101</code>, <code>E = 100</code>: <strong>3 + 7 bits</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Floating point stores the digits that carry information and the position separately.</strong> The zeros that only place the point cost nothing.</p>
+<h3 id="standard-formats">Standard formats</h3>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th style="text-align: right;">Sign</th>
+<th style="text-align: right;">Exponent</th>
+<th style="text-align: right;">Mantissa</th>
+<th style="text-align: right;">Bias</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Single precision</strong> (FP32, <code>float</code>)</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">127</td>
+</tr>
+<tr>
+<td><strong>Double precision</strong> (FP64, <code>double</code>)</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">1023</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code>FP32:   s | eeeeeeee | mmmmmmmmmmmmmmmmmmmmmmm
+        1 |    8     |          23
+</code></pre></div>
+<hr />
+<h2 id="6-inside-an-ieee-754-float">6. Inside an IEEE 754 float</h2>
+<h3 id="normalisation-one-number-one-encoding">Normalisation: one number, one encoding</h3>
+<p>Without a rule, one value has many encodings:</p>
+<div class="highlight"><pre><span></span><code>101.11 = 10111    × 2^-2
+       = 101110   × 2^-3
+       = 1011100  × 2^-4
+       = 10111000 × 2^-5
+</code></pre></div>
+<p>Multiple encodings waste bit patterns and make equality checks compare more than bits. <strong>Normalisation</strong> fixes the binary point relative to the most significant 1.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Explicit normalisation</th>
+<th>Implicit normalisation (IEEE 754)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Rule</strong></td>
+<td>point to the <strong>left</strong> of the leading 1</td>
+<td>point to the <strong>right</strong> of the leading 1</td>
+</tr>
+<tr>
+<td><strong>Form</strong></td>
+<td><code>(−1)^s × 0.M × 2^(e − bias)</code></td>
+<td><code>(−1)^s × 1.M × 2^(e − bias)</code></td>
+</tr>
+<tr>
+<td><strong>Example</strong></td>
+<td><code>101.11 = 0.10111 × 2^3</code></td>
+<td><code>101.11 = 1.0111 × 2^2</code></td>
+</tr>
+<tr>
+<td><strong>Leading 1</strong></td>
+<td>stored</td>
+<td><strong>not stored</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>The hidden bit is free precision.</strong> A normalised binary significand always starts with 1, so IEEE 754 leaves it out: FP32 stores 23 mantissa bits and gets 24 bits of precision.</p>
+<h3 id="biased-exponent">Biased exponent</h3>
+<p>The sign has its own bit, and the significand is always positive, so it is stored as unsigned binary. The exponent can be negative. Two's complement could hold it; IEEE 754 stores <code>e = E + bias</code> with <code>bias = 2^(w−1) − 1</code>.</p>
+<table>
+<thead>
+<tr>
+<th>3-bit pattern</th>
+<th style="text-align: right;">Two's complement</th>
+<th style="text-align: right;">Biased, <code>e − 3</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">−3</td>
+</tr>
+<tr>
+<td>001</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">−2</td>
+</tr>
+<tr>
+<td>010</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">−1</td>
+</tr>
+<tr>
+<td>011</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>100</td>
+<td style="text-align: right;"><strong>−4</strong></td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>101</td>
+<td style="text-align: right;">−3</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>110</td>
+<td style="text-align: right;">−2</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>111</td>
+<td style="text-align: right;">−1</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Biased exponents sort in the same order as their bit patterns; two's complement jumps from +3 to −4.</strong> With the exponent above the mantissa, non-negative floats compare correctly as plain unsigned integers:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Value</th>
+<th>FP32 bits (hex)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1.0</td>
+<td><code>3f800000</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">2.0</td>
+<td><code>40000000</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">3.0</td>
+<td><code>40400000</code></td>
+</tr>
+</tbody>
+</table>
+<p>The all-zeros and all-ones patterns are reserved (see <em>Normalized, subnormal and special values</em> below), so the usable FP32 exponents run from −126 to +127.</p>
+<h3 id="worked-example-975-in-fp32">Worked example: 9.75 in FP32</h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Convert to binary</td>
+<td><code>9.75 = 1001.11₂</code></td>
+</tr>
+<tr>
+<td>2. Normalise</td>
+<td><code>1.00111₂ × 2^3</code></td>
+</tr>
+<tr>
+<td>3. Sign</td>
+<td><code>s = 0</code></td>
+</tr>
+<tr>
+<td>4. Biased exponent</td>
+<td><code>3 + 127 = 130 = 10000010₂</code></td>
+</tr>
+<tr>
+<td>5. Mantissa, hidden 1 dropped</td>
+<td><code>00111000000000000000000</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>S</th>
+<th>Exponent</th>
+<th>Mantissa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>10000010</td>
+<td>00111000000000000000000</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code>0100 0001 0001 1100 0000 0000 0000 0000  =  0x411C0000
+</code></pre></div>
+<p><strong>In memory the bytes are <code>00 00 1c 41</code> on x86 and most ARM systems,</strong> which are little-endian: least significant byte at the lowest address.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;f&#39;</span><span class="p">,</span> <span class="mf">9.75</span><span class="p">)</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>      <span class="c1"># big-endian: the bit pattern as written</span>
+<span class="s1">&#39;411c0000&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&lt;f&#39;</span><span class="p">,</span> <span class="mf">9.75</span><span class="p">)</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>      <span class="c1"># little-endian: the bytes as stored</span>
+<span class="s1">&#39;00001c41&#39;</span>
+</code></pre></div>
+<h3 id="normalized-subnormal-and-special-values">Normalized, subnormal and special values</h3>
+<p>The exponent field decides how the rest of the bits are read. A <strong>normalized</strong> float has significand <code>1.f</code> with a hidden leading 1. A <strong>subnormal</strong> (denormalized) float has significand <code>0.f</code> and fills the gap around zero.</p>
+<table>
+<thead>
+<tr>
+<th>Exponent bits <code>e</code></th>
+<th>Case</th>
+<th>Significand M</th>
+<th>Exponent E</th>
+<th>Covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>neither all 0s nor all 1s</td>
+<td><strong>Normalized</strong></td>
+<td><code>1.f</code> (hidden 1)</td>
+<td><code>e − bias</code></td>
+<td>almost every number</td>
+</tr>
+<tr>
+<td>all 0s</td>
+<td><strong>Subnormal</strong></td>
+<td><code>0.f</code> (no hidden 1)</td>
+<td><code>1 − bias</code></td>
+<td>zero and tiny values near it</td>
+</tr>
+<tr>
+<td>all 1s</td>
+<td><strong>Special</strong></td>
+<td>—</td>
+<td>—</td>
+<td>±∞ when <code>f = 0</code>, NaN when <code>f ≠ 0</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="why-subnormals-are-needed">Why subnormals are needed</h4>
+<p><strong>With a hidden 1, every significand is at least 1, so normalized floats alone cannot represent zero and leave a hole around it.</strong> The smallest normalized FP32 value is <code>1.0 × 2^-126</code>. Between it and 0 there would be nothing, while the step just above it is <code>2^-149</code>: a gap 2²³ times wider than its neighbourhood.</p>
+<p>That hole breaks arithmetic that programs rely on:</p>
+<ul>
+<li><strong><code>x − y == 0</code> would no longer mean <code>x == y</code>.</strong> Take <code>x = 1.5 × 2^-126</code> and <code>y = 2^-126</code>. Both are normalized and they differ, but <code>x − y = 2^-127</code> is below the smallest normalized value. Without subnormals it flushes to 0, and code such as <code>if x != y: z = 1 / (x - y)</code> divides by zero.</li>
+<li><strong>Small values vanish abruptly.</strong> Any result below <code>2^-126</code> drops straight to 0 and takes every later product with it.</li>
+</ul>
+<p>Subnormals fill the hole. When the exponent bits are all zeros, <strong>the hidden bit becomes 0</strong>, so <code>M = 0.f</code>:</p>
+<ul>
+<li><strong>Zero falls out of the encoding:</strong> <code>e = 0, f = 0</code> is ±0.</li>
+<li><strong>Values shrink toward 0 in even steps of <code>2^-149</code>,</strong> so <code>x − y = 2^-127</code> is stored exactly. This is <strong>gradual underflow</strong>.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="mi">2</span><span class="o">**-</span><span class="mi">126</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="mi">2</span><span class="o">**-</span><span class="mi">126</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span>                    <span class="c1"># 2^-127: a subnormal, not zero</span>
+<span class="mf">5.877472e-39</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="kc">False</span>
+</code></pre></div>
+<h4 id="why-e-1-bias-not-0-bias">Why <code>E = 1 − bias</code>, not <code>0 − bias</code></h4>
+<p><strong>It keeps the number line continuous.</strong> The largest subnormal, <code>0.111…1 × 2^-126</code>, sits one step below the smallest normalized value, <code>1.000…0 × 2^-126</code>. The step is <code>2^-149</code> on both sides of the boundary, with no jump.</p>
+<table>
+<thead>
+<tr>
+<th>FP32</th>
+<th>Value</th>
+<th style="text-align: right;">Significant bits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Smallest normalized</td>
+<td><code>2^-126 ≈ 1.18 × 10⁻³⁸</code></td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr>
+<td>Largest subnormal</td>
+<td><code>(1 − 2^-23) × 2^-126</code></td>
+<td style="text-align: right;">23</td>
+</tr>
+<tr>
+<td>Smallest subnormal</td>
+<td><code>2^-149 ≈ 1.4 × 10⁻⁴⁵</code></td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The cost is precision.</strong> A subnormal keeps the fixed step <code>2^-149</code> but loses one significant bit for every halving toward 0. Near zero, floating point turns back into fixed point.</p>
+<div class="admonition note">
+<p class="admonition-title">Why this matters in ML</p>
+<p>FP16's smallest normalized value is <code>6.1 × 10⁻⁵</code>; its subnormals reach down to <code>6.0 × 10⁻⁸</code>. Small gradients routinely land in that band. They survive as subnormals with few significant bits, and anything smaller flushes to 0. Mixed-precision training scales the loss up before the backward pass to lift gradients back into the normalized range.</p>
+</div>
+<hr />
+<h2 id="7-implications">7. Implications</h2>
 <h3 id="the-step-grows-with-magnitude">The step grows with magnitude</h3>
+<p><strong>Exponent bits buy range; mantissa bits buy precision.</strong> <code>M</code> mantissa bits give <code>2^M</code> steps in every power-of-two interval, so relative error stays near <code>2^-(M+1)</code> while absolute error grows with the value.</p>
 <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="mi">16777217</span><span class="p">)</span>                 <span class="c1"># 2^24 + 1</span>
 <span class="mf">16777216.0</span>
@@ -1808,9 +2598,53 @@ FP32:   s | eeeeeeee | mmmmmmmmmmmmmmmmmmmmmmm
 <span class="o">&gt;&gt;&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">(</span><span class="mf">1e-8</span><span class="p">)</span>                     <span class="c1"># below FP16&#39;s smallest subnormal</span>
 <span class="mf">0.0</span>
 </code></pre></div>
-<p><strong>Special values:</strong> an all-ones exponent encodes ±∞ and NaN, and an all-zeros exponent encodes zero and the <strong>subnormals</strong>, which trade precision for a gentler underflow.</p>
+<h3 id="casting">Casting</h3>
+<table>
+<thead>
+<tr>
+<th>Cast</th>
+<th>Kind</th>
+<th>What happens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>float</code> → <code>double</code></td>
+<td>widening</td>
+<td>exact; the mantissa gains bits</td>
+</tr>
+<tr>
+<td><code>int</code> → <code>long</code></td>
+<td>widening</td>
+<td>exact; sign extension copies the sign bit upward</td>
+</tr>
+<tr>
+<td><code>double</code> → <code>float</code></td>
+<td>narrowing</td>
+<td><strong>rounded</strong> to the nearest float; <code>0.1</code> becomes <code>0.10000000149011612</code></td>
+</tr>
+<tr>
+<td><code>long</code> → <code>int</code></td>
+<td>narrowing</td>
+<td><strong>high bits discarded</strong>; <code>4294967301</code> becomes <code>5</code></td>
+</tr>
+<tr>
+<td><code>int</code> → <code>float</code></td>
+<td>same width, different grid</td>
+<td>exact only up to <code>2^24</code>; <code>16777217</code> becomes <code>16777216</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="mixing-signed-and-unsigned">Mixing signed and unsigned</h3>
+<p>C and C++ <strong>convert the signed operand to unsigned</strong> when an expression mixes <code>int</code> and <code>unsigned int</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-5</span><span class="p">;</span>
+<span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%u</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">);</span><span class="w">   </span><span class="c1">// 4294967294: -5 is read as 2^32 - 5, then 3 is added</span>
+<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">b</span><span class="p">);</span><span class="w">   </span><span class="c1">// 0: the comparison is 4294967291 &lt; 3</span>
+</code></pre></div>
+<p><strong>Use unsigned types only for bit patterns and sizes</strong>, where negative values cannot occur.</p>
 <hr />
-<h2 id="5-different-numerical-formats">5. Different numerical formats</h2>
+<h2 id="8-different-numerical-formats">8. Different numerical formats</h2>
 <table>
 <thead>
 <tr>
@@ -1822,6 +2656,13 @@ FP32:   s | eeeeeeee | mmmmmmmmmmmmmmmmmmmmmmm
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><strong>FP64</strong></td>
+<td>1 / 11 / 52</td>
+<td style="text-align: right;">1.8 × 10³⁰⁸</td>
+<td style="text-align: right;">2.2 × 10⁻¹⁶</td>
+<td>scientific computing; rare in ML</td>
+</tr>
 <tr>
 <td><strong>FP32</strong></td>
 <td>1 / 8 / 23</td>
@@ -1884,7 +2725,7 @@ FP32:   s | eeeeeeee | mmmmmmmmmmmmmmmmmmmmmmm
 <li><strong>BF16 vs FP16:</strong> the same 16 bits split two ways. BF16 keeps FP32's exponent, so a value that fits in FP32 does not overflow; it gives up three mantissa bits to do it.</li>
 <li><strong>The two FP8s:</strong> E4M3 has no infinities, which buys back range up to 448. E5M2 keeps FP16's exponent range.</li>
 <li><strong>FP4 E2M1</strong> has only eight magnitudes: <code>0, 0.5, 1, 1.5, 2, 3, 4, 6</code>. It is usable only because a shared scale per block of 16 or 32 values moves that grid to where the data sits.</li>
-<li><strong>INT8 and INT4 are fixed point with an external scale.</strong> Generalise Section 1's power-of-two scale <code>2^-F</code> to any real scale, chosen per tensor, per channel or per group, and you have symmetric integer quantization.</li>
+<li><strong>INT8 and INT4 are fixed point with an external scale.</strong> Generalise Section 2's power-of-two scale <code>2^-F</code> to any real scale and an offset, and you have the affine quantization of <a href="../Lecture21_22/">Lecture 21/22</a>.</li>
 </ul>
 <div class="admonition question">
 <p class="admonition-title">Bytes to speed</p>
@@ -1893,10 +2734,12 @@ FP32:   s | eeeeeeee | mmmmmmmmmmmmmmmmmmmmmmm
 <hr />
 <h2 id="references">References</h2>
 <ol>
+<li>Bryant and O'Hallaron, <em>Computer Systems: A Programmer's Perspective</em>, 3<sup>rd</sup> ed. — §2.2–2.3 integer representation and arithmetic, §2.4 floating point</li>
 <li>IEEE, <em>IEEE Standard for Floating-Point Arithmetic</em> (IEEE 754-2019)</li>
+<li>Goldberg, <a href="https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html"><em>What Every Computer Scientist Should Know About Floating-Point Arithmetic</em></a> (1991)</li>
 <li>Micikevicius et al., <a href="https://arxiv.org/abs/2209.05433"><em>FP8 Formats for Deep Learning</em></a> (2022) — E4M3 and E5M2</li>
 <li>Open Compute Project, <a href="https://www.opencompute.org/documents/ocp-microscaling-formats-mx-v1-0-spec-final-pdf"><em>Microscaling Formats (MX) Specification v1.0</em></a> (2023) — block-scaled FP8, FP6, FP4</li>
-<li>Goldberg, <a href="https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html"><em>What Every Computer Scientist Should Know About Floating-Point Arithmetic</em></a> (1991)</li>
+<li><a href="https://www.youtube.com/playlist?list=PLBlnK6fEyqRgLLlzdgiTUKULKJPYc0A4q">Computer Organization &amp; Architecture — number system videos</a> (YouTube playlist)</li>
 <li><a href="../Lecture9_10/">Lecture 9/10</a> — why bytes per parameter set decode speed</li>
 </ol>
 
@@ -1945,13 +2788,13 @@ FP32:   s | eeeeeeee | mmmmmmmmmmmmmmmmmmmmmmm
         
         
           
-          <a href="../../labs/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+          <a href="../Lecture21_22/" class="md-footer__link md-footer__link--next" aria-label="Next: 21_22:Affine Quantization">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Overview
+                21_22:Affine Quantization
               </div>
             </div>
             <div class="md-footer__button md-icon">
