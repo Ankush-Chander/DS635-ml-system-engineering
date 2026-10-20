@@ -1,0 +1,17 @@
+{
+  "name": "DS635 GGUF block dissection",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "postCreateCommand": "pip install --user pytest numpy gguf==0.19.0 && cd ${containerWorkspaceFolder} && ([ -d llama.cpp ] || (git -c advice.detachedHead=false clone --quiet --depth 1 --branch b10758 --filter=blob:none --sparse https://github.com/ggml-org/llama.cpp && git -C llama.cpp sparse-checkout set --no-cone /ggml/src/ggml-common.h /ggml/src/ggml-quants.c /ggml/src/ggml-cpu/quants.c))",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/code/quantization/gguf_block",
+  "customizations": {
+    "codespaces": {
+      "openFiles": ["gguf_block.py"]
+    },
+    "vscode": {
+      "extensions": ["ms-python.python"],
+      "settings": {
+        "python.testing.pytestEnabled": true
+      }
+    }
+  }
+}
