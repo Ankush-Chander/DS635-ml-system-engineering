@@ -199,6 +199,10 @@ plugins:
 #extra_css:
 #        - stylesheets/extra.css
 #
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js
+
 ### Extensions
 markdown_extensions:
   - attr_list
@@ -214,7 +218,8 @@ markdown_extensions:
 #  - markdown.extensions.toc:
 #      baselevel: 1
 #      permalink: true
-  - pymdownx.arithmatex
+  - pymdownx.arithmatex:
+      generic: true
   - pymdownx.betterem:
       smart_enable: all
   - pymdownx.caret
