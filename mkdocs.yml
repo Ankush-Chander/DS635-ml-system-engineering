@@ -34,6 +34,7 @@ nav:
       - 17_18:Speculative Decoding Variants: 'lectures/Lecture17_18.md'
       - 19_20:Number Formats: 'lectures/Lecture19_20.md'
       - 21_22:Affine Quantization: 'lectures/Lecture21_22.md'
+      - 23_24:Quantization Schemes & Targets: 'lectures/Lecture23_24.md'
       # - 4:Tensor Cores & Precision: 'lectures/Lecture4.md'
   - Labs:
       - Overview: 'labs/index.md'

@@ -213,8 +213,9 @@ $$
 | scale only, FP16 | 16 bits | $4 + 16/32 =$ **4.5** |
 | scale + offset, FP16 each | 32 bits | $4 + 32/32 =$ **5.0** |
 
-**Halving $g$ doubles the metadata overhead.** These two rows are exactly llama.cpp's `Q4_0` and `Q4_1`, the subject of the next exercise.
+**Halving $g$ doubles the metadata overhead.** These two rows are exactly llama.cpp's `Q4_0` and `Q4_1`.
 
+<!--
 ---
 
 ## 6. Classroom exercise — dissect a GGUF block
@@ -266,6 +267,7 @@ The second term is §4's zero-point term. llama.cpp quantizes the activations to
 !!! question "Discuss"
     - `Q4_1`'s implied $Z = -m/d$ is not an integer, so real $0.0$ is not exact. Why is that acceptable for weights, given §2's two reasons?
     - `quantize_row_q4_0_ref` sets $d = \text{max} / {-8}$, where `max` is the signed value of largest magnitude. When is $d$ negative, and what does that buy?
+-->
 
 ---
 
