@@ -47,7 +47,7 @@
 ## 6. Read it off a real server
 
 - vLLM reports its pool at startup: `GPU KV cache size` in tokens and `Maximum concurrency` at the configured length.
-- Both numbers follow from [Lecture 27/28](Lecture27_28.md) §7: pool bytes $\div$ KV bytes per token.
+- Both numbers follow from [Lecture 27/28](Lecture27_28.md) §5.2: pool bytes $\div$ KV bytes per token.
 
 !!! question "Check the server"
     From a startup log, recover the KV bytes per token and the maximum concurrency. Then predict both with FP8 KV.

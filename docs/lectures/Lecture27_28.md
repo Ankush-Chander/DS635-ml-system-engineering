@@ -39,7 +39,7 @@ $$
 - **Score** $s_{ij} = q_i \cdot k_j$: how well token $j$'s key answers token $i$'s query.
 - **Scale by $\sqrt{d_{head}}$:** a dot product of $d$ unit-variance terms has variance $d$. Unscaled, large scores saturate the softmax and one token takes all the weight.
 - **Softmax** over $j$ turns scores into weights that sum to 1.
-- **Mask $M$:** in a decoder, $M_{ij} = -\infty$ for $j > i$, so no token attends to the future. This **causal mask** is what makes §6 work.
+- **Mask $M$:** in a decoder, $M_{ij} = -\infty$ for $j > i$, so no token attends to the future. This **causal mask** is what makes §5.1 work.
 - **Output** $o_i = \sum_j a_{ij} v_j$.
 
 ## 3. Multi-head attention
@@ -59,7 +59,7 @@ One query per token must serve every relationship at once. In *"The exhausted do
 | --- | --- |
 | input $X$ | $n \times 1024$ |
 | $W_Q$, all heads | $1024 \times (16 \cdot 128)$ |
-| $W_K$, $W_V$, all heads | $1024 \times (8 \cdot 128)$: fewer KV heads, see §9 |
+| $W_K$, $W_V$, all heads | $1024 \times (8 \cdot 128)$: fewer KV heads, see §5.4 |
 | $W_O$ | $2048 \times 1024$ |
 
 ## 4. The cost is quadratic
@@ -79,7 +79,7 @@ Every query is compared with every key, **including its own**. Direction matters
 !!! question "Double the context"
     Context goes from 4K to 8K tokens. By what factor do the scores grow? The weights?
 
-## 5. FlashAttention: compute it in tiles
+### FlashAttention: compute it in tiles
 
 **Shared memory is far too small to hold a 32 MiB score matrix, so the matrix is never formed whole.**
 
@@ -92,7 +92,11 @@ Every query is compared with every key, **including its own**. Direction matters
 !!! tip "Further exploration"
     Dao et al., *FlashAttention* (2022): the online-softmax rescaling that lets a tile be normalised before its row is complete.
 
-## 6. The KV cache
+## 5. The KV cache
+
+Part 1 prices the cache; Part 2 shrinks it.
+
+### 5.1 What is cached, and why it is exact
 
 **Prefill** reads the whole prompt in one pass: the $n^2$ case, compute-bound. **Decode** then generates one token per pass ([Lecture 9/10](Lecture9_10.md) §3).
 
@@ -111,9 +115,9 @@ Generating token 101 needs:
 | Scores | $t$ | $t$ |
 | Memory held | none | **every past K and V** |
 
-**The trade:** recompute that grows with every step, exchanged for memory that grows with every token. The rest of this lecture prices that memory.
+**The trade:** recompute that grows with every step, exchanged for memory that grows with every token. §5.2 prices that memory.
 
-## 7. Sizing the cache
+### 5.2 Sizing the cache
 
 $$
 \text{KV bytes per token} = 2 \times n_{layers} \times n_{kv\_heads} \times d_{head} \times \text{bytes per element}
@@ -134,7 +138,7 @@ The leading 2 counts $K$ and $V$. Every term comes from the model's `config.json
 !!! question "Size it yourself"
     For each row, compute the KV cache at the model's maximum context, and the number of full-length users at which the cache equals the weights.
 
-## 8. Two costs, not one
+### 5.3 Two costs, not one
 
 | Cost | What grows | Consequence |
 | --- | --- | --- |
@@ -144,7 +148,7 @@ The leading 2 counts $K$ and $V$. Every term comes from the model's `config.json
 - Measured on a 27B model, BF16 KV: **56 tok/s at 32 prompt tokens, 23 tok/s at 101K**. Same weights, same GPU.
 - Weights dominate a short prompt's traffic. At long context the cache does.
 
-## 9. Lever 1 — fewer KV heads
+### 5.4 Lever 1 — fewer KV heads
 
 | Scheme | KV heads | KV size relative to MHA |
 | --- | --- | --- |
@@ -165,7 +169,7 @@ The leading 2 counts $K$ and $V$. Every term comes from the model's `config.json
 !!! question "Predict"
     Turn on FP8 KV for a 27B model. Is decode faster or slower at a 32-token prompt? At 101K tokens?
 
-## 10. When it pays
+### 5.5 When quantizing it pays
 
 | Prompt tokens | BF16 KV, tok/s | FP8 KV, tok/s | Change |
 | ---: | ---: | ---: | ---: |
@@ -177,12 +181,12 @@ The leading 2 counts $K$ and $V$. Every term comes from the model's `config.json
 - Quantize and dequantize cost the same per token at any length. **The traffic saved grows with context.**
 - In FP8 the curve flattens: the cache term shrinks until weight reads dominate again.
 
-## 11. Neither weight nor activation
+### 5.6 Neither weight nor activation
 
 - The cache is **produced online**, like an activation, and **reread on every step**, like a weight.
 - It does not exist before inference, so there is no offline calibration. **Scales are dynamic** ([Lecture 23/24](Lecture23_24.md) §1.2).
 
-## 12. Keys and values differ
+### 5.7 Keys and values differ
 
 | Tensor | Side of the softmax | Structure | Granularity |
 | --- | --- | --- | --- |
@@ -193,18 +197,18 @@ The leading 2 counts $K$ and $V$. Every term comes from the model's `config.json
 - This is [Lecture 21/22](Lecture21_22.md) §5's rule: match the scale's grouping to where the outliers live.
 - Per-token scales for $V$ cost 2 bytes per token per head: **about 3%** on 64 bytes of INT4 data at $d_{head} = 128$.
 
-## 13. The streaming catch
+### 5.8 The streaming catch
 
 - A per-channel scale for $K$ is a maximum **over tokens**. During decode, those tokens arrive one at a time.
 - Fix: quantize keys per channel **within groups of tokens**, and hold the newest tokens in FP16 until a group fills (KIVI).
 
-## 14. FP8 KV in practice
+### 5.9 FP8 KV in practice
 
 - **E4M3** is the default: cache values are well scaled, so mantissa beats range.
 - **It pays twice.** With the same 12.4 GiB pool at a 131K-token limit, concurrency rose from **1.31× to 2.36×**: one resident long session became two.
 - **It is lossy.** It perturbs attention scores, so check quality at the **longest** context you serve.
 
-## 15. Below 4 bits
+### 5.10 Below 4 bits
 
 - **TurboQuant:** a random rotation spreads outlier channels evenly, and a fixed codebook quantizes each coordinate. **No calibration**, so it suits a tensor that arrives one vector at a time.
 - **Decision rule:** judge the flag against **your context distribution**. Leave it off for chat under ~2K tokens; turn it on for agents working at 15K+.
