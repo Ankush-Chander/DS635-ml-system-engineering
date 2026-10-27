@@ -32,6 +32,10 @@ Every token arrives as a vector $x$ of width $d_{model}$. Three learned projecti
 
 ## 2. Scoring: dot product, scale, softmax
 
+![Attention for one token: the current token's query is dot-multiplied with the keys of all tokens to give scores; softmax turns the scores into weights; the weighted sum of all tokens' values is the output](../images/attention/attention_mechanism.png)
+
+**One query against every key, then a weighted sum of every value.** The equation below is this pipeline for all queries at once.
+
 $$
 \operatorname{Attention}(Q, K, V) = \operatorname{softmax}\!\left(\frac{QK^\top}{\sqrt{d_{head}}} + M\right) V
 $$
@@ -79,19 +83,6 @@ Every query is compared with every key, **including its own**. Direction matters
 !!! question "Double the context"
     Context goes from 4K to 8K tokens. By what factor do the scores grow? The weights?
 
-### FlashAttention: compute it in tiles
-
-**Shared memory is far too small to hold a 32 MiB score matrix, so the matrix is never formed whole.**
-
-- Load a **tile** of queries and a tile of keys and values into shared memory ([Lecture 8](Lecture8.md) §7).
-- Compute that tile's scores and fold them into the output with a **running softmax**: keep the row's maximum and sum so far, and rescale as new tiles arrive.
-- Discard the tile and load the next one. **The $n \times n$ matrix never reaches HBM.**
-- **The result is exact.** The arithmetic is reordered; nothing is approximated.
-- **It changes traffic, not FLOPs or storage.** The work is still $O(n^2)$, and the KV cache is the same size.
-
-!!! tip "Further exploration"
-    Dao et al., *FlashAttention* (2022): the online-softmax rescaling that lets a tile be normalised before its row is complete.
-
 ## 5. The KV cache
 
 Part 1 prices the cache; Part 2 shrinks it.
@@ -135,8 +126,10 @@ The leading 2 counts $K$ and $V$. Every term comes from the model's `config.json
 - **Read $d_{head}$ from the config.** Qwen3-0.6B has $16 \times 128 = 2048 \neq$ `hidden_size` 1024. Dividing hidden size by heads gives 64 and **halves the answer**.
 - Llama-2-7B's cache matches its weights at 25.7K tokens. Its window is 4,096, so that takes **about 6 users** at full context.
 
-!!! question "Size it yourself"
-    For each row, compute the KV cache at the model's maximum context, and the number of full-length users at which the cache equals the weights.
+!!! tip "Notebook — KV cache, measured · §5.2"
+    Predict one layer's K shape and the total KV bytes for 256 tokens, then run it: the formula is checked against Qwen3-0.6B's real cache, byte for byte.
+
+    [**Open in Colab**](https://colab.research.google.com/github/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/notebooks/kv_cache_shapes.ipynb) · [view on GitHub](https://github.com/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/notebooks/kv_cache_shapes.ipynb)
 
 ### 5.3 Two costs, not one
 
@@ -212,6 +205,19 @@ The leading 2 counts $K$ and $V$. Every term comes from the model's `config.json
 
 - **TurboQuant:** a random rotation spreads outlier channels evenly, and a fixed codebook quantizes each coordinate. **No calibration**, so it suits a tensor that arrives one vector at a time.
 - **Decision rule:** judge the flag against **your context distribution**. Leave it off for chat under ~2K tokens; turn it on for agents working at 15K+.
+
+## 6. FlashAttention: compute it in tiles
+
+**The KV cache removes recompute from decode. Prefill still builds §4's score matrix, 32 MiB per head at 4,096 tokens, and shared memory is far too small to hold it, so the matrix is never formed whole.**
+
+- Load a **tile** of queries and a tile of keys and values into shared memory ([Lecture 8](Lecture8.md) §7).
+- Compute that tile's scores and fold them into the output with a **running softmax**: keep the row's maximum and sum so far, and rescale as new tiles arrive.
+- Discard the tile and load the next one. **The $n \times n$ matrix never reaches HBM.**
+- **The result is exact.** The arithmetic is reordered; nothing is approximated.
+- **It changes traffic, not FLOPs or storage.** The work is still $O(n^2)$, and the KV cache is the same size.
+
+!!! tip "Further exploration"
+    Dao et al., *FlashAttention* (2022): the online-softmax rescaling that lets a tile be normalised before its row is complete.
 
 ---
 
