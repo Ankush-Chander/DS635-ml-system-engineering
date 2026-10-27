@@ -1,0 +1,1959 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Home of DS635 - Machine Learning System Engineering, DAU">
+      
+      
+      
+        <link rel="canonical" href="https://DS635.ankushchander.com/lectures/Lecture23_24/">
+      
+      
+        <link rel="prev" href="../Lecture21_22/">
+      
+      
+        <link rel="next" href="../Lecture27_28/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>23_24:Quantization Schemes & Targets - DS635 - Machine Learning System Engineering | DAU</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quantization-schemes-and-targets" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-header__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DS635 - Machine Learning System Engineering | DAU
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              23_24:Quantization Schemes & Targets
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Lecture0/" class="md-tabs__link">
+          
+  
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../labs/" class="md-tabs__link">
+          
+  
+  
+  Labs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../viz/acceptance-rule.html" class="md-tabs__link">
+          
+  
+  
+  Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DS635 - Machine Learning System Engineering | DAU" class="md-nav__button md-logo" aria-label="DS635 - Machine Learning System Engineering | DAU" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DS635 - Machine Learning System Engineering | DAU
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lectures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lectures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0:Course Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1:Machine Learning Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:Hardware Accelerators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture3_4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3_4:Memory Hierarchy & Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture5_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU job submission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7:Matmul to Silicon — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7a:From Python to a Kernel Launch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7b:The Throughput Machine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture7c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7c:SIMT, Tiles & Occupancy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8:Inside the GPU — Memory & the Roofline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture9_10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9_10:Inference Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture11_12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11_12:Model Artifacts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture13_14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13_14:Decoding Strategies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture15_16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15_16:Speculative Decoding
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture17_18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17_18:Speculative Decoding Variants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture19_20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    19_20:Number Formats
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture21_22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    21_22:Affine Quantization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    23_24:Quantization Schemes & Targets
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    23_24:Quantization Schemes & Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-types-of-quantization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Types of quantization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Types of quantization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-symmetric-vs-asymmetric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Symmetric vs asymmetric
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-static-vs-dynamic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Static vs dynamic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-quantization-targets-weights-only-or-weights-and-activations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Quantization targets: weights only, or weights and activations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Quantization targets: weights only, or weights and activations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-weight-only-w8a16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Weight-only (W8A16)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-weights-and-activations-w8a8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Weights and activations (W8A8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-which-one-pays" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Which one pays
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture27_28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    27_28:Attention & KV Cache
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    29:Serving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Labs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Labs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab5_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5_6:GPU Job Submission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab5_6_gpu_job_submission/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5/6 — The GPU submission protocol, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2:The Concurrency Budget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab2_concurrency_budget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2 — The concurrency budget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab11_12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11_12:Three Formats, One Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab11_12_model_artifacts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 11/12 — The three formats, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab13_14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13_14:Decoding Strategies, Measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab13_14_decoding_strategies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 13/14 — Decoding strategies, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab15_16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15_16:Speculative Decoding
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab15_16_speculative_decoding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 15/16 — Speculative decoding, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../viz/acceptance-rule.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Speculative decoding: the acceptance rule
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-types-of-quantization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Types of quantization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Types of quantization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-symmetric-vs-asymmetric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Symmetric vs asymmetric
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-static-vs-dynamic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Static vs dynamic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-quantization-targets-weights-only-or-weights-and-activations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Quantization targets: weights only, or weights and activations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Quantization targets: weights only, or weights and activations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-weight-only-w8a16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Weight-only (W8A16)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-weights-and-activations-w8a8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Weights and activations (W8A8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-which-one-pays" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Which one pays
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="quantization-schemes-and-targets">Quantization schemes and targets</h1>
+<blockquote>
+<p><strong>Module thesis:</strong> <a href="../Lecture21_22/">Lecture 21/22</a> built the affine map <span class="arithmatex">\(r = S(q - Z)\)</span> and decided how many values share one <span class="arithmatex">\((S, Z)\)</span>. Two more decisions fix a quantizer: <strong>where the grid sits</strong> (symmetric or asymmetric) and <strong>when its scale is computed</strong> (static or dynamic). Then comes the decision that sets the speedup: <strong>which tensors are quantized at all</strong>. Weights only saves memory traffic; weights and activations saves arithmetic as well.</p>
+</blockquote>
+<p><strong>Prerequisite:</strong> <a href="../Lecture21_22/">Affine quantization</a></p>
+<hr />
+<h2 id="1-types-of-quantization">1. Types of quantization</h2>
+<p>Every quantizer answers two independent questions:</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Options</th>
+<th>Fixed by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Where does the grid sit?</strong></td>
+<td>symmetric · asymmetric</td>
+<td>the shape of the data</td>
+</tr>
+<tr>
+<td><strong>When is <span class="arithmatex">\(S\)</span> computed?</strong></td>
+<td>static · dynamic</td>
+<td>whether the data is known before inference</td>
+</tr>
+</tbody>
+</table>
+<h3 id="11-symmetric-vs-asymmetric">1.1 Symmetric vs asymmetric</h3>
+<p><strong>Asymmetric</strong> is the full affine map of Lecture 21/22 §1: fit the grid to <span class="arithmatex">\([r_{min}, r_{max}]\)</span> and let <span class="arithmatex">\(Z\)</span> land wherever Equation 2.7 puts it.</p>
+<p><strong>Symmetric</strong> pins <span class="arithmatex">\(Z = 0\)</span> and centres the grid on real zero:</p>
+<div class="arithmatex">\[
+S = \frac{\max |r|}{q_{max}}, \qquad q = \operatorname{clip}\!\left(\operatorname{round}\!\left(\frac{r}{S}\right),\; -q_{max},\; q_{max}\right)
+\]</div>
+<ul>
+<li>int8 symmetric uses <span class="arithmatex">\([-127, 127]\)</span>. <strong>Dropping <span class="arithmatex">\(-128\)</span></strong> makes the grid a mirror image, so <span class="arithmatex">\(-r\)</span> quantizes to exactly <span class="arithmatex">\(-q\)</span>.</li>
+<li>Fixed point (Lecture 19/20) is symmetric, with <span class="arithmatex">\(S\)</span> forced to a power of two.</li>
+</ul>
+<p><strong>Worked example: data in [−1.0, 3.0], int8.</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Asymmetric</th>
+<th>Symmetric</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(S\)</span></td>
+<td><span class="arithmatex">\(4.0 / 255 = 0.0157\)</span></td>
+<td><span class="arithmatex">\(3.0 / 127 = 0.0236\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(Z\)</span></td>
+<td><span class="arithmatex">\(64\)</span></td>
+<td><span class="arithmatex">\(0\)</span></td>
+</tr>
+<tr>
+<td>Integers used</td>
+<td>all 256</td>
+<td><span class="arithmatex">\(-42 \ldots 127\)</span>: <strong>170 of 255</strong></td>
+</tr>
+<tr>
+<td>Step size</td>
+<td>1×</td>
+<td><strong>1.5× coarser</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Symmetric wastes the grid on the side the data never reaches.</strong> Post-ReLU activations in <span class="arithmatex">\([0, 6]\)</span> use only <span class="arithmatex">\(0 \ldots 127\)</span>, so half the integers sit idle.</p>
+<p><strong>Asymmetric pays at runtime.</strong> Lecture 21/22 §4 showed that a nonzero <span class="arithmatex">\(Z_w\)</span> adds the term <span class="arithmatex">\(Z_w \sum q_x\)</span>, an extra pass over every input.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Symmetric</th>
+<th>Asymmetric</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Grid use on skewed data</strong></td>
+<td>wastes up to half</td>
+<td>full</td>
+</tr>
+<tr>
+<td><strong>Integer dot product</strong></td>
+<td>core term only</td>
+<td>extra terms per input (Lecture 21/22 §4)</td>
+</tr>
+<tr>
+<td><strong>Typical target</strong></td>
+<td><strong>weights</strong>: roughly zero-centred</td>
+<td><strong>activations</strong> after ReLU / GELU</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">In practice</p>
+<p>Most int8 GPU inference stacks quantize <strong>both</strong> weights and activations symmetrically: TensorRT supports only symmetric int8 [2]. The kernel stays a single multiply-accumulate loop. Asymmetric grids appear where the bit budget is tightest, such as 4-bit weight blocks.</p>
+</div>
+<h3 id="12-static-vs-dynamic">1.2 Static vs dynamic</h3>
+<p><strong>The scale for weights is always computed offline</strong>, because weights are known before inference. The choice applies to <strong>activations</strong>, which depend on the input.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Static</th>
+<th>Dynamic</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>When <span class="arithmatex">\(S_x\)</span> is computed</strong></td>
+<td>once, offline, on a calibration set</td>
+<td>every forward pass, from the live tensor</td>
+</tr>
+<tr>
+<td><strong>Calibration data</strong></td>
+<td>required</td>
+<td>none</td>
+</tr>
+<tr>
+<td><strong>Runtime cost</strong></td>
+<td>zero: <span class="arithmatex">\(S_x\)</span> is a constant</td>
+<td>one reduction (<span class="arithmatex">\(\max \lvert x \rvert\)</span>) over the activations before each matmul</td>
+</tr>
+<tr>
+<td><strong>Out-of-range input</strong></td>
+<td><strong>clipped</strong> to the calibrated range</td>
+<td>cannot happen: the range is measured</td>
+</tr>
+<tr>
+<td><strong>Typical use</strong></td>
+<td>CNNs, edge accelerators</td>
+<td>transformers, PyTorch <code>quantize_dynamic</code> [3]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Calibration</strong> runs a few hundred representative inputs through the float model and records each activation's range. Min/max is the simplest rule; percentile and entropy rules [1] clip rare outliers to buy a finer step for everything else.</p>
+<p><strong>Transformers push towards dynamic.</strong> Activation ranges vary sharply from token to token, so one calibrated range is either too wide for most tokens or too narrow for some. Computing <span class="arithmatex">\(S_x\)</span> <strong>per token</strong> at runtime tracks each row.</p>
+<div class="admonition warning">
+<p class="admonition-title">Same words, different meaning</p>
+<p><a href="../Lecture9_10/">Lecture 9/10</a> used <em>static</em> and <em>dynamic</em> for <strong>batching</strong>: when requests are grouped. Here they refer to <strong>scales</strong>: when <span class="arithmatex">\(S_x\)</span> is computed. The two choices are independent.</p>
+</div>
+<hr />
+<h2 id="2-quantization-targets-weights-only-or-weights-and-activations">2. Quantization targets: weights only, or weights and activations</h2>
+<p>A Linear layer stores <strong>weights</strong>, and receives <strong>activations</strong> at runtime. Quantizing only the first saves bytes; quantizing both changes the arithmetic.</p>
+<h3 id="21-weight-only-w8a16">2.1 Weight-only (W8A16)</h3>
+<p><img alt="Weight-only INT8: weights stored as int8 with one symmetric scale per output channel, dequantized to float before a float matmul; 48 B of weights become 12 B plus 12 B of scales, and the output error stays below 0.02" src="../../images/inference_optimization/FloatvsINT8LinearRegressionGuide.png" /></p>
+<ul>
+<li><strong>Stored:</strong> <code>w_q</code> in int8, plus one symmetric scale per output row (Lecture 21/22 §5).</li>
+<li><strong>Computed:</strong> dequantize, then a <strong>float</strong> matmul. Production kernels fuse the dequantize into the GEMM, so float weights never reach memory.</li>
+<li><strong>Calibration:</strong> none. Every scale comes from the weights themselves.</li>
+</ul>
+<h3 id="22-weights-and-activations-w8a8">2.2 Weights and activations (W8A8)</h3>
+<p><img alt="W8A8: the input is quantized with a calibrated scale, multiplied int8 by int8 into an int32 accumulator, then requantized once by m = s_x·s_w/s_y; the matmul runs on int8 tensor cores and the error rises to 0.075, mostly from the coarse output scale" src="../../images/inference_optimization/W8A8QuantizedLinearLayers.png" /></p>
+<ul>
+<li><strong>Computed:</strong> int8 × int8 → int32. This is Lecture 21/22 §4's core term, with every <span class="arithmatex">\(Z = 0\)</span>.</li>
+<li><strong>Requantize:</strong> panel 5's <span class="arithmatex">\(m = s_x s_w / s_y\)</span> is Lecture 21/22 §4's <span class="arithmatex">\(M\)</span>, applied once per output.</li>
+<li><strong>Scales:</strong> <span class="arithmatex">\(s_x\)</span> and <span class="arithmatex">\(s_y\)</span> here are <strong>static</strong> and per-tensor (§1.2), so the layer needs calibration data.</li>
+</ul>
+<h3 id="23-which-one-pays">2.3 Which one pays</h3>
+<p><a href="../Lecture9_10/">Lecture 9/10 §4</a> placed <strong>decode at ~2 FLOP/byte</strong>, far below the ridge, and prefill well above it.</p>
+<table>
+<thead>
+<tr>
+<th>Regime</th>
+<th>Bottleneck</th>
+<th>Weight-only</th>
+<th>W8A8</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Decode, batch 1</strong></td>
+<td>memory bandwidth</td>
+<td><strong>captures the win</strong>: bytes per token drop 2–4×</td>
+<td>same bytes saved; the faster arithmetic sits idle</td>
+</tr>
+<tr>
+<td><strong>Prefill, large batch</strong></td>
+<td>compute</td>
+<td>float matmul: no faster</td>
+<td><strong>int8 tensor cores</strong>: faster arithmetic</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Weight-only attacks the bytes; W8A8 attacks the FLOPs.</strong> Pick the target that matches the bottleneck.</p>
+<div class="admonition question">
+<p class="admonition-title">Break the calibration</p>
+<p>Panel 7 calibrates <span class="arithmatex">\(s_x = 4.0/127\)</span> on three sample inputs. Feed the layer <span class="arithmatex">\(x = [2, 4, 6, 8]\)</span>.</p>
+<ul>
+<li>What is <span class="arithmatex">\(x_q\)</span>?</li>
+<li>Which of §1.2's two schemes avoids the damage, and what does it cost per forward pass?</li>
+</ul>
+</div>
+<hr />
+<h2 id="references">References</h2>
+<ol>
+<li>Wu et al., <a href="https://arxiv.org/abs/2004.09602"><em>Integer Quantization for Deep Learning Inference: Principles and Empirical Evaluation</em></a> (NVIDIA, 2020) — symmetric vs asymmetric cost, static calibration with max, percentile and entropy rules</li>
+<li>NVIDIA, <a href="https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/work-quantized-types.html"><em>TensorRT Developer Guide — Working with Quantized Types</em></a> — symmetric-only int8</li>
+<li>PyTorch, <a href="https://pytorch.org/docs/stable/quantization.html"><em>Quantization</em></a> — dynamic quantization of Linear layers: int8 weights, activation scales computed per batch at runtime</li>
+<li><a href="../Lecture21_22/">Lecture 21/22</a> — the affine map, the four-term dot product, the requantize multiplier <span class="arithmatex">\(M\)</span>, granularity</li>
+<li><a href="../Lecture9_10/">Lecture 9/10</a> — prefill vs decode on the roofline</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../Lecture21_22/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 21_22:Affine Quantization">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                21_22:Affine Quantization
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../Lecture27_28/" class="md-footer__link md-footer__link--next" aria-label="Next: 27_28:Attention &amp; KV Cache">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                27_28:Attention & KV Cache
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Ankush Chander
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.expand", "navigation.footer", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

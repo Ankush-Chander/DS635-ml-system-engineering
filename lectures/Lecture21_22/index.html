@@ -16,7 +16,7 @@
         <link rel="prev" href="../Lecture19_20/">
       
       
-        <link rel="next" href="../../labs/">
+        <link rel="next" href="../Lecture23_24/">
       
       
         
@@ -848,10 +848,71 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-from-fixed-point-to-affine" class="md-nav__link">
+  <a href="#1-the-fundamental-equations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. From fixed point to affine
+        1. The fundamental equations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. The fundamental equations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dequantize-integer-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dequantize: integer → real
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quantize-real-integer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quantize: real → integer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solving-for-s-and-z" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solving for S and Z
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worked-example-uint8-data-in-10-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: uint8, data in [−1.0, 3.0]
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-why-real-zero-must-land-on-an-integer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Why real zero must land on an integer
       
     </span>
   </a>
@@ -859,10 +920,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-fitting-s-and-z-to-the-data" class="md-nav__link">
+  <a href="#3-classroom-exercise-build-it" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Fitting S and Z to the data
+        3. Classroom exercise — build it
       
     </span>
   </a>
@@ -870,46 +931,80 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-real-zero-must-be-exact" class="md-nav__link">
+  <a href="#4-cost-affine-vs-fixed-point" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Real zero must be exact
+        4. Cost: affine vs fixed point
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Cost: affine vs fixed point">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed point
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#4-granularity-who-shares-one-s-z" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#affine" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Granularity: who shares one (S, Z)
+        Affine
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#5-what-z-costs-in-a-dot-product" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#side-by-side" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. What Z costs in a dot product
+        Side by side
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#classroom-exercise-build-it" class="md-nav__link">
+  <a href="#5-granularity-who-shares-one-s-z" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Classroom exercise — build it
+        5. Granularity: who shares one (S, Z)
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="5. Granularity: who shares one (S, Z)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-smaller-groups-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What smaller groups cost
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -928,6 +1023,90 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture23_24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    23_24:Quantization Schemes & Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture27_28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    27_28:Attention & KV Cache
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    29:Serving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1421,10 +1600,71 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-from-fixed-point-to-affine" class="md-nav__link">
+  <a href="#1-the-fundamental-equations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. From fixed point to affine
+        1. The fundamental equations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. The fundamental equations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dequantize-integer-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dequantize: integer → real
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quantize-real-integer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quantize: real → integer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solving-for-s-and-z" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solving for S and Z
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worked-example-uint8-data-in-10-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: uint8, data in [−1.0, 3.0]
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-why-real-zero-must-land-on-an-integer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Why real zero must land on an integer
       
     </span>
   </a>
@@ -1432,10 +1672,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-fitting-s-and-z-to-the-data" class="md-nav__link">
+  <a href="#3-classroom-exercise-build-it" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Fitting S and Z to the data
+        3. Classroom exercise — build it
       
     </span>
   </a>
@@ -1443,46 +1683,80 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-real-zero-must-be-exact" class="md-nav__link">
+  <a href="#4-cost-affine-vs-fixed-point" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Real zero must be exact
+        4. Cost: affine vs fixed point
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Cost: affine vs fixed point">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed point
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#4-granularity-who-shares-one-s-z" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#affine" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Granularity: who shares one (S, Z)
+        Affine
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#5-what-z-costs-in-a-dot-product" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#side-by-side" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. What Z costs in a dot product
+        Side by side
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#classroom-exercise-build-it" class="md-nav__link">
+  <a href="#5-granularity-who-shares-one-s-z" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Classroom exercise — build it
+        5. Granularity: who shares one (S, Z)
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="5. Granularity: who shares one (S, Z)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-smaller-groups-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What smaller groups cost
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1516,15 +1790,12 @@
 
 <h1 id="affine-quantization">Affine quantization</h1>
 <blockquote>
-<p><strong>Module thesis:</strong> <a href="../Lecture19_20/">Lecture 19/20</a> built fixed point: an integer, a power-of-two scale, and a grid centred on zero. A real tensor needs a grid fitted to its own data, with any real scale and an offset that places the grid over <code>[r_min, r_max]</code>. That map is affine quantization, and every int8 inference stack runs on it.</p>
+<p><strong>Module thesis:</strong> <a href="../Lecture19_20/">Lecture 19/20</a> built fixed point: an integer, a power-of-two scale, and a grid centred on zero. A real tensor needs a grid fitted to its own data, with any real scale and an offset that places the grid over <span class="arithmatex">\([r_{min}, r_{max}]\)</span>. That map is affine quantization, and every int8 inference stack runs on it.</p>
 </blockquote>
 <p><strong>Prerequisite:</strong> <a href="../Lecture19_20/">Number formats</a></p>
 <hr />
-<h2 id="1-from-fixed-point-to-affine">1. From fixed point to affine</h2>
-<p><a href="../Lecture19_20/">Lecture 19/20</a>'s fixed point carries two restrictions. <strong>The scale is a power of two</strong>, so the grid can only zoom by factors of 2. <strong>Real 0.0 is pinned to raw 0</strong>, so the grid is always centred on zero. Affine quantization lifts both.</p>
-<div class="highlight"><pre><span></span><code>dequantize:   r = S · (q − Z)
-quantize:     q = clip( round(r / S + Z), q_min, q_max )
-</code></pre></div>
+<h2 id="1-the-fundamental-equations">1. The fundamental equations</h2>
+<p>Four quantities describe every quantized tensor [1]:</p>
 <table>
 <thead>
 <tr>
@@ -1535,42 +1806,77 @@ quantize:     q = clip( round(r / S + Z), q_min, q_max )
 </thead>
 <tbody>
 <tr>
-<td><code>r</code></td>
+<td><span class="arithmatex">\(r\)</span></td>
 <td>float32</td>
-<td>the real weight or activation</td>
+<td>the <strong>real</strong> weight, activation or bias</td>
 </tr>
 <tr>
-<td><code>q</code></td>
+<td><span class="arithmatex">\(q\)</span></td>
 <td>int8 / uint8</td>
-<td>what is stored and multiplied</td>
+<td>the <strong>quantized</strong> integer: what is stored and multiplied</td>
 </tr>
 <tr>
-<td><code>S</code></td>
-<td>float32, &gt; 0</td>
+<td><span class="arithmatex">\(S\)</span></td>
+<td>float32, <span class="arithmatex">\(&gt; 0\)</span></td>
 <td><strong>scale</strong>: the real value of one integer step</td>
 </tr>
 <tr>
-<td><code>Z</code></td>
-<td>integer, same type as <code>q</code></td>
-<td><strong>zero-point</strong>: the integer that means real 0.0</td>
+<td><span class="arithmatex">\(Z\)</span></td>
+<td>integer, same type as <span class="arithmatex">\(q\)</span></td>
+<td><strong>zero-point</strong>: the integer that means real <span class="arithmatex">\(0.0\)</span></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Fixed point is the special case <code>S = 2^-F</code>, <code>Z = 0</code>.</strong> Q3.4 is the affine map with <code>S = 1/16</code> and <code>Z = 0</code>; <code>FP(1.5)</code> and an affine <code>quantize(1.5)</code> both store 24.</p>
-<hr />
-<h2 id="2-fitting-s-and-z-to-the-data">2. Fitting S and Z to the data</h2>
-<p>Map the data's <code>[r_min, r_max]</code> onto the full grid <code>[q_min, q_max]</code>. That gives two equations in two unknowns:</p>
-<div class="highlight"><pre><span></span><code>r_min = S · (q_min − Z)
-r_max = S · (q_max − Z)
-
-S = (r_max − r_min) / (q_max − q_min)      subtract the two
-Z = round( q_min − r_min / S )             rearrange the first
-</code></pre></div>
+<p><img alt="" src="https://media.licdn.com/dms/image/v2/D5612AQEuNGuWfPPYfQ/article-inline_image-shrink_1500_2232/article-inline_image-shrink_1500_2232/0/1721202548242?e=1794441600&amp;v=beta&amp;t=bWFplUDUzhSbIQqWLDnYUXn7UHCqkIPaWJAxBWRyw-o" /></p>
+<h3 id="dequantize-integer-real">Dequantize: integer → real</h3>
+<div class="arithmatex">\[
+r = S \cdot (q - Z)
+\tag{2.2}
+\]</div>
+<p><strong>This is a straight line, <span class="arithmatex">\(y = mx + c\)</span>, with slope <span class="arithmatex">\(m = S\)</span> and intercept <span class="arithmatex">\(c = -S \cdot Z\)</span>.</strong> Read it right to left: subtract <span class="arithmatex">\(Z\)</span> to "untare" the integer, then scale by the step size <span class="arithmatex">\(S\)</span>.</p>
+<h3 id="quantize-real-integer">Quantize: real → integer</h3>
+<p>Invert Equation 2.2:</p>
+<div class="arithmatex">\[
+q = \operatorname{round}\!\left(\frac{r}{S} + Z\right)
+\tag{2.3}
+\]</div>
+<p><span class="arithmatex">\(q\)</span> has a fixed bit width, so values outside the grid must be <strong>clipped</strong> to it:</p>
+<div class="arithmatex">\[
+q = \operatorname{clip}\!\left(\operatorname{round}\!\left(\frac{r}{S} + Z\right),\; q_{min},\; q_{max}\right)
+\tag{2.4}
+\]</div>
 <ul>
-<li><strong><code>S</code> is the real range per integer step.</strong> Weights in <code>[−0.123, 0.123]</code> on int8 give <code>S = 0.246 / 255 ≈ 0.00096</code>.</li>
-<li><strong><code>Z</code> must be rounded</strong>, because it is a grid position. Rounding nudges the represented range slightly away from <code>[r_min, r_max]</code>.</li>
+<li><span class="arithmatex">\(\operatorname{clip}(v, a, b) = \min(\max(v, a), b)\)</span>.</li>
+<li><span class="arithmatex">\(q_{min}, q_{max}\)</span> are the integer type's limits: <span class="arithmatex">\([-128, 127]\)</span> for int8, <span class="arithmatex">\([0, 255]\)</span> for uint8.</li>
+<li><strong>The tie-breaking rule inside <span class="arithmatex">\(\operatorname{round}\)</span> is a source of drift between frameworks</strong> — Lecture 19/20 §4 measured it.</li>
 </ul>
-<p>Worked example, uint8, data in <code>[−1.0, 3.0]</code>:</p>
+<p><strong>Fixed point is the special case <span class="arithmatex">\(S = 2^{-F}\)</span>, <span class="arithmatex">\(Z = 0\)</span>.</strong> Q3.4 is the affine map with <span class="arithmatex">\(S = 1/16\)</span>, <span class="arithmatex">\(Z = 0\)</span>; <code>FP(1.5)</code> and an affine <code>quantize(1.5)</code> both store 24.</p>
+<h3 id="solving-for-s-and-z">Solving for S and Z</h3>
+<p>Map the data's <span class="arithmatex">\([r_{min}, r_{max}]\)</span> onto the full grid <span class="arithmatex">\([q_{min}, q_{max}]\)</span>. Each end gives one equation, so there are two equations in two unknowns:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+r_{min} &amp;= S\,(q_{min} - Z) &amp;&amp; \text{(constraint 1)} \\
+r_{max} &amp;= S\,(q_{max} - Z) &amp;&amp; \text{(constraint 2)}
+\end{aligned}
+\]</div>
+<p><strong>Subtract constraint 1 from constraint 2</strong> and <span class="arithmatex">\(Z\)</span> cancels:</p>
+<div class="arithmatex">\[
+S = \frac{r_{max} - r_{min}}{q_{max} - q_{min}}
+\tag{2.5}
+\]</div>
+<p><span class="arithmatex">\(S\)</span> is the real range per integer step. Weights in <span class="arithmatex">\([-0.123, 0.123]\)</span> on int8 give <span class="arithmatex">\(S = 0.246 / 255 \approx 0.00096\)</span>.</p>
+<p><strong>Rearrange constraint 1</strong> for <span class="arithmatex">\(Z\)</span>:</p>
+<div class="arithmatex">\[
+Z = q_{min} - \frac{r_{min}}{S}
+\tag{2.6}
+\]</div>
+<p><span class="arithmatex">\(Z\)</span> is a position on the integer grid, and Equation 2.6 almost never lands on one. <strong>So <span class="arithmatex">\(Z\)</span> is rounded:</strong></p>
+<div class="arithmatex">\[
+Z = \operatorname{round}\!\left(q_{min} - \frac{r_{min}}{S}\right)
+\tag{2.7}
+\]</div>
+<p><strong>Rounding <span class="arithmatex">\(Z\)</span> nudges the represented range.</strong> The grid covers a range shifted slightly off <span class="arithmatex">\([r_{min}, r_{max}]\)</span>. This is the first quantization error, and it is separate from the rounding of each individual value.</p>
+<h3 id="worked-example-uint8-data-in-10-30">Worked example: uint8, data in [−1.0, 3.0]</h3>
 <table>
 <thead>
 <tr>
@@ -1580,34 +1886,179 @@ Z = round( q_min − r_min / S )             rearrange the first
 </thead>
 <tbody>
 <tr>
-<td><code>S = 4.0 / 255</code></td>
-<td>0.01569</td>
+<td><span class="arithmatex">\(S = 4.0 / 255\)</span></td>
+<td><span class="arithmatex">\(0.01569\)</span></td>
 </tr>
 <tr>
-<td><code>Z = 0 − (−1.0) / S</code></td>
-<td>63.75 → <strong>64</strong></td>
+<td><span class="arithmatex">\(Z = 0 - (-1.0)/S\)</span></td>
+<td><span class="arithmatex">\(63.75 \to\)</span> <strong>64</strong></td>
 </tr>
 <tr>
-<td>Range actually covered, <code>S·(0 − 64)</code> to <code>S·(255 − 64)</code></td>
-<td><code>[−1.004, 2.996]</code>: the nudge</td>
+<td>Range covered, <span class="arithmatex">\(S(0 - 64)\)</span> to <span class="arithmatex">\(S(255 - 64)\)</span></td>
+<td><span class="arithmatex">\([-1.004,\ 2.996]\)</span>: <strong>the nudge</strong></td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="3-real-zero-must-be-exact">3. Real zero must be exact</h2>
-<p><strong>Real 0.0 must map to the integer <code>Z</code> with no error.</strong> Two everyday operations depend on it:</p>
+<h2 id="2-why-real-zero-must-land-on-an-integer">2. Why real zero must land on an integer</h2>
+<p><strong>Rounding <span class="arithmatex">\(Z\)</span> in Equation 2.7 is what makes <span class="arithmatex">\(0.0\)</span> exact.</strong> Put <span class="arithmatex">\(r = 0\)</span> into Equation 2.3: <span class="arithmatex">\(q = \operatorname{round}(Z) = Z\)</span>. Decode it with Equation 2.2: <span class="arithmatex">\(S(Z - Z) = 0\)</span>, with no error.</p>
+<p>With an unrounded <span class="arithmatex">\(Z = 63.75\)</span> from the worked example, no integer means zero. The nearest one, 64, decodes to <span class="arithmatex">\(S(64 - 63.75) \approx 0.0039\)</span>. <strong>Every zero in the tensor would come back as 0.0039.</strong></p>
+<p>Two everyday operations depend on an exact zero:</p>
 <ul>
-<li><strong>Zero-padding.</strong> A convolution pads its integer input with <code>Z</code>. If <code>Z</code> decodes to 0.05, the image gets a grey border and the edge-detecting filters fire on it.</li>
-<li><strong>ReLU sparsity.</strong> ReLU outputs exact zeros, and hardware skips them. If 0.0 decodes to 0.001, nothing is skippable.</li>
+<li><strong>Zero-padding.</strong> A convolution pads its integer input with <span class="arithmatex">\(Z\)</span>. If <span class="arithmatex">\(Z\)</span> decodes to <span class="arithmatex">\(0.05\)</span>, the image gets a grey border and the edge-detecting filters fire on it.</li>
+<li><strong>ReLU sparsity.</strong> ReLU outputs exact zeros, and hardware skips them. If <span class="arithmatex">\(0.0\)</span> decodes to <span class="arithmatex">\(0.001\)</span>, nothing is skippable.</li>
 </ul>
-<p>So calibration <strong>stretches the range to include 0.0</strong> before solving for <code>S</code> and <code>Z</code>. Data in <code>[2.0, 5.0]</code> is calibrated as <code>[0.0, 5.0]</code>.</p>
+<p><strong>Zero must also be inside the range.</strong> Equation 2.4 clips anything outside <span class="arithmatex">\([r_{min}, r_{max}]\)</span>, so data in <span class="arithmatex">\([2.0, 5.0]\)</span> would clip <span class="arithmatex">\(0.0\)</span> to <span class="arithmatex">\(2.0\)</span>. Calibration stretches the range to include zero first: <span class="arithmatex">\([2.0, 5.0]\)</span> is calibrated as <span class="arithmatex">\([0.0, 5.0]\)</span>.</p>
+<div class="admonition question">
+<p class="admonition-title">Wasted integers</p>
+<p>Calibrate uint8 on <span class="arithmatex">\([2.0, 5.0]\)</span> after stretching to <span class="arithmatex">\([0.0, 5.0]\)</span>. How many of the 256 integers now sit below <span class="arithmatex">\(2.0\)</span> and are never used?</p>
+</div>
 <hr />
-<h2 id="4-granularity-who-shares-one-s-z">4. Granularity: who shares one (S, Z)</h2>
+<h2 id="3-classroom-exercise-build-it">3. Classroom exercise — build it</h2>
+<p><a href="https://codespaces.new/Ankush-Chander/DS635-ml-system-engineering?devcontainer_path=.devcontainer/affine/devcontainer.json"><img alt="Open in GitHub Codespaces" src="https://github.com/codespaces/badge.svg" /></a></p>
+<p>Fill TODOs A–F in <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/tree/main/code/quantization/affine"><code>code/quantization/affine/affine_quantizer.py</code></a>:</p>
+<table>
+<thead>
+<tr>
+<th>TODO</th>
+<th>Implements</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A</strong></td>
+<td>integer grid <span class="arithmatex">\([q_{min}, q_{max}]\)</span></td>
+</tr>
+<tr>
+<td><strong>B</strong></td>
+<td>stretch the range to include <span class="arithmatex">\(0.0\)</span> (§2)</td>
+</tr>
+<tr>
+<td><strong>C</strong></td>
+<td>scale, Equation 2.5</td>
+</tr>
+<tr>
+<td><strong>D</strong></td>
+<td>zero-point, Equation 2.7</td>
+</tr>
+<tr>
+<td><strong>E</strong></td>
+<td>quantize, Equation 2.4</td>
+</tr>
+<tr>
+<td><strong>F</strong></td>
+<td>dequantize, Equation 2.2</td>
+</tr>
+<tr>
+<td><strong>G</strong> (stretch)</td>
+<td>the four-term integer dot product (§4)</td>
+</tr>
+</tbody>
+</table>
+<p><code>pytest -q</code> runs 18 self-checks, each named after the TODO it covers. One of them recovers Q3.4 as <span class="arithmatex">\(S = 1/16\)</span>, <span class="arithmatex">\(Z = 0\)</span>.</p>
+<div class="admonition question">
+<p class="admonition-title">Ties again</p>
+<p><code>np.round</code> sends ties to the even neighbour; FixedPoint sent them up. Calibrate a signed int8 quantizer on <span class="arithmatex">\([-8, 7.9375]\)</span> and quantize <span class="arithmatex">\(0.03125\)</span> and <span class="arithmatex">\(0.09375\)</span>. Which integers come back, and which row of Lecture 19/20's rounding table does that match?</p>
+</div>
+<hr />
+<h2 id="4-cost-affine-vs-fixed-point">4. Cost: affine vs fixed point</h2>
+<p><strong>Both store one integer per value. The difference is what a dot product costs.</strong></p>
+<h3 id="fixed-point">Fixed point</h3>
+<p>Every value shares one power-of-two scale <span class="arithmatex">\(2^{-F}\)</span>:</p>
+<div class="arithmatex">\[
+y = 2^{-2F} \sum_i a_i\, b_i
+\]</div>
+<p>One integer multiply-accumulate loop, then <strong>one shift</strong> by <span class="arithmatex">\(F\)</span> to return to scale <span class="arithmatex">\(2^{-F}\)</span>.</p>
+<h3 id="affine">Affine</h3>
+<p>Substitute <span class="arithmatex">\(r = S(q - Z)\)</span> for both weights <span class="arithmatex">\(w\)</span> and inputs <span class="arithmatex">\(x\)</span>:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+y &amp;= S_w S_x \sum_i (q_{w,i} - Z_w)(q_{x,i} - Z_x) \\
+  &amp;= S_w S_x \Big( \underbrace{\textstyle\sum q_w q_x}_{\text{core}}
+     \;-\; \underbrace{Z_x \textstyle\sum q_w}_{\text{weights only}}
+     \;-\; \underbrace{Z_w \textstyle\sum q_x}_{\text{every input}}
+     \;+\; \underbrace{N Z_w Z_x}_{\text{constant}} \Big)
+\end{aligned}
+\]</div>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>When it is computed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\sum q_w q_x\)</span></td>
+<td>every input: the main multiply-accumulate loop, as in fixed point</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(-Z_x \sum q_w\)</span></td>
+<td>once per weight row, offline</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(-Z_w \sum q_x\)</span></td>
+<td><strong>every input</strong>: an extra pass over the activations</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(N Z_w Z_x\)</span></td>
+<td>once, folded into the bias</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The rescale is a multiply, not a shift.</strong> The int32 result must be written back on the output's grid, scale <span class="arithmatex">\(S_y\)</span>, by multiplying by <span class="arithmatex">\(M = S_w S_x / S_y\)</span>. <span class="arithmatex">\(M\)</span> is an arbitrary real. Integer-only hardware stores it as <span class="arithmatex">\(M = 2^{-n} M_0\)</span>, with <span class="arithmatex">\(M_0\)</span> an int32 fixed-point multiplier, and pays an integer multiply plus a shift.</p>
+<h3 id="side-by-side">Side by side</h3>
+<table>
+<thead>
+<tr>
+<th>Cost</th>
+<th>Fixed point</th>
+<th>Affine, <span class="arithmatex">\(Z_w = 0\)</span></th>
+<th>Affine, both <span class="arithmatex">\(Z \neq 0\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Inner loop</strong></td>
+<td><span class="arithmatex">\(\sum a b\)</span></td>
+<td><span class="arithmatex">\(\sum q_w q_x\)</span></td>
+<td><span class="arithmatex">\(\sum q_w q_x\)</span></td>
+</tr>
+<tr>
+<td><strong>Extra pass per input</strong></td>
+<td>none</td>
+<td>none</td>
+<td><span class="arithmatex">\(Z_w \sum q_x\)</span></td>
+</tr>
+<tr>
+<td><strong>Offline terms</strong></td>
+<td>none</td>
+<td><span class="arithmatex">\(Z_x \sum q_w\)</span></td>
+<td><span class="arithmatex">\(Z_x \sum q_w\)</span>, <span class="arithmatex">\(N Z_w Z_x\)</span></td>
+</tr>
+<tr>
+<td><strong>Output rescale</strong></td>
+<td>shift by <span class="arithmatex">\(F\)</span></td>
+<td>multiply by <span class="arithmatex">\(M_0\)</span>, shift</td>
+<td>multiply by <span class="arithmatex">\(M_0\)</span>, shift</td>
+</tr>
+<tr>
+<td><strong>Grid fitted to data</strong></td>
+<td>no</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Symmetric weights (<span class="arithmatex">\(Z_w = 0\)</span>) delete the third and fourth terms.</strong> That is why weights are usually quantized symmetrically while activations keep a zero-point. Post-ReLU activations are all <span class="arithmatex">\(\geq 0\)</span>, and a symmetric grid would waste half its integers on negatives that never occur.</p>
+<hr />
+<h2 id="5-granularity-who-shares-one-s-z">5. Granularity: who shares one (S, Z)</h2>
+<p><img alt="" src="https://apple.github.io/coremltools/docs-guides/_images/quantization-granularities.png" /></p>
 <table>
 <thead>
 <tr>
 <th>Granularity</th>
-<th>One (S, Z) per</th>
+<th>One <span class="arithmatex">\((S, Z)\)</span> per</th>
 <th>Cost</th>
 <th>Outlier damage</th>
 </tr>
@@ -1617,7 +2068,7 @@ Z = round( q_min − r_min / S )             rearrange the first
 <td><strong>Per-tensor</strong></td>
 <td>whole tensor</td>
 <td>2 numbers</td>
-<td>one outlier sets <code>S</code> for everything</td>
+<td>one outlier sets <span class="arithmatex">\(S\)</span> for everything</td>
 </tr>
 <tr>
 <td><strong>Per-channel</strong></td>
@@ -1633,52 +2084,94 @@ Z = round( q_min − r_min / S )             rearrange the first
 </tr>
 </tbody>
 </table>
-<p>Lecture 19/20's outlier question, in affine form: values in <code>[0, 1]</code> plus one value at 100.0, per-tensor uint8, give <code>S = 100 / 255 ≈ 0.39</code>. <strong>All of <code>[0, 1]</code> lands in four integers, 0 to 3.</strong></p>
-<hr />
-<h2 id="5-what-z-costs-in-a-dot-product">5. What Z costs in a dot product</h2>
-<p>Substitute <code>r = S · (q − Z)</code> for both weights <code>w</code> and inputs <code>x</code>:</p>
-<div class="highlight"><pre><span></span><code>y = S_w · S_x · Σ (q_w − Z_w)(q_x − Z_x)
-  = S_w · S_x · ( Σ q_w q_x  −  Z_x Σ q_w  −  Z_w Σ q_x  +  N · Z_w Z_x )
-</code></pre></div>
+<p><strong>The outlier, in affine form.</strong> Values in <span class="arithmatex">\([0, 1]\)</span> plus one value at <span class="arithmatex">\(100.0\)</span>, per-tensor uint8, give <span class="arithmatex">\(S = 100/255 \approx 0.39\)</span>. <strong>All of <span class="arithmatex">\([0, 1]\)</span> lands in four integers, 0 to 3.</strong></p>
+<h3 id="what-smaller-groups-cost">What smaller groups cost</h3>
+<p>Metadata is paid per group, so it is spread over the group size <span class="arithmatex">\(g\)</span>:</p>
+<div class="arithmatex">\[
+\text{bits per weight} = b + \frac{\text{metadata bits}}{g}
+\]</div>
 <table>
 <thead>
 <tr>
-<th>Term</th>
-<th>When it is computed</th>
+<th>4-bit scheme, <span class="arithmatex">\(g = 32\)</span></th>
+<th>Metadata per group</th>
+<th style="text-align: right;">Bits per weight</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>Σ q_w q_x</code></td>
-<td>every input: the main multiply-accumulate loop, as in fixed point</td>
+<td>scale only, FP16</td>
+<td>16 bits</td>
+<td style="text-align: right;"><span class="arithmatex">\(4 + 16/32 =\)</span> <strong>4.5</strong></td>
 </tr>
 <tr>
-<td><code>−Z_x Σ q_w</code></td>
-<td>once per weight row, offline</td>
-</tr>
-<tr>
-<td><code>−Z_w Σ q_x</code></td>
-<td><strong>every input</strong>: an extra pass over the activations</td>
-</tr>
-<tr>
-<td><code>N · Z_w Z_x</code></td>
-<td>once, folded into the bias</td>
+<td>scale + offset, FP16 each</td>
+<td>32 bits</td>
+<td style="text-align: right;"><span class="arithmatex">\(4 + 32/32 =\)</span> <strong>5.0</strong></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Symmetric weights (<code>Z_w = 0</code>) delete the third and fourth terms.</strong> That is why weights are usually quantized symmetrically while activations keep a zero-point: post-ReLU activations are all ≥ 0, and a symmetric grid would waste half its integers on negatives that never occur.</p>
-<hr />
-<h2 id="classroom-exercise-build-it">Classroom exercise — build it</h2>
-<p><a href="https://codespaces.new/Ankush-Chander/DS635-ml-system-engineering?devcontainer_path=.devcontainer/affine/devcontainer.json"><img alt="Open in GitHub Codespaces" src="https://github.com/codespaces/badge.svg" /></a></p>
-<p>Fill TODOs A–F in <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/tree/main/code/quantization/affine"><code>code/quantization/affine/affine_quantizer.py</code></a>: integer grid, stretch to zero, scale, zero-point, quantize, dequantize. TODO G (stretch) is the four-term integer dot product. <code>pytest -q</code> runs 18 self-checks, each named after the TODO it covers; one of them recovers Q3.4 as <code>S = 1/16</code>, <code>Z = 0</code>.</p>
-<div class="admonition question">
-<p class="admonition-title">Ties again</p>
-<p><code>np.round</code> sends ties to the even neighbour; FixedPoint sent them up. Calibrate a signed int8 quantizer on <code>[−8, 7.9375]</code> and quantize <code>0.03125</code> and <code>0.09375</code>. Which integers come back, and which row of Lecture 19/20's rounding table does that match?</p>
-</div>
+<p><strong>Halving <span class="arithmatex">\(g\)</span> doubles the metadata overhead.</strong> These two rows are exactly llama.cpp's <code>Q4_0</code> and <code>Q4_1</code>.</p>
+<!--
+---
+
+## 6. Classroom exercise — dissect a GGUF block
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Ankush-Chander/DS635-ml-system-engineering?devcontainer_path=.devcontainer/gguf-block/devcontainer.json)
+
+**The affine quantizer as shipped in llama.cpp.** `Q4_0` is symmetric; `Q4_1` is asymmetric. Both use blocks of 32 weights.
+
+The Codespace checks out the three llama.cpp source files at tag [`b10758`](https://github.com/ggml-org/llama.cpp/tree/b10758) next to [`code/quantization/gguf_block/gguf_block.py`](https://github.com/Ankush-Chander/DS635-ml-system-engineering/tree/main/code/quantization/gguf_block). `pytest -q` runs 61 self-checks; TODOs D–F are compared against `gguf`, llama.cpp's own Python package, byte for byte.
+
+### Read
+
+1. **The block structs** in [`ggml/src/ggml-common.h`](https://github.com/ggml-org/llama.cpp/blob/b10758/ggml/src/ggml-common.h#L194-L269): `block_q4_0`, `block_q4_1`, `block_q8_1`. Count the bytes in each and check them against §5's table.
+2. **The decoders** in [`ggml/src/ggml-quants.c`](https://github.com/ggml-org/llama.cpp/blob/b10758/ggml/src/ggml-quants.c#L459-L498): `dequantize_row_q4_0`, `dequantize_row_q4_1`. Write each one in the form $r = S(q - Z)$.
+
+| Format | Stored per block | Decoder | As $r = S(q - Z)$ |
+| --- | --- | --- | --- |
+| `Q4_0` | `d` (FP16), 16 bytes of nibbles | $r = d\,(q - 8)$ | $S = d$, $Z = 8$ |
+| `Q4_1` | `d`, `m` (FP16), 16 bytes of nibbles | $r = d\,q + m$ | $S = d$, $Z = -m/d$ |
+
+### Build
+
+| TODO | Implements |
+| --- | --- |
+| **A** | bytes per block and bits per weight for `Q4_0`, `Q4_1`, `Q8_1` |
+| **B** | unpack 16 bytes into 32 nibbles |
+| **C** | pack them back |
+| **D** | decode `Q4_0` |
+| **E** | decode `Q4_1` |
+| **F** | encode `Q4_1`, byte-identical to llama.cpp |
+| **G** (stretch) | split the dot product into core and offset terms |
+
+- **Nibble layout.** Byte `qs[j]` holds weight `j` in its **low** nibble and weight `j + 16` in its **high** nibble.
+- **Encoding** follows [`quantize_row_q4_1_ref`](https://github.com/ggml-org/llama.cpp/blob/b10758/ggml/src/ggml-quants.c#L150-L185): $d = (\max - \min)/15$, $m = \min$, $q = \min\!\big(15,\ \lfloor (r - m)/d + 0.5 \rfloor\big)$.
+- **Precision.** $q$ is computed with the float32 $d$; $d$ and $m$ are stored as float16. Decoding with the float32 values does not reproduce llama.cpp's output.
+
+### The dot product
+
+TODO G takes a 32-element activation vector $a$ and computes $\sum_i \hat{r}_i a_i$ two ways:
+
+$$
+\underbrace{\sum_i (d\,q_i + m)\, a_i}_{\text{dequantize, then dot}}
+\;=\;
+\underbrace{d \sum_i q_i\, a_i}_{\text{core}} \;+\; \underbrace{m \sum_i a_i}_{\text{offset term}}
+$$
+
+The second term is §4's zero-point term. llama.cpp quantizes the activations to `block_q8_1`, which stores $s = d_a \sum q_{a,i}$ for exactly this term. [`ggml_vec_dot_q4_1_q8_1`](https://github.com/ggml-org/llama.cpp/blob/b10758/ggml/src/ggml-cpu/quants.c#L262-L296) then pays one multiply per block for it.
+
+!!! question "Discuss"
+    - `Q4_1`'s implied $Z = -m/d$ is not an integer, so real $0.0$ is not exact. Why is that acceptable for weights, given §2's two reasons?
+    - `quantize_row_q4_0_ref` sets $d = \text{max} / {-8}$, where `max` is the signed value of largest magnitude. When is $d$ negative, and what does that buy?
+-->
+
 <hr />
 <h2 id="references">References</h2>
 <ol>
-<li>Jacob et al., <a href="https://arxiv.org/abs/1712.05877"><em>Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference</em></a> (CVPR 2018) — the affine scheme <code>r = S(q − Z)</code> and its integer dot product</li>
+<li>Vivek Kalyanarangan, <em>Quantization and Fast Inference</em>, Manning Publications — Chapter 2: the fundamental equations (2.2–2.7), the two-constraint solve for <span class="arithmatex">\(S\)</span> and <span class="arithmatex">\(Z\)</span>, and the zero-point nudge</li>
+<li>Jacob et al., <a href="https://arxiv.org/abs/1712.05877"><em>Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference</em></a> (CVPR 2018) — the affine scheme <span class="arithmatex">\(r = S(q - Z)\)</span>, its integer dot product, and the <span class="arithmatex">\(M = 2^{-n} M_0\)</span> rescale</li>
+<li><a href="https://github.com/ggml-org/llama.cpp/tree/b10758">llama.cpp</a>, tag <code>b10758</code> — <code>ggml/src/ggml-common.h</code> block formats; <code>ggml/src/ggml-quants.c</code> quantize and dequantize; <code>ggml/src/ggml-cpu/quants.c</code> the Q4_1 × Q8_1 dot product</li>
 <li><a href="../Lecture19_20/">Lecture 19/20</a> — fixed point, rounding modes, and the formats being quantized into</li>
 <li><a href="../Lecture9_10/">Lecture 9/10</a> — why bytes per parameter set decode speed</li>
 </ol>
@@ -1728,13 +2221,13 @@ Z = round( q_min − r_min / S )             rearrange the first
         
         
           
-          <a href="../../labs/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+          <a href="../Lecture23_24/" class="md-footer__link md-footer__link--next" aria-label="Next: 23_24:Quantization Schemes &amp; Targets">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Overview
+                23_24:Quantization Schemes & Targets
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -1779,6 +2272,10 @@ Z = round( q_min − r_min / S )             rearrange the first
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
       
     
   </body>

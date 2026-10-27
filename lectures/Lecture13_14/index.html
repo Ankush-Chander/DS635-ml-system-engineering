@@ -1112,6 +1112,90 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture23_24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    23_24:Quantization Schemes & Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture27_28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    27_28:Attention & KV Cache
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Lecture29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    29:Serving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1899,12 +1983,9 @@
 </ul>
 <h3 id="sequence-probability">Sequence probability</h3>
 <p>The probability of a whole sequence is the product of its per-step conditionals:</p>
-<div class="arithmatex">
-<div class="MathJax_Preview">P(w_1, \ldots, w_n) = \prod_{i=1}^{n} P(w_i \mid w_1, \ldots, w_{i-1})</div>
-<script type="math/tex; mode=display">P(w_1, \ldots, w_n) = \prod_{i=1}^{n} P(w_i \mid w_1, \ldots, w_{i-1})</script>
-</div>
-<p>A product of numbers below 1 shrinks fast: a 100-token continuation where every step is a confident <span class="arithmatex"><span class="MathJax_Preview">P = 0.5</span><script type="math/tex">P = 0.5</script></span> still has sequence probability <span class="arithmatex"><span class="MathJax_Preview">2^{-100}</span><script type="math/tex">2^{-100}</script></span>. <strong>Every long text is individually improbable</strong> — so "pick probable text" cannot mean "pick text with high absolute probability"; it can only mean choosing well <em>relative to the alternatives at each step</em>.</p>
-<p>Serving APIs expose the per-step conditionals directly: request <code>logprobs: true, top_logprobs: k</code> and every generated token comes back with its own <span class="arithmatex"><span class="MathJax_Preview">\log P</span><script type="math/tex">\log P</script></span> plus the <span class="arithmatex"><span class="MathJax_Preview">k</span><script type="math/tex">k</script></span> strongest alternatives. That is how the distribution behind a <em>served</em> model is inspected — the same numbers the notebook reads off a local <code>gpt2</code>, at production scale.</p>
+<div class="arithmatex">\[P(w_1, \ldots, w_n) = \prod_{i=1}^{n} P(w_i \mid w_1, \ldots, w_{i-1})\]</div>
+<p>A product of numbers below 1 shrinks fast: a 100-token continuation where every step is a confident <span class="arithmatex">\(P = 0.5\)</span> still has sequence probability <span class="arithmatex">\(2^{-100}\)</span>. <strong>Every long text is individually improbable</strong> — so "pick probable text" cannot mean "pick text with high absolute probability"; it can only mean choosing well <em>relative to the alternatives at each step</em>.</p>
+<p>Serving APIs expose the per-step conditionals directly: request <code>logprobs: true, top_logprobs: k</code> and every generated token comes back with its own <span class="arithmatex">\(\log P\)</span> plus the <span class="arithmatex">\(k\)</span> strongest alternatives. That is how the distribution behind a <em>served</em> model is inspected — the same numbers the notebook reads off a local <code>gpt2</code>, at production scale.</p>
 <h3 id="the-two-families">The two families</h3>
 <table>
 <thead>
@@ -2001,10 +2082,7 @@ Source: <a href="https://huggingface.co/blog/how-to-generate">von Platen, How to
 Source: <a href="https://huggingface.co/blog/how-to-generate">von Platen, How to generate text</a>, Hugging Face.</em></p>
 <h3 id="temperature">Temperature</h3>
 <p>One knob reshapes the distribution before the draw — divide the logits by a <strong>temperature</strong> <code>T</code> before softmax:</p>
-<div class="arithmatex">
-<div class="MathJax_Preview">P(w_i) = \frac{e^{l_i / T}}{\sum_j e^{l_j / T}}</div>
-<script type="math/tex; mode=display">P(w_i) = \frac{e^{l_i / T}}{\sum_j e^{l_j / T}}</script>
-</div>
+<div class="arithmatex">\[P(w_i) = \frac{e^{l_i / T}}{\sum_j e^{l_j / T}}\]</div>
 <p>Worked on three tokens with logits <code>[2, 1, 0]</code>:</p>
 <table>
 <thead>
@@ -2041,7 +2119,7 @@ Source: <a href="https://huggingface.co/blog/how-to-generate">von Platen, How to
 <li><strong>T = 1</strong>: the model's own distribution, untouched</li>
 <li><strong>T &gt; 1</strong>: the distribution flattens toward uniform — more adventurous, less reliable</li>
 </ul>
-<p>What <code>T</code> really moves is the <strong>ratio</strong> between any two tokens, exponentially: <span class="arithmatex"><span class="MathJax_Preview">P_i / P_j = e^{(l_i - l_j)/T}</span><script type="math/tex">P_i / P_j = e^{(l_i - l_j)/T}</script></span>. A logit gap of 1 means A is 2.7× likelier than B at <code>T = 1</code>, 7.4× at <code>T = 0.5</code>, only 1.6× at <code>T = 2</code>. Temperature does not add or remove candidates — it redistributes trust among them.</p>
+<p>What <code>T</code> really moves is the <strong>ratio</strong> between any two tokens, exponentially: <span class="arithmatex">\(P_i / P_j = e^{(l_i - l_j)/T}\)</span>. A logit gap of 1 means A is 2.7× likelier than B at <code>T = 1</code>, 7.4× at <code>T = 0.5</code>, only 1.6× at <code>T = 2</code>. Temperature does not add or remove candidates — it redistributes trust among them.</p>
 <p><img alt="Temperature reshapes the distribution before the draw" src="../../images/decoding/sampling_search_with_temp.png" /><br />
 <em>Low temperature sharpens the distribution toward the top token; high temperature flattens it toward uniform.<br />
 Source: <a href="https://huggingface.co/blog/how-to-generate">von Platen, How to generate text</a>, Hugging Face.</em></p>
@@ -2072,7 +2150,7 @@ Source: <a href="https://huggingface.co/blog/how-to-generate">von Platen, How to
 <p>Top-k keeps tokens by <strong>rank</strong>, top-p by <strong>cumulative mass</strong>. A grammar keeps tokens by <strong>legality</strong>: the same cut-renormalise-sample operator, with a criterion that comes from the output format instead of the distribution.</p>
 <!-- figure: one step's distribution cut three ways — top-k, top-p, grammar (only the schema's legal tokens survive) -->
 
-<p>The mechanism is a state machine over tokens. A JSON schema (or regex, or enum) compiles to an automaton; at every step the engine asks which tokens keep the automaton alive, sets every other logit to <span class="arithmatex"><span class="MathJax_Preview">-\infty</span><script type="math/tex">-\infty</script></span>, renormalises, and hands the result to whatever sampler the request asked for. Temperature and top-p still apply — inside the legal set. vLLM does this with xgrammar; the request carries it as one field:</p>
+<p>The mechanism is a state machine over tokens. A JSON schema (or regex, or enum) compiles to an automaton; at every step the engine asks which tokens keep the automaton alive, sets every other logit to <span class="arithmatex">\(-\infty\)</span>, renormalises, and hands the result to whatever sampler the request asked for. Temperature and top-p still apply — inside the legal set. vLLM does this with xgrammar; the request carries it as one field:</p>
 <div class="highlight"><pre><span></span><code><span class="n">response_format</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;json_schema&quot;</span><span class="p">,</span> <span class="s2">&quot;json_schema&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;record&quot;</span><span class="p">,</span> <span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">}}}</span>
 </code></pre></div>
 <p>Over the wire it is one more field on an ordinary chat-completions request. Each tab below is a different constraint language against the same server, run at <code>temperature: 0</code> so the printed output is reproducible — which is also what §6 recommends for structured work. The <code>jq</code> pipe drops the response envelope and prints <code>.choices[0].message.content</code> alone; every command is shown with the output it returns.</p>
@@ -2390,6 +2468,10 @@ token on a peaked step and <strong>1,913</strong> on a flat one.</p>
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
       
     
   </body>
