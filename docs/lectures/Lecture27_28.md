@@ -123,7 +123,7 @@ The leading 2 counts $K$ and $V$. Every term comes from the model's `config.json
 | **Llama-3-8B** | 32 | 32 | 8 | 128 | 16.06 GB | **128 KiB** | 1.00 GiB at 8,192 |
 
 - **Answer to the opener:** 1.19 GB ÷ 112 KiB ≈ **10.4K tokens**, well inside Qwen3-0.6B's 40K window.
-- **Read $d_{head}$ from the config.** Qwen3-0.6B has $16 \times 128 = 2048 \neq$ `hidden_size` 1024. Dividing hidden size by heads gives 64 and **halves the answer**.
+- **Read every term from `config.json`**, $d_{head}$ included.
 - Llama-2-7B's cache matches its weights at 25.7K tokens. Its window is 4,096, so that takes **about 6 users** at full context.
 
 !!! tip "Notebook — KV cache, measured · §5.2"
