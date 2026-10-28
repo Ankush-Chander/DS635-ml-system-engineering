@@ -1097,39 +1097,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#58-the-streaming-catch" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.8 The streaming catch
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#59-fp8-kv-in-practice" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.9 FP8 KV in practice
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#510-below-4-bits" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.10 Below 4 bits
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1864,39 +1831,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#58-the-streaming-catch" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.8 The streaming catch
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#59-fp8-kv-in-practice" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.9 FP8 KV in practice
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#510-below-4-bits" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.10 Below 4 bits
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -2545,22 +2479,22 @@
 <li>This is <a href="../Lecture21_22/">Lecture 21/22</a> §5's rule: match the scale's grouping to where the outliers live.</li>
 <li>Per-token scales for <span class="arithmatex">\(V\)</span> cost 2 bytes per token per head: <strong>about 3%</strong> on 64 bytes of INT4 data at <span class="arithmatex">\(d_{head} = 128\)</span>.</li>
 </ul>
-<h3 id="58-the-streaming-catch">5.8 The streaming catch</h3>
-<ul>
-<li>A per-channel scale for <span class="arithmatex">\(K\)</span> is a maximum <strong>over tokens</strong>. During decode, those tokens arrive one at a time.</li>
-<li>Fix: quantize keys per channel <strong>within groups of tokens</strong>, and hold the newest tokens in FP16 until a group fills (KIVI).</li>
-</ul>
-<h3 id="59-fp8-kv-in-practice">5.9 FP8 KV in practice</h3>
-<ul>
-<li><strong>E4M3</strong> is the default: cache values are well scaled, so mantissa beats range.</li>
-<li><strong>It pays twice.</strong> With the same 12.4 GiB pool at a 131K-token limit, concurrency rose from <strong>1.31× to 2.36×</strong>: one resident long session became two.</li>
-<li><strong>It is lossy.</strong> It perturbs attention scores, so check quality at the <strong>longest</strong> context you serve.</li>
-</ul>
-<h3 id="510-below-4-bits">5.10 Below 4 bits</h3>
-<ul>
-<li><strong>TurboQuant:</strong> a random rotation spreads outlier channels evenly, and a fixed codebook quantizes each coordinate. <strong>No calibration</strong>, so it suits a tensor that arrives one vector at a time.</li>
-<li><strong>Decision rule:</strong> judge the flag against <strong>your context distribution</strong>. Leave it off for chat under ~2K tokens; turn it on for agents working at 15K+.</li>
-</ul>
+<!--### 5.8 The streaming catch
+
+- A per-channel scale for $K$ is a maximum **over tokens**. During decode, those tokens arrive one at a time.
+- Fix: quantize keys per channel **within groups of tokens**, and hold the newest tokens in FP16 until a group fills (KIVI).
+
+### 5.9 FP8 KV in practice
+
+- **E4M3** is the default: cache values are well scaled, so mantissa beats range.
+- **It pays twice.** With the same 12.4 GiB pool at a 131K-token limit, concurrency rose from **1.31× to 2.36×**: one resident long session became two.
+- **It is lossy.** It perturbs attention scores, so check quality at the **longest** context you serve.
+
+### 5.10 Below 4 bits
+
+- **TurboQuant:** a random rotation spreads outlier channels evenly, and a fixed codebook quantizes each coordinate. **No calibration**, so it suits a tensor that arrives one vector at a time.
+- **Decision rule:** judge the flag against **your context distribution**. Leave it off for chat under ~2K tokens; turn it on for agents working at 15K+.-->
+
 <hr />
 <h2 id="references">References</h2>
 <ol>
