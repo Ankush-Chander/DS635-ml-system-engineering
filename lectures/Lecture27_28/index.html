@@ -993,13 +993,74 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#54-lever-1-fewer-kv-heads" class="md-nav__link">
+  <a href="#54-lever-1-store-less-per-token" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.4 Lever 1 — fewer KV heads
+        5.4 Lever 1 — store less per token
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="5.4 Lever 1 — store less per token">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#grouped-query-attention-gqa-fewer-kv-heads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grouped-query attention (GQA): fewer KV heads
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-head-latent-attention-mla-compress-what-is-cached" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-head Latent Attention (MLA): compress what is cached
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sliding-window-attention-swa-cache-only-a-recent-window" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sliding-window attention (SWA): cache only a recent window
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hybrid-layers-cache-fewer-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hybrid layers: cache fewer layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-catch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The catch
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1071,17 +1132,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-flashattention-compute-it-in-tiles" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. FlashAttention: compute it in tiles
-      
-    </span>
-  </a>
   
 </li>
       
@@ -1710,13 +1760,74 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#54-lever-1-fewer-kv-heads" class="md-nav__link">
+  <a href="#54-lever-1-store-less-per-token" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.4 Lever 1 — fewer KV heads
+        5.4 Lever 1 — store less per token
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="5.4 Lever 1 — store less per token">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#grouped-query-attention-gqa-fewer-kv-heads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grouped-query attention (GQA): fewer KV heads
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-head-latent-attention-mla-compress-what-is-cached" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-head Latent Attention (MLA): compress what is cached
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sliding-window-attention-swa-cache-only-a-recent-window" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sliding-window attention (SWA): cache only a recent window
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hybrid-layers-cache-fewer-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hybrid layers: cache fewer layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-catch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The catch
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1788,17 +1899,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-flashattention-compute-it-in-tiles" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. FlashAttention: compute it in tiles
-      
-    </span>
-  </a>
   
 </li>
       
@@ -1881,6 +1981,7 @@
 <p><strong>The weights are computed from the data.</strong> A convolution's weights are fixed after training; attention's mixing weights change with every sentence. This is <strong>content-dependent routing</strong>.</p>
 <h2 id="2-scoring-dot-product-scale-softmax">2. Scoring: dot product, scale, softmax</h2>
 <p><img alt="Attention for one token: the current token's query is dot-multiplied with the keys of all tokens to give scores; softmax turns the scores into weights; the weighted sum of all tokens' values is the output" src="../../images/attention/attention_mechanism.png" /></p>
+<p><em>Figure: Vivek Kalyanarangan, <a href="https://www.manning.com/books/quantization-and-fast-inference">Quantization and Fast Inference</a>, Manning Publications — Figure 3.7.</em></p>
 <p><strong>One query against every key, then a weighted sum of every value.</strong> The equation below is this pipeline for all queries at once.</p>
 <div class="arithmatex">\[
 \operatorname{Attention}(Q, K, V) = \operatorname{softmax}\!\left(\frac{QK^\top}{\sqrt{d_{head}}} + M\right) V
@@ -1955,7 +2056,7 @@
 <ul>
 <li><strong>Qwen3-0.6B at 4,096 tokens:</strong> 16 heads × 28 layers × 16.8M ≈ <strong>7.5 billion scores</strong> per forward pass.</li>
 <li><strong>Memory:</strong> one head's <span class="arithmatex">\(4096 \times 4096\)</span> score matrix is <strong>32 MiB</strong> in FP16. At 32K tokens it is <strong>2 GiB</strong>.</li>
-<li>The causal mask uses only the lower triangle, <span class="arithmatex">\(n(n+1)/2\)</span> (21 of the 36). A straightforward kernel still computes the full square and masks it.</li>
+<li>The causal mask uses only the lower triangle, <span class="arithmatex">\(n(n+1)/2\)</span> (21 of the 36). A straightforward kernel still computes the full square and masks it; <a href="../Lecture29/">Lecture 29</a> §1 computes it without ever storing it.</li>
 </ul>
 <div class="admonition question">
 <p class="admonition-title">Double the context</p>
@@ -1999,6 +2100,11 @@
 </tbody>
 </table>
 <p><strong>The trade:</strong> recompute that grows with every step, exchanged for memory that grows with every token. §5.2 prices that memory.</p>
+<div class="admonition tip">
+<p class="admonition-title">Notebook — KV cache, measured · part 1</p>
+<p>Generate with and without the cache on Qwen3-0.6B. The tokens come out identical; the per-token time without a cache grows with the context, and with one it stays flat.</p>
+<p><a href="https://colab.research.google.com/github/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/notebooks/kv_cache_shapes.ipynb"><strong>Open in Colab</strong></a> · <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/notebooks/kv_cache_shapes.ipynb">view on GitHub</a></p>
+</div>
 <h3 id="52-sizing-the-cache">5.2 Sizing the cache</h3>
 <div class="arithmatex">\[
 \text{KV bytes per token} = 2 \times n_{layers} \times n_{kv\_heads} \times d_{head} \times \text{bytes per element}
@@ -2052,12 +2158,17 @@
 </table>
 <ul>
 <li><strong>Answer to the opener:</strong> 1.19 GB ÷ 112 KiB ≈ <strong>10.4K tokens</strong>, well inside Qwen3-0.6B's 40K window.</li>
-<li><strong>Read <span class="arithmatex">\(d_{head}\)</span> from the config.</strong> Qwen3-0.6B has <span class="arithmatex">\(16 \times 128 = 2048 \neq\)</span> <code>hidden_size</code> 1024. Dividing hidden size by heads gives 64 and <strong>halves the answer</strong>.</li>
+<li><strong>Read every term from <code>config.json</code></strong>, <span class="arithmatex">\(d_{head}\)</span> included.</li>
 <li>Llama-2-7B's cache matches its weights at 25.7K tokens. Its window is 4,096, so that takes <strong>about 6 users</strong> at full context.</li>
 </ul>
 <div class="admonition tip">
-<p class="admonition-title">Notebook — KV cache, measured · §5.2</p>
+<p class="admonition-title">Notebook — KV cache, measured · part 2</p>
 <p>Predict one layer's K shape and the total KV bytes for 256 tokens, then run it: the formula is checked against Qwen3-0.6B's real cache, byte for byte.</p>
+<p><a href="https://colab.research.google.com/github/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/notebooks/kv_cache_shapes.ipynb"><strong>Open in Colab</strong></a> · <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/notebooks/kv_cache_shapes.ipynb">view on GitHub</a></p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Notebook — KV cache, measured · part 3</p>
+<p>A table of context lengths, up to Qwen3-0.6B's 40,960-token maximum. One sequence's cache overtakes the weights at about 10.4K tokens; a batch of 8 gets there at about 1.3K.</p>
 <p><a href="https://colab.research.google.com/github/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/notebooks/kv_cache_shapes.ipynb"><strong>Open in Colab</strong></a> · <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/notebooks/kv_cache_shapes.ipynb">view on GitHub</a></p>
 </div>
 <h3 id="53-two-costs-not-one">5.3 Two costs, not one</h3>
@@ -2086,38 +2197,268 @@
 <li>Measured on a 27B model, BF16 KV: <strong>56 tok/s at 32 prompt tokens, 23 tok/s at 101K</strong>. Same weights, same GPU.</li>
 <li>Weights dominate a short prompt's traffic. At long context the cache does.</li>
 </ul>
-<h3 id="54-lever-1-fewer-kv-heads">5.4 Lever 1 — fewer KV heads</h3>
+<div class="admonition tip">
+<p class="admonition-title">Notebook — KV cache, measured · part 4</p>
+<p>Weights are shared; the cache is per sequence. A table of batch sizes at 2,048 and 8,192 tokens shows Qwen3-0.6B's cache overtaking its weights at batch ≈ 5, and at batch ≈ 1.3 for the longer context.</p>
+<p><a href="https://colab.research.google.com/github/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/notebooks/kv_cache_shapes.ipynb"><strong>Open in Colab</strong></a> · <a href="https://github.com/Ankush-Chander/DS635-ml-system-engineering/blob/main/docs/notebooks/kv_cache_shapes.ipynb">view on GitHub</a></p>
+</div>
+<h3 id="54-lever-1-store-less-per-token">5.4 Lever 1 — store less per token</h3>
+<p><strong>Decode multiplies one query vector by the whole cache.</strong> That matrix-vector product reads every cached byte from HBM to compute very little (§5.3), so the lever is how much is cached. Each attention variant below cuts one term of the cache formula:</p>
+<div class="arithmatex">\[
+\text{KV bytes} = 2 \times L_{full} \times H_{kv} \times D_h \times T_{cached} \times \text{bytes per element}
+\]</div>
+<table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>Term it cuts</th>
+<th>How</th>
+<th>Example models</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GQA / MQA</strong></td>
+<td><span class="arithmatex">\(H_{kv}\)</span></td>
+<td>query heads share key and value heads</td>
+<td>Llama 3, Qwen3, Gemma 3</td>
+</tr>
+<tr>
+<td><strong>MLA</strong></td>
+<td><span class="arithmatex">\(2 \times H_{kv} \times D_h\)</span></td>
+<td>one compressed latent per token, shared by all heads</td>
+<td>DeepSeek V3, Kimi K2</td>
+</tr>
+<tr>
+<td><strong>Sliding window (SWA)</strong></td>
+<td><span class="arithmatex">\(T_{cached}\)</span> in local layers</td>
+<td>local layers keep only the last <span class="arithmatex">\(W\)</span> tokens</td>
+<td>Gemma 3, OLMo 3</td>
+</tr>
+<tr>
+<td><strong>Hybrid</strong></td>
+<td><span class="arithmatex">\(L_{full}\)</span></td>
+<td>most layers keep a fixed-size state</td>
+<td>Qwen3-Next, Qwen3.5, Kimi Linear</td>
+</tr>
+</tbody>
+</table>
+<h4 id="grouped-query-attention-gqa-fewer-kv-heads">Grouped-query attention (GQA): fewer KV heads</h4>
+<p><strong>Several query heads share one key and value head.</strong> The attention computation is unchanged; only the number of KV projections drops.</p>
+<p><img alt="Multi-head attention gives each of four query heads its own key and value head; grouped-query attention lets heads 1–2 share one key and value head and heads 3–4 share another, halving what is cached" src="../../images/attention/mha_vs_gqa.png" /></p>
+<p><em>Figure: Sebastian Raschka, <a href="https://magazine.sebastianraschka.com/p/the-big-llm-architecture-comparison">The Big LLM Architecture Comparison</a>.</em></p>
+<div class="arithmatex">\[
+\text{elements per token per layer} = 2 \times H_{kv} \times D_h
+\]</div>
 <table>
 <thead>
 <tr>
 <th>Scheme</th>
-<th>KV heads</th>
-<th>KV size relative to MHA</th>
+<th>KV heads <span class="arithmatex">\(H_{kv}\)</span></th>
+<th>Example</th>
+<th style="text-align: right;">Elements per token per layer</th>
+<th>Trade-off</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>MHA</strong></td>
-<td>one per query head</td>
-<td>1×</td>
+<td><span class="arithmatex">\(= H_q\)</span></td>
+<td>Llama-2-7B: 32 KV heads</td>
+<td style="text-align: right;">8,192</td>
+<td>full capacity, largest cache</td>
 </tr>
 <tr>
 <td><strong>GQA</strong></td>
-<td>one per group of query heads</td>
-<td><span class="arithmatex">\(n_{kv} / n_{heads}\)</span></td>
+<td><span class="arithmatex">\(1 &lt; H_{kv} &lt; H_q\)</span></td>
+<td>Llama-3-8B: 8 KV heads for 32 query heads</td>
+<td style="text-align: right;">2,048</td>
+<td><strong>4× smaller</strong>; recovers most of MHA's quality</td>
 </tr>
 <tr>
 <td><strong>MQA</strong></td>
-<td>one for all query heads</td>
-<td><span class="arithmatex">\(1 / n_{heads}\)</span></td>
+<td><span class="arithmatex">\(1\)</span></td>
+<td>one KV head for 32 query heads</td>
+<td style="text-align: right;">256</td>
+<td><strong>32× smaller</strong>; every query head reads the same K and V, and quality drops</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>Llama-3-8B shares each KV head across 4 query heads: <strong>128 KiB per token</strong>, a quarter of Llama-2-7B's.</li>
-<li>Its cache equals its weights only at 122.5K tokens, <strong>about 15 users</strong> at its 8K window.</li>
-<li><strong>Hybrid models</strong> go further: only their full-attention layers keep a KV cache.</li>
-<li><strong>The catch:</strong> the head count is fixed at training time. For a model you are handed, the remaining knob is <strong>bytes per element</strong>.</li>
+<li><strong>GQA is the common choice today.</strong> Llama-3-8B caches <strong>128 KiB per token</strong>, a quarter of Llama-2-7B's. Its cache equals its weights only at 122.5K tokens, <strong>about 15 users</strong> at its 8K window.</li>
+<li>Qwen3-0.6B is GQA too: 8 KV heads serve 16 query heads.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Simple:</strong> standard attention with fewer KV projections</td>
+<td><strong>Quality:</strong> in DeepSeek-V2's ablation (Table 8), a dense 7B GQA model scored below MHA on all four benchmarks</td>
+</tr>
+<tr>
+<td><strong>Robust:</strong> easy to train, with few extra hyperparameters to tune</td>
+<td><strong>A floor:</strong> MQA, the limit of sharing, scored lower still</td>
+</tr>
+</tbody>
+</table>
+<h4 id="multi-head-latent-attention-mla-compress-what-is-cached">Multi-head Latent Attention (MLA): compress what is cached</h4>
+<p><img alt="DeepSeek-V3 block with multi-head latent attention: the input is projected by W_dkv into one compressed key-and-value vector, which W_uk and W_uv expand into keys and values; regular multi-head attention projects the input directly into a query, key and value per head" src="../../images/attention/mla_vs_mha.png" /></p>
+<p><em>Figure: Sebastian Raschka, <a href="https://magazine.sebastianraschka.com/p/the-big-llm-architecture-comparison">The Big LLM Architecture Comparison</a>.</em></p>
+<p>DeepSeek-V2 and V3 cache a <strong>compressed vector</strong> in place of per-head keys and values:</p>
+<ul>
+<li>Per token per layer, the cache holds a latent <span class="arithmatex">\(c_t\)</span> of width <span class="arithmatex">\(d_c = 512\)</span>, produced by <span class="arithmatex">\(W_{dkv}\)</span> (the figure's compressed key and value), and a small key <span class="arithmatex">\(k^R_t\)</span> of width <span class="arithmatex">\(d_r = 64\)</span> that carries the RoPE position: <strong>576 elements</strong>.</li>
+<li>Each head's keys and values are <span class="arithmatex">\(W_{uk} c_t\)</span> and <span class="arithmatex">\(W_{uv} c_t\)</span>. Because <span class="arithmatex">\(q^\top (W_{uk} c_t) = (W_{uk}^\top q)^\top c_t\)</span>, the up-projections fold into the query and output weights, so <strong>attention runs directly on the cached latent</strong> and per-head keys and values are never rebuilt.</li>
+<li>An MHA layer with 128 heads of width 128 caches <span class="arithmatex">\(2 \times 128 \times 128 =\)</span> 32,768 elements per token. MLA stores <strong>1.8%</strong> of that.</li>
+<li><strong>DeepSeek-V3 (671B parameters):</strong> 61 layers × 576 × 2 bytes ≈ <strong>69 KiB per token</strong>. That is less than Llama-3-8B's 128 KiB, and <strong>about 7× less than Llama-2-7B</strong>.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Smallest cache:</strong> in DeepSeek-V2's ablation (Table 9), 15.6K vs 110.6K elements per token in the small MoE, 34.6K vs 860.2K in the large</td>
+<td><strong>Complex:</strong> decoupled RoPE key and folded projections make the attention stack harder to implement</td>
+</tr>
+<tr>
+<td><strong>Quality kept:</strong> matches or beats MHA on most benchmarks in the same ablation</td>
+<td><strong>Scale-dependent:</strong> practitioners report GQA is easier to tune below roughly 100B parameters</td>
+</tr>
+</tbody>
+</table>
+<h4 id="sliding-window-attention-swa-cache-only-a-recent-window">Sliding-window attention (SWA): cache only a recent window</h4>
+<p><strong>A local layer lets each token attend only to the last <span class="arithmatex">\(W\)</span> tokens.</strong> Its cache stops growing at <span class="arithmatex">\(W\)</span> entries. Global layers, interleaved between the local ones, still see the full prefix, so information can travel the whole sequence.</p>
+<p><img alt="Causal attention mask, where each token attends to itself and every earlier token, next to a sliding-window mask, where each token attends only to itself and the previous tokens within a window of 3" src="../../images/attention/swa_mask.png" /></p>
+<p><em>Figure: Sebastian Raschka, <a href="https://magazine.sebastianraschka.com/p/visual-attention-variants">A Visual Guide to Attention Variants in Modern LLMs</a>.</em></p>
+<ul>
+<li><strong>Gemma 3</strong> pairs five local layers with one global layer, at <span class="arithmatex">\(W = 1{,}024\)</span>. At 131K tokens, five of every six layers cache 1,024 tokens: the cache is <span class="arithmatex">\(\tfrac16 + \tfrac56 \cdot \tfrac{1024}{131072} \approx\)</span> <strong>17% of all-global, about 5.8× smaller</strong>.</li>
+<li><strong>SWA and GQA combine.</strong> SWA cuts how many tokens a local layer caches; GQA cuts how much each token costs. Gemma 3 uses both.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Simple:</strong> a mask change, nothing new to learn</td>
+<td><strong>Local layers are blind past <span class="arithmatex">\(W\)</span>:</strong> global layers must stay, at 5:1 (Gemma 3, Xiaomi) or 3:1 (OLMo 3, Arcee Trinity)</td>
+</tr>
+<tr>
+<td><strong>Big long-context saving</strong> for most layers</td>
+<td><strong>Two knobs to tune:</strong> the local-to-global ratio and <span class="arithmatex">\(W\)</span>, from 128 (Xiaomi) to 1,024 (Gemma 3)</td>
+</tr>
+<tr>
+<td><strong>Little quality cost:</strong> Gemma 3's ablation found a smaller window and a more aggressive ratio barely moved perplexity</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="hybrid-layers-cache-fewer-layers">Hybrid layers: cache fewer layers</h4>
+<p><strong>A hybrid model mixes two layer types.</strong> Most layers are linear attention; every fourth is full attention.</p>
+<p><img alt="Qwen3-Next decoder block: each of 48 layers is either Gated DeltaNet (linear attention) or gated full attention, in a 3:1 ratio, so layers 1–3 are linear attention and layer 4 is full attention, repeated" src="../../images/attention/qwen3_next_hybrid.png" /></p>
+<p><em>Figure: Sebastian Raschka, <a href="https://magazine.sebastianraschka.com/p/beyond-standard-llms">Beyond Standard LLMs</a>. Qwen3-Next: three Gated DeltaNet layers, then one full-attention layer, repeated.</em></p>
+<p><img alt="A full-attention layer's KV cache holds 4 key-value entries after 4 tokens and 8 after 8; a linear-attention layer's state is one fixed-size matrix, the same size after 4 tokens and after 8, updated in place by each token" src="../../images/attention/kv_cache_vs_linear_state.svg" /></p>
+<ul>
+<li><strong>Linear-attention layers behave like an RNN.</strong> Each head keeps one fixed-size state matrix <span class="arithmatex">\(S_t\)</span> that folds in every token, <span class="arithmatex">\(S_t = S_{t-1} + k_t v_t^\top\)</span>, with an LSTM-style gate that lets old content fade. It is the same size at token 10 and at token 100,000.</li>
+<li><strong>Full-attention layers are ordinary attention.</strong> They keep every past key and value, so they can still recall any token exactly, which a fixed-size state cannot.</li>
+<li><strong>Only the full-attention layers grow with context</strong>, so the formula counts them alone:</li>
+</ul>
+<div class="arithmatex">\[
+\text{KV bytes per token} = 2 \times L_{full} \times H_{kv} \times D_h \times \text{bytes per element}
+\]</div>
+<p><strong>Example: Qwen3.8-27B on a 48 GB workstation GPU.</strong> 64 layers, of which 16 are full attention; 4 KV heads; <span class="arithmatex">\(D_h = 256\)</span>; FP8 KV cache (§5.9).</p>
+<table>
+<thead>
+<tr>
+<th>Per sequence</th>
+<th>Full-attention layers (16)</th>
+<th>Linear-attention layers (48)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Grows with context?</strong></td>
+<td>yes: <span class="arithmatex">\(2 \times 16 \times 4 \times 256 \times 1\)</span> B = <strong>32 KiB per token</strong></td>
+<td>no: <strong>≈ 155 MiB</strong>, fixed</td>
+</tr>
+<tr>
+<td>at 2,048 tokens</td>
+<td>64 MiB</td>
+<td>155 MiB</td>
+</tr>
+<tr>
+<td>at 131,072 tokens</td>
+<td><strong>4 GiB</strong></td>
+<td>155 MiB</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>With all 64 layers as full attention, the cache would be 128 KiB per token: <strong>16 GiB</strong> at 131K tokens, 4× more.</li>
+<li>
+<p>At short context the fixed state is most of each request's memory; at long context the KV cache is.</p>
+</li>
+<li>
+<p><strong>The full-attention layers are gated</strong> in Qwen3-Next and Qwen3.5: standard attention plus an output gate, a zero-centred QK-norm and partial RoPE, which make the retained layers behave more predictably inside the hybrid stack.</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Flatter memory:</strong> a 3:1 hybrid's cache grows at a quarter of full attention's rate</td>
+<td><strong>Weaker exact recall:</strong> a fixed-size state is less precise at content-based retrieval, so full-attention layers stay</td>
+</tr>
+<tr>
+<td><strong>Fixed cost per token</strong> in the linear layers, at any context length</td>
+<td><strong>Two caches, two limits:</strong> per-token KV bounds context; per-sequence state bounds concurrency (Lecture 29)</td>
+</tr>
+</tbody>
+</table>
+<details class="note">
+<summary>Beyond storage: DeepSeek Sparse Attention (DSA)</summary>
+<p><strong>DSA restricts each token to a selected subset of earlier tokens, like SWA, but the model learns which ones.</strong> A lightning indexer scores every prior token against the new query, using MLA's compressed representations, and a selector keeps only the highest-scoring positions for attention.</p>
+<p><img alt="DeepSeek Sparse Attention mask: each token attends to itself and a learned selection of earlier tokens, not a contiguous window" src="../../images/attention/dsa_mask.png" /></p>
+<p><em>Figure: Sebastian Raschka, <a href="https://magazine.sebastianraschka.com/p/visual-attention-variants">A Visual Guide to Attention Variants in Modern LLMs</a>.</em></p>
+<table>
+<thead>
+<tr>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Learned selection:</strong> keeps distant tokens that matter, which a fixed window drops</td>
+<td><strong>Cache is not smaller:</strong> any past token may be selected, so every token's latent stays stored</td>
+</tr>
+<tr>
+<td><strong>Less attention work per step</strong> at long context: fewer keys are read and scored</td>
+<td><strong>Extra machinery:</strong> the indexer is its own learned component that runs every step</td>
+</tr>
+</tbody>
+</table>
+<p>Used in DeepSeek V3.2, together with MLA, and in GLM-5.</p>
+</details>
+<h4 id="the-catch">The catch</h4>
+<ul>
+<li>Every scheme here is <strong>fixed at training time</strong>. For a model you are handed, the remaining knob is <strong>bytes per element</strong>.</li>
 </ul>
 <hr />
 <div class="admonition abstract">
@@ -2220,30 +2561,23 @@
 <li><strong>TurboQuant:</strong> a random rotation spreads outlier channels evenly, and a fixed codebook quantizes each coordinate. <strong>No calibration</strong>, so it suits a tensor that arrives one vector at a time.</li>
 <li><strong>Decision rule:</strong> judge the flag against <strong>your context distribution</strong>. Leave it off for chat under ~2K tokens; turn it on for agents working at 15K+.</li>
 </ul>
-<h2 id="6-flashattention-compute-it-in-tiles">6. FlashAttention: compute it in tiles</h2>
-<p><strong>The KV cache removes recompute from decode. Prefill still builds §4's score matrix, 32 MiB per head at 4,096 tokens, and shared memory is far too small to hold it, so the matrix is never formed whole.</strong></p>
-<ul>
-<li>Load a <strong>tile</strong> of queries and a tile of keys and values into shared memory (<a href="../Lecture8/">Lecture 8</a> §7).</li>
-<li>Compute that tile's scores and fold them into the output with a <strong>running softmax</strong>: keep the row's maximum and sum so far, and rescale as new tiles arrive.</li>
-<li>Discard the tile and load the next one. <strong>The <span class="arithmatex">\(n \times n\)</span> matrix never reaches HBM.</strong></li>
-<li><strong>The result is exact.</strong> The arithmetic is reordered; nothing is approximated.</li>
-<li><strong>It changes traffic, not FLOPs or storage.</strong> The work is still <span class="arithmatex">\(O(n^2)\)</span>, and the KV cache is the same size.</li>
-</ul>
-<div class="admonition tip">
-<p class="admonition-title">Further exploration</p>
-<p>Dao et al., <em>FlashAttention</em> (2022): the online-softmax rescaling that lets a tile be normalised before its row is complete.</p>
-</div>
 <hr />
 <h2 id="references">References</h2>
 <ol>
 <li>Vivek Kalyanarangan, <em>Quantization and Fast Inference</em>, Manning Publications — §3.4 key/value asymmetry and scale overhead; §7.5 TurboQuant; §10.5.1 the KV formula and GQA</li>
-<li>Dao et al., <a href="https://arxiv.org/abs/2205.14135"><em>FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness</em></a> (2022)</li>
 <li>Ainslie et al., <a href="https://arxiv.org/abs/2305.13245"><em>GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints</em></a> (2023)</li>
 <li>Liu et al., <a href="https://arxiv.org/abs/2402.02750"><em>KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache</em></a> (2024)</li>
 <li>Hooper et al., <a href="https://arxiv.org/abs/2401.18079"><em>KVQuant: Towards 10 Million Context Length LLM Inference with KV Cache Quantization</em></a> (2024)</li>
 <li>Model configs: <a href="https://huggingface.co/Qwen/Qwen3-0.6B/blob/main/config.json">Qwen3-0.6B</a> · <a href="https://huggingface.co/NousResearch/Llama-2-7b-hf/blob/main/config.json">Llama-2-7B</a> · <a href="https://huggingface.co/NousResearch/Meta-Llama-3-8B/blob/main/config.json">Llama-3-8B</a></li>
 <li><a href="../Lecture9_10/">Lecture 9/10</a> — prefill vs decode on the roofline</li>
 <li><a href="../Lecture23_24/">Lecture 23/24</a> — static vs dynamic scales</li>
+<li>Shazeer, <a href="https://arxiv.org/abs/1911.02150"><em>Fast Transformer Decoding: One Write-Head is All You Need</em></a> (2019) — multi-query attention</li>
+<li>DeepSeek-AI, <a href="https://arxiv.org/abs/2405.04434"><em>DeepSeek-V2: A Strong, Economical, and Efficient Mixture-of-Experts Language Model</em></a> (2024) — multi-head latent attention; <a href="https://huggingface.co/deepseek-ai/DeepSeek-V3/blob/main/config.json">DeepSeek-V3 config</a></li>
+<li>Katharopoulos et al., <a href="https://arxiv.org/abs/2006.16236"><em>Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention</em></a> (2020) — linear attention as a recurrent state</li>
+<li>Yang et al., <a href="https://arxiv.org/abs/2412.06464"><em>Gated Delta Networks: Improving Mamba2 with Delta Rule</em></a> (2024) — the gated delta rule; <a href="https://huggingface.co/Qwen/Qwen3.8-27B-FP8/blob/main/config.json">Qwen3.8-27B-FP8 config</a></li>
+<li>Sebastian Raschka, <a href="https://magazine.sebastianraschka.com/p/visual-attention-variants"><em>A Visual Guide to Attention Variants in Modern LLMs</em></a> (2026) — GQA, MLA, sliding-window, sparse and hybrid attention, with their trade-offs</li>
+<li>Gemma Team, <a href="https://arxiv.org/abs/2503.19786"><em>Gemma 3 Technical Report</em></a> (2025) — 5:1 local-to-global sliding-window attention</li>
+<li>Qiu et al., <a href="https://arxiv.org/abs/2505.06708"><em>Gated Attention for Large Language Models: Non-linearity, Sparsity, and Attention-Sink-Free</em></a> (2025) — the gated full-attention layers in Qwen3-Next and Qwen3.5</li>
 </ol>
 
 

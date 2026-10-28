@@ -1365,6 +1365,58 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-with-and-without-the-cache-51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. With and without the cache · §5.1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-shapes-and-bytes-52" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Shapes and bytes · §5.2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-context-when-one-sequence-outweighs-the-weights-52" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Context: when one sequence outweighs the weights · §5.2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-batch-when-the-cache-outweighs-the-weights-53" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Batch: when the cache outweighs the weights · §5.3
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2107,27 +2159,33 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="kv-cache-measured">KV cache, measured<a class="anchor-link" href="#kv-cache-measured">¶</a></h1><p>Companion notebook to <strong>Lecture 27/28 — Attention and the KV cache</strong>, §5.2. One prefill pass fills Qwen3-0.6B's cache, and the cell below reads it back: tensor shapes, total bytes, and the formula they should match.</p>
+<h1 id="kv-cache-measured">KV cache, measured<a class="anchor-link" href="#kv-cache-measured">¶</a></h1><p>Companion notebook to <strong>Lecture 27/28 — Attention and the KV cache</strong>, §5.1–5.2. Qwen3-0.6B generates text with and without its cache, then the cache is read back: tensor shapes, total bytes, and the formula they should match.</p>
 <ul>
 <li><strong>Model:</strong> <code>Qwen/Qwen3-0.6B</code> in BF16, about 1.2 GB. No login needed.</li>
-<li><strong>Runtime:</strong> the free CPU runtime is enough. One 256-token prefill takes seconds.</li>
+<li><strong>Runtime:</strong> the free CPU runtime is enough. Part 1 takes a minute or two; part 2 takes seconds.</li>
 </ul>
-<p><strong>Predict before you run:</strong></p>
-<ol>
-<li>The shape of one layer's K tensor for a 256-token prompt. Read <code>num_hidden_layers</code>, <code>num_key_value_heads</code> and <code>head_dim</code> from the model's <a href="https://huggingface.co/Qwen/Qwen3-0.6B/blob/main/config.json"><code>config.json</code></a>.</li>
-<li>The total KV bytes, from $2 \times \text{layers} \times \text{kv\_heads} \times \text{head\_dim} \times \text{tokens} \times 2$ bytes.</li>
-<li>The context length at which one conversation's cache outweighs the weights.</li>
-</ol>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=kv-cache-shapes">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=360597d2-3b66-4c0d-b616-0d359aa0711c">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><img alt="" src="https://miro.medium.com/v2/resize:fit:1100/format:webp/1*dSCIzMEXEdNAbPtUXjIwaQ.png"/><br/>
+Image credits: <a href="https://medium.com/@lmpo/decoder-only-transformer-models-a-comprehensive-overview-c54dc3286d71">Medium: The Rise of LLMs: From GPT to Modern Innovations</a></p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=setup">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-1">
@@ -2140,15 +2198,253 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># KV cache: read the shapes, count the bytes, check the formula</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoModelForCausalLM</span><span class="p">,</span> <span class="n">AutoTokenizer</span>
 
 <span class="n">name</span> <span class="o">=</span> <span class="s2">"Qwen/Qwen3-0.6B"</span>
 <span class="n">tok</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">bfloat16</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">config</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-1">import time
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
+name = "Qwen/Qwen3-0.6B"
+tok = AutoTokenizer.from_pretrained(name)
+model = AutoModelForCausalLM.from_pretrained(name, dtype=torch.bfloat16)
+model.eval()
+cfg = model.config</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Loading weights:   0%|          | 0/311 [00:00&lt;?, ?it/s]</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=with-without-intro">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="1-with-and-without-the-cache-51">1. With and without the cache · §5.1<a class="anchor-link" href="#1-with-and-without-the-cache-51">¶</a></h2><p>Without a cache, every new token reruns the <strong>whole sequence</strong> and recomputes the keys and values of every past token. With one, the model is fed only the newest token and reads past keys and values from the cache.</p>
+<p><strong>Predict before you run:</strong></p>
+<ol>
+<li>Do the two methods generate the same tokens?</li>
+<li>As the context grows from 64 to 512 tokens, which per-token time grows, and which stays roughly flat?</li>
+</ol>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=with-without-cache">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-2">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">statistics</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_without_cache</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">new_token_count</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Every step reruns the whole sequence. Returns the tokens and each step's time."""</span>
+    <span class="n">tokens</span><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">new_token_count</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+        <span class="c1"># generate logits based on all tokens seen so far input. No cache</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">input_ids</span><span class="o">=</span><span class="n">ids</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">logits</span>
+        
+        <span class="c1"># last token vector gives you logits for next token </span>
+        <span class="n">nxt</span> <span class="o">=</span> <span class="n">logits</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>        
+        <span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+        <span class="n">tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nxt</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="c1"># append recently generated token into existing input</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">ids</span><span class="p">,</span> <span class="n">nxt</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">times</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_with_cache</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">new_token_count</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Prefill once, then feed only the newest token. Returns the tokens and each step's time."""</span>
+    <span class="n">tokens</span><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+    <span class="c1"># prefill stage. use cache</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">input_ids</span><span class="o">=</span><span class="n">ids</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">new_token_count</span><span class="p">):</span>
+        <span class="c1"># last token vector gives you logits for next token </span>
+        <span class="n">nxt</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">logits</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+        <span class="n">tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nxt</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+        <span class="c1"># only recently generated token is sent as input </span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">input_ids</span><span class="o">=</span><span class="n">nxt</span><span class="p">,</span> <span class="n">past_key_values</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">past_key_values</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">times</span>
+
+
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="c1"># Same tokens either way: the cache stores values that never change</span>
+    <span class="n">prompt_tokens</span> <span class="o">=</span> <span class="n">tok</span><span class="p">(</span><span class="s2">"The hungry dog ate the bone because"</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s2">"pt"</span><span class="p">)[</span><span class="s2">"input_ids"</span><span class="p">]</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">generate_without_cache</span><span class="p">(</span><span class="n">prompt_tokens</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">b</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">generate_with_cache</span><span class="p">(</span><span class="n">prompt_tokens</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"identical tokens: </span><span class="si">{</span><span class="n">a</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">b</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"generated: </span><span class="si">{</span><span class="n">tok</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="si">!r}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="c1"># Time per generated token as the context grows. Step 1 is the prefill in both</span>
+    <span class="c1"># methods, so it is left out; the median keeps one slow step from skewing a row.</span>
+    <span class="n">filler</span> <span class="o">=</span> <span class="n">tok</span><span class="p">(</span><span class="s2">"The hungry dog ate the bone. "</span> <span class="o">*</span> <span class="mi">200</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s2">"pt"</span><span class="p">)[</span><span class="s2">"input_ids"</span><span class="p">]</span>
+    <span class="n">steps</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'context'</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'no cache'</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'cache'</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'ratio'</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1024</span><span class="p">):</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="n">filler</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n</span><span class="p">]</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">t_none</span> <span class="o">=</span> <span class="n">generate_without_cache</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">steps</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">t_cache</span> <span class="o">=</span> <span class="n">generate_with_cache</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">steps</span><span class="p">)</span>
+        <span class="n">none_ms</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">*</span> <span class="n">statistics</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">t_none</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="n">cache_ms</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">*</span> <span class="n">statistics</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">t_cache</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">none_ms</span><span class="si">:</span><span class="s2">&gt;9.0f</span><span class="si">}</span><span class="s2"> ms </span><span class="si">{</span><span class="n">cache_ms</span><span class="si">:</span><span class="s2">&gt;7.0f</span><span class="si">}</span><span class="s2"> ms </span><span class="si">{</span><span class="n">none_ms</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">cache_ms</span><span class="si">:</span><span class="s2">&gt;6.1f</span><span class="si">}</span><span class="s2">×"</span><span class="p">)</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-2">import statistics
+
+
+def generate_without_cache(ids, new_token_count):
+    """Every step reruns the whole sequence. Returns the tokens and each step's time."""
+    tokens, times = [], []
+    for _ in range(new_token_count):
+        start = time.perf_counter()
+        # generate logits based on all tokens seen so far input. No cache
+        logits = model(input_ids=ids, use_cache=False).logits
+        
+        # last token vector gives you logits for next token 
+        nxt = logits[:, -1].argmax(-1, keepdim=True)        
+        times.append(time.perf_counter() - start)
+        tokens.append(nxt.item())
+        # append recently generated token into existing input
+        ids = torch.cat([ids, nxt], dim=1)
+    return tokens, times
+
+
+def generate_with_cache(ids, new_token_count):
+    """Prefill once, then feed only the newest token. Returns the tokens and each step's time."""
+    tokens, times = [], []
+    start = time.perf_counter()
+    # prefill stage. use cache
+    out = model(input_ids=ids, use_cache=True)
+    for _ in range(new_token_count):
+        # last token vector gives you logits for next token 
+        nxt = out.logits[:, -1].argmax(-1, keepdim=True)
+        times.append(time.perf_counter() - start)
+        tokens.append(nxt.item())
+        start = time.perf_counter()
+        # only recently generated token is sent as input 
+        out = model(input_ids=nxt, past_key_values=out.past_key_values, use_cache=True)
+    return tokens, times
+
+
+with torch.no_grad():
+    # Same tokens either way: the cache stores values that never change
+    prompt_tokens = tok("The hungry dog ate the bone because", return_tensors="pt")["input_ids"]
+    a, _ = generate_without_cache(prompt_tokens, 20)
+    b, _ = generate_with_cache(prompt_tokens, 20)
+    print(f"identical tokens: {a == b}")
+    print(f"generated: {tok.decode(b)!r}\n")
+
+    # Time per generated token as the context grows. Step 1 is the prefill in both
+    # methods, so it is left out; the median keeps one slow step from skewing a row.
+    filler = tok("The hungry dog ate the bone. " * 200, return_tensors="pt")["input_ids"]
+    steps = 6
+    print(f"{'context':&gt;8} {'no cache':&gt;12} {'cache':&gt;10} {'ratio':&gt;7}")
+    for n in (64, 256, 512, 1024):
+        ids = filler[:, :n]
+        _, t_none = generate_without_cache(ids, steps)
+        _, t_cache = generate_with_cache(ids, steps)
+        none_ms = 1000 * statistics.median(t_none[1:])
+        cache_ms = 1000 * statistics.median(t_cache[1:])
+        print(f"{n:&gt;8} {none_ms:&gt;9.0f} ms {cache_ms:&gt;7.0f} ms {none_ms / cache_ms:&gt;6.1f}×")</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>identical tokens: True
+generated: ' it was a bone. The dog is a hungry dog. The dog is a hungry dog. The'
+
+ context     no cache      cache   ratio
+      64        93 ms      37 ms    2.5×
+     256       242 ms      36 ms    6.8×
+     512       406 ms      48 ms    8.5×
+    1024      1378 ms      39 ms   35.3×
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=shapes-intro">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="2-shapes-and-bytes-52">2. Shapes and bytes · §5.2<a class="anchor-link" href="#2-shapes-and-bytes-52">¶</a></h2><p><strong>Predict before you run:</strong></p>
+<ol>
+<li>The shape of one layer's K tensor for a 256-token prompt. Read <code>num_hidden_layers</code>, <code>num_key_value_heads</code> and <code>head_dim</code> from the model's <a href="https://huggingface.co/Qwen/Qwen3-0.6B/blob/main/config.json"><code>config.json</code></a>.</li>
+<li>The total KV bytes, from $2 \times \text{layers} \times \text{kv\_heads} \times \text{head\_dim} \times \text{tokens} \times 2$ bytes.</li>
+<li>The context length at which one conversation's cache outweighs the weights.</li>
+</ol>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=kv-cache-shapes">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Shapes and bytes, measured against the formula</span>
 <span class="c1"># One prefill pass fills the cache for every prompt token.</span>
 <span class="n">inputs</span> <span class="o">=</span> <span class="n">tok</span><span class="p">(</span><span class="s2">"The hungry dog ate the bone. "</span> <span class="o">*</span> <span class="mi">37</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s2">"pt"</span><span class="p">)</span>
 <span class="n">inputs</span><span class="p">[</span><span class="s2">"input_ids"</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">"input_ids"</span><span class="p">][:,</span> <span class="p">:</span><span class="mi">256</span><span class="p">]</span>
@@ -2175,14 +2471,16 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"one layer's K:      </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">k0</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">   (batch, kv_heads, tokens, head_dim)"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"one layer's V:      </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">v0</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">   dtype </span><span class="si">{</span><span class="n">k0</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
+<span class="n">layer_k</span> <span class="o">=</span> <span class="n">k0</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">*</span> <span class="n">k0</span><span class="o">.</span><span class="n">element_size</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">one layer's K:      </span><span class="si">{</span><span class="n">layer_k</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> bytes   = </span><span class="si">{</span><span class="s1">' × '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="n">k0</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span><span class="si">}</span><span class="s2"> × </span><span class="si">{</span><span class="n">k0</span><span class="o">.</span><span class="n">element_size</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"K + V, one layer:   </span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">layer_k</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"× </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">kv</span><span class="p">)</span><span class="si">}</span><span class="s2"> layers:        </span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">layer_k</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">kv</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
 <span class="n">measured</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">*</span> <span class="n">k</span><span class="o">.</span><span class="n">element_size</span><span class="p">()</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">*</span> <span class="n">v</span><span class="o">.</span><span class="n">element_size</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kv</span><span class="p">)</span>
 <span class="n">formula</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">cfg</span><span class="o">.</span><span class="n">num_hidden_layers</span> <span class="o">*</span> <span class="n">cfg</span><span class="o">.</span><span class="n">num_key_value_heads</span> <span class="o">*</span> <span class="n">cfg</span><span class="o">.</span><span class="n">head_dim</span> <span class="o">*</span> <span class="n">n</span> <span class="o">*</span> <span class="mi">2</span>
-<span class="n">hidden_div_heads</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">//</span> <span class="n">cfg</span><span class="o">.</span><span class="n">num_attention_heads</span>
-<span class="n">trap</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">cfg</span><span class="o">.</span><span class="n">num_hidden_layers</span> <span class="o">*</span> <span class="n">cfg</span><span class="o">.</span><span class="n">num_key_value_heads</span> <span class="o">*</span> <span class="n">hidden_div_heads</span> <span class="o">*</span> <span class="n">n</span> <span class="o">*</span> <span class="mi">2</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">measured KV bytes:  </span><span class="si">{</span><span class="n">measured</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">measured KV bytes:  </span><span class="si">{</span><span class="n">measured</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">   (summed over every cached tensor)"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"formula (head_dim=</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">head_dim</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">formula</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">   match: </span><span class="si">{</span><span class="n">measured</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">formula</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"with hidden/heads = </span><span class="si">{</span><span class="n">hidden_div_heads</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">trap</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">   (</span><span class="si">{</span><span class="n">trap</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">measured</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">× the real cache)"</span><span class="p">)</span>
 
 <span class="n">per_token</span> <span class="o">=</span> <span class="n">measured</span> <span class="o">/</span> <span class="n">n</span>
 <span class="n">weights</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">*</span> <span class="n">p</span><span class="o">.</span><span class="n">element_size</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
@@ -2190,15 +2488,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"weights:            </span><span class="si">{</span><span class="n">weights</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e9</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> GB"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"KV = weights at:    </span><span class="si">{</span><span class="n">weights</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">per_token</span><span class="si">:</span><span class="s2">,.0f</span><span class="si">}</span><span class="s2"> tokens"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1"># KV cache: read the shapes, count the bytes, check the formula
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
-
-name = "Qwen/Qwen3-0.6B"
-tok = AutoTokenizer.from_pretrained(name)
-model = AutoModelForCausalLM.from_pretrained(name, dtype=torch.bfloat16)
-cfg = model.config
-
+<div class="clipboard-copy-txt" id="cell-3"># Shapes and bytes, measured against the formula
 # One prefill pass fills the cache for every prompt token.
 inputs = tok("The hungry dog ate the bone. " * 37, return_tensors="pt")
 inputs["input_ids"] = inputs["input_ids"][:, :256]
@@ -2225,20 +2515,233 @@ print(f"layers:             {len(kv)}")
 print(f"one layer's K:      {tuple(k0.shape)}   (batch, kv_heads, tokens, head_dim)")
 print(f"one layer's V:      {tuple(v0.shape)}   dtype {k0.dtype}")
 
+layer_k = k0.numel() * k0.element_size()
+print(f"\none layer's K:      {layer_k:,} bytes   = {' × '.join(map(str, k0.shape))} × {k0.element_size()}")
+print(f"K + V, one layer:   {2 * layer_k:,}")
+print(f"× {len(kv)} layers:        {2 * layer_k * len(kv):,}")
+
 measured = sum(k.numel() * k.element_size() + v.numel() * v.element_size() for k, v in kv)
 formula = 2 * cfg.num_hidden_layers * cfg.num_key_value_heads * cfg.head_dim * n * 2
-hidden_div_heads = cfg.hidden_size // cfg.num_attention_heads
-trap = 2 * cfg.num_hidden_layers * cfg.num_key_value_heads * hidden_div_heads * n * 2
 
-print(f"\nmeasured KV bytes:  {measured:,}")
+print(f"\nmeasured KV bytes:  {measured:,}   (summed over every cached tensor)")
 print(f"formula (head_dim={cfg.head_dim}): {formula:,}   match: {measured == formula}")
-print(f"with hidden/heads = {hidden_div_heads}: {trap:,}   ({trap / measured:.2f}× the real cache)")
 
 per_token = measured / n
 weights = sum(p.numel() * p.element_size() for p in model.parameters())
 print(f"\nKV per token:       {per_token / 1024:.0f} KiB")
 print(f"weights:            {weights / 1e9:.2f} GB")
 print(f"KV = weights at:    {weights / per_token:,.0f} tokens")</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>tokens cached:      256
+layers:             28
+one layer's K:      (1, 8, 256, 128)   (batch, kv_heads, tokens, head_dim)
+one layer's V:      (1, 8, 256, 128)   dtype torch.bfloat16
+
+one layer's K:      524,288 bytes   = 1 × 8 × 256 × 128 × 2
+K + V, one layer:   1,048,576
+× 28 layers:        29,360,128
+
+measured KV bytes:  29,360,128   (summed over every cached tensor)
+formula (head_dim=128): 29,360,128   match: True
+
+KV per token:       112 KiB
+weights:            1.19 GB
+KV = weights at:    10,394 tokens
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=kv-vs-context-intro">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="3-context-when-one-sequence-outweighs-the-weights-52">3. Context: when one sequence outweighs the weights · §5.2<a class="anchor-link" href="#3-context-when-one-sequence-outweighs-the-weights-52">¶</a></h2><p>Every cached token adds the same 112 KiB, so the cache grows <strong>linearly with the context window</strong>. The weights do not grow at all.</p>
+<p><strong>Predict before you run:</strong> at what context length does a single sequence's cache outweigh the 1.19 GB of weights? Where does that move for a batch of 8?</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=kv-vs-context">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Context scales the cache linearly: check it on a real 512-token prefill</span>
+<span class="n">long_ids</span> <span class="o">=</span> <span class="n">tok</span><span class="p">(</span><span class="s2">"The hungry dog ate the bone. "</span> <span class="o">*</span> <span class="mi">80</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s2">"pt"</span><span class="p">)[</span><span class="s2">"input_ids"</span><span class="p">][:,</span> <span class="p">:</span><span class="mi">512</span><span class="p">]</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">long_cache</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">input_ids</span><span class="o">=</span><span class="n">long_ids</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">past_key_values</span>
+<span class="n">long_bytes</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">*</span> <span class="n">k</span><span class="o">.</span><span class="n">element_size</span><span class="p">()</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">*</span> <span class="n">v</span><span class="o">.</span><span class="n">element_size</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kv_per_layer</span><span class="p">(</span><span class="n">long_cache</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"512 tokens: </span><span class="si">{</span><span class="n">long_bytes</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> bytes = </span><span class="si">{</span><span class="n">long_bytes</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">measured</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">× the </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">-token cache</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">batches</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">weights_gb</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">/</span> <span class="mf">1e9</span>
+<span class="n">max_ctx</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">max_position_embeddings</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">ctx</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">8192</span><span class="p">,</span> <span class="mi">16384</span><span class="p">,</span> <span class="mi">32768</span><span class="p">,</span> <span class="n">max_ctx</span><span class="p">):</span>
+    <span class="n">row</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batches</span><span class="p">:</span>
+        <span class="n">kv_gb</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">ctx</span> <span class="o">*</span> <span class="n">per_token</span> <span class="o">/</span> <span class="mf">1e9</span>
+        <span class="n">mark</span> <span class="o">=</span> <span class="s2">"  KV larger"</span> <span class="k">if</span> <span class="n">kv_gb</span> <span class="o">&gt;</span> <span class="n">weights_gb</span> <span class="k">else</span> <span class="s2">""</span>
+        <span class="n">row</span><span class="p">[(</span><span class="sa">f</span><span class="s2">"batch </span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"KV cache (GB)"</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">kv_gb</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">row</span><span class="p">[(</span><span class="sa">f</span><span class="s2">"batch </span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"KV ÷ weights"</span><span class="p">)]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">kv_gb</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">weights_gb</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">×</span><span class="si">{</span><span class="n">mark</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">rows</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ctx</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">"</span> <span class="o">+</span> <span class="p">(</span><span class="s2">" (max)"</span> <span class="k">if</span> <span class="n">ctx</span> <span class="o">==</span> <span class="n">max_ctx</span> <span class="k">else</span> <span class="s2">""</span><span class="p">)]</span> <span class="o">=</span> <span class="n">row</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"weights: </span><span class="si">{</span><span class="n">weights_gb</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> GB"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batches</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"batch </span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">: the cache overtakes the weights at </span><span class="si">{</span><span class="n">weights</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">b</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">per_token</span><span class="p">)</span><span class="si">:</span><span class="s2">,.0f</span><span class="si">}</span><span class="s2"> tokens per sequence"</span><span class="p">)</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">"index"</span><span class="p">)</span>
+<span class="n">table</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">table</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"context"</span>
+<span class="n">table</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-4">import pandas as pd
+
+# Context scales the cache linearly: check it on a real 512-token prefill
+long_ids = tok("The hungry dog ate the bone. " * 80, return_tensors="pt")["input_ids"][:, :512]
+with torch.no_grad():
+    long_cache = model(input_ids=long_ids, use_cache=True).past_key_values
+long_bytes = sum(k.numel() * k.element_size() + v.numel() * v.element_size() for k, v in kv_per_layer(long_cache))
+print(f"512 tokens: {long_bytes:,} bytes = {long_bytes / measured:.0f}× the {n}-token cache\n")
+
+batches = (1, 8)
+weights_gb = weights / 1e9
+max_ctx = cfg.max_position_embeddings
+rows = {}
+for ctx in (512, 1024, 2048, 4096, 8192, 16384, 32768, max_ctx):
+    row = {}
+    for b in batches:
+        kv_gb = b * ctx * per_token / 1e9
+        mark = "  KV larger" if kv_gb &gt; weights_gb else ""
+        row[(f"batch {b}", "KV cache (GB)")] = round(kv_gb, 2)
+        row[(f"batch {b}", "KV ÷ weights")] = f"{kv_gb / weights_gb:.2f}×{mark}"
+    rows[f"{ctx:,}" + (" (max)" if ctx == max_ctx else "")] = row
+
+print(f"weights: {weights_gb:.2f} GB")
+for b in batches:
+    print(f"batch {b}: the cache overtakes the weights at {weights / (b * per_token):,.0f} tokens per sequence")
+table = pd.DataFrame.from_dict(rows, orient="index")
+table.columns = pd.MultiIndex.from_tuples(table.columns)
+table.index.name = "context"
+table</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=kv-vs-weights-intro">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="4-batch-when-the-cache-outweighs-the-weights-53">4. Batch: when the cache outweighs the weights · §5.3<a class="anchor-link" href="#4-batch-when-the-cache-outweighs-the-weights-53">¶</a></h2><p>The weights are loaded once and shared by every request. The cache is <strong>per sequence</strong>: each request in a batch holds its own keys and values. So the weights stay fixed while the cache grows with <strong>batch × context</strong>.</p>
+<p><strong>Predict before you run:</strong> at 2,048 tokens per sequence, at which batch size does the cache outweigh Qwen3-0.6B's 1.19 GB of weights? And at 8,192?</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=kv-vs-weights">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Batch scales the cache linearly: check it on a real batched prefill</span>
+<span class="n">batch</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">batched</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">input_ids</span><span class="o">=</span><span class="n">inputs</span><span class="p">[</span><span class="s2">"input_ids"</span><span class="p">]</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">past_key_values</span>
+<span class="n">batched_bytes</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">*</span> <span class="n">k</span><span class="o">.</span><span class="n">element_size</span><span class="p">()</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">*</span> <span class="n">v</span><span class="o">.</span><span class="n">element_size</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kv_per_layer</span><span class="p">(</span><span class="n">batched</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"batch </span><span class="si">{</span><span class="n">batch</span><span class="si">}</span><span class="s2"> × </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> tokens: </span><span class="si">{</span><span class="n">batched_bytes</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> bytes = </span><span class="si">{</span><span class="n">batched_bytes</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">measured</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">× the batch-1 cache</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">contexts</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">8192</span><span class="p">)</span>  <span class="c1"># tokens per sequence</span>
+<span class="n">weights_gb</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">/</span> <span class="mf">1e9</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">):</span>
+    <span class="n">row</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">ctx</span> <span class="ow">in</span> <span class="n">contexts</span><span class="p">:</span>
+        <span class="n">kv_gb</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">ctx</span> <span class="o">*</span> <span class="n">per_token</span> <span class="o">/</span> <span class="mf">1e9</span>
+        <span class="n">mark</span> <span class="o">=</span> <span class="s2">"  KV larger"</span> <span class="k">if</span> <span class="n">kv_gb</span> <span class="o">&gt;</span> <span class="n">weights_gb</span> <span class="k">else</span> <span class="s2">""</span>
+        <span class="n">row</span><span class="p">[(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ctx</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> tokens"</span><span class="p">,</span> <span class="s2">"KV cache (GB)"</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">kv_gb</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">row</span><span class="p">[(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ctx</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> tokens"</span><span class="p">,</span> <span class="s2">"KV ÷ weights"</span><span class="p">)]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">kv_gb</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">weights_gb</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">×</span><span class="si">{</span><span class="n">mark</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">rows</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"weights: </span><span class="si">{</span><span class="n">weights_gb</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> GB, shared by every sequence"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ctx</span> <span class="ow">in</span> <span class="n">contexts</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"at </span><span class="si">{</span><span class="n">ctx</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> tokens per sequence, the cache overtakes the weights at batch </span><span class="si">{</span><span class="n">weights</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">ctx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">per_token</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">"index"</span><span class="p">)</span>
+<span class="n">table</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">table</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"batch"</span>
+<span class="n">table</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-5"># Batch scales the cache linearly: check it on a real batched prefill
+batch = 4
+with torch.no_grad():
+    batched = model(input_ids=inputs["input_ids"].repeat(batch, 1), use_cache=True).past_key_values
+batched_bytes = sum(k.numel() * k.element_size() + v.numel() * v.element_size() for k, v in kv_per_layer(batched))
+print(f"batch {batch} × {n} tokens: {batched_bytes:,} bytes = {batched_bytes / measured:.0f}× the batch-1 cache\n")
+
+contexts = (2048, 8192)  # tokens per sequence
+weights_gb = weights / 1e9
+rows = {}
+for b in (1, 2, 4, 8, 16, 32, 64):
+    row = {}
+    for ctx in contexts:
+        kv_gb = b * ctx * per_token / 1e9
+        mark = "  KV larger" if kv_gb &gt; weights_gb else ""
+        row[(f"{ctx:,} tokens", "KV cache (GB)")] = round(kv_gb, 2)
+        row[(f"{ctx:,} tokens", "KV ÷ weights")] = f"{kv_gb / weights_gb:.2f}×{mark}"
+    rows[b] = row
+
+print(f"weights: {weights_gb:.2f} GB, shared by every sequence")
+for ctx in contexts:
+    print(f"at {ctx:,} tokens per sequence, the cache overtakes the weights at batch {weights / (ctx * per_token):.1f}")
+table = pd.DataFrame.from_dict(rows, orient="index")
+table.columns = pd.MultiIndex.from_tuples(table.columns)
+table.index.name = "batch"
+table</div>
 </div>
 </div>
 </div>
