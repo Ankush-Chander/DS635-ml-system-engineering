@@ -35,6 +35,8 @@ nav:
       - 19_20:Number Formats: 'lectures/Lecture19_20.md'
       - 21_22:Affine Quantization: 'lectures/Lecture21_22.md'
       - 23_24:Quantization Schemes & Targets: 'lectures/Lecture23_24.md'
+      - 27_28:Attention & KV Cache: 'lectures/Lecture27_28.md'
+      - 29:Serving: 'lectures/Lecture29.md'
       # - 4:Tensor Cores & Precision: 'lectures/Lecture4.md'
   - Labs:
       - Overview: 'labs/index.md'
