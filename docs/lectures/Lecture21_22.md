@@ -130,7 +130,7 @@ Fill TODOs A–F in [`code/quantization/affine/affine_quantizer.py`](https://git
 | **F** | dequantize, Equation 2.2 |
 | **G** (stretch) | the four-term integer dot product (§4) |
 
-`pytest -q` runs 18 self-checks, each named after the TODO it covers. One of them recovers Q3.4 as $S = 1/16$, $Z = 0$.
+`pytest -q` runs 18 self-checks, each named after the TODO it covers. One of them recovers Q3.4 as $S = 1/16$, $Z = 0$. Submitted and marked as [Lab 19–22a](../labs/Lab19_22a.md).
 
 !!! question "Ties again"
     `np.round` sends ties to the even neighbour; FixedPoint sent them up. Calibrate a signed int8 quantizer on $[-8, 7.9375]$ and quantize $0.03125$ and $0.09375$. Which integers come back, and which row of Lecture 19/20's rounding table does that match?

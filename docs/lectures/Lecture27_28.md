@@ -324,7 +324,7 @@ $$
 - This is [Lecture 21/22](Lecture21_22.md) §5's rule: match the scale's grouping to where the outliers live.
 - Per-token scales for $V$ cost 2 bytes per token per head: **about 3%** on 64 bytes of INT4 data at $d_{head} = 128$.
 
-### 5.8 The streaming catch
+<!--### 5.8 The streaming catch
 
 - A per-channel scale for $K$ is a maximum **over tokens**. During decode, those tokens arrive one at a time.
 - Fix: quantize keys per channel **within groups of tokens**, and hold the newest tokens in FP16 until a group fills (KIVI).
@@ -338,7 +338,7 @@ $$
 ### 5.10 Below 4 bits
 
 - **TurboQuant:** a random rotation spreads outlier channels evenly, and a fixed codebook quantizes each coordinate. **No calibration**, so it suits a tensor that arrives one vector at a time.
-- **Decision rule:** judge the flag against **your context distribution**. Leave it off for chat under ~2K tokens; turn it on for agents working at 15K+.
+- **Decision rule:** judge the flag against **your context distribution**. Leave it off for chat under ~2K tokens; turn it on for agents working at 15K+.-->
 
 ---
 

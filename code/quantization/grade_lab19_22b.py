@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-grade_lab19_22.py -- automated marking for Lab 19-22, "Quantization error, measured".
+grade_lab19_22b.py -- automated marking for Lab 19-22b, "Quantization error, measured".
 
-    python grade_lab19_22.py <submissions_dir> [-o report_dir] [--csv-only]
+    python grade_lab19_22b.py <submissions_dir> [-o report_dir] [--csv-only]
 
 Same principle as the other DS635 labs: every check tests a *relationship between the student's
 own numbers*, never a magnitude against a reference. The signals, the data split and the model
@@ -25,7 +25,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 AUTO_TOTAL, RUBRIC_TOTAL = 40, 60
-LAB = "lab19_22"
+LAB = "lab19_22b"
 
 @dataclass
 class Check:
@@ -159,7 +159,7 @@ def fingerprint(s: Submission):
 
 def scorecard(s: Submission) -> str:
     env = s.data.get("env", {})
-    L = [f"{'='*60}", f"Lab 19-22  --  {s.roll}  ({s.data.get('name','?')})", "="*60,
+    L = [f"{'='*60}", f"Lab 19-22b  --  {s.roll}  ({s.data.get('name','?')})", "="*60,
          f"Seed: {env.get('seed','?')}   sine cycles: {env.get('cycles','?')}", "",
          f"AUTOMATIC  {s.auto:.1f} / {AUTO_TOTAL}", "-"*60]
     for c in s.checks:
@@ -188,7 +188,7 @@ def load(directory: Path):
     return subs
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Mark Lab 19-22 submissions.")
+    ap = argparse.ArgumentParser(description="Mark Lab 19-22b submissions.")
     ap.add_argument("directory", type=Path)
     ap.add_argument("-o", "--out", type=Path, default=None)
     ap.add_argument("--csv-only", action="store_true")
