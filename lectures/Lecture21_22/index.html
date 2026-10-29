@@ -1479,6 +1479,90 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab19_22a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    19_22a:Fixed Point & Affine, by Hand
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab19_22b/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    19_22b:Quantization Error, Measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/Lab19_22b_quantization_error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 19–22b — Quantization error, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1955,7 +2039,7 @@ Z = \operatorname{round}\!\left(q_{min} - \frac{r_{min}}{S}\right)
 </tr>
 </tbody>
 </table>
-<p><code>pytest -q</code> runs 18 self-checks, each named after the TODO it covers. One of them recovers Q3.4 as <span class="arithmatex">\(S = 1/16\)</span>, <span class="arithmatex">\(Z = 0\)</span>.</p>
+<p><code>pytest -q</code> runs 18 self-checks, each named after the TODO it covers. One of them recovers Q3.4 as <span class="arithmatex">\(S = 1/16\)</span>, <span class="arithmatex">\(Z = 0\)</span>. Submitted and marked as <a href="../../labs/Lab19_22a/">Lab 19–22a</a>.</p>
 <div class="admonition question">
 <p class="admonition-title">Ties again</p>
 <p><code>np.round</code> sends ties to the even neighbour; FixedPoint sent them up. Calibrate a signed int8 quantizer on <span class="arithmatex">\([-8, 7.9375]\)</span> and quantize <span class="arithmatex">\(0.03125\)</span> and <span class="arithmatex">\(0.09375\)</span>. Which integers come back, and which row of Lecture 19/20's rounding table does that match?</p>
