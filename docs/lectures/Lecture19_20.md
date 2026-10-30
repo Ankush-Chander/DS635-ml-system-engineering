@@ -100,7 +100,7 @@ The class built in the classroom exercise behaves like this:
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Ankush-Chander/DS635-ml-system-engineering?devcontainer_path=.devcontainer/fixed-point/devcontainer.json)
 
-Fill TODOs A–F in [`code/quantization/fixed_point/fixed_point.py`](https://github.com/Ankush-Chander/DS635-ml-system-engineering/tree/main/code/quantization/fixed_point): scale, range, saturation, addition, and a rounded multiply. `pytest -q` runs 16 self-checks, each named after the TODO it covers.
+Fill TODOs A–F in [`code/quantization/fixed_point/fixed_point.py`](https://github.com/Ankush-Chander/DS635-ml-system-engineering/tree/main/code/quantization/fixed_point): scale, range, saturation, addition, and a rounded multiply. `pytest -q` runs 16 self-checks, each named after the TODO it covers. Submitted and marked as [Lab 19–22a](../labs/Lab19_22a.md).
 
 ---
 

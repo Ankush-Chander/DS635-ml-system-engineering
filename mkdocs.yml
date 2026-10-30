@@ -50,6 +50,9 @@ nav:
       - '13_14:Decoding, measured': 'labs/Lab13_14_decoding_strategies.ipynb'
       - '15_16:Speculative Decoding': 'labs/Lab15_16.md'
       - '15_16:Speculative decoding, measured': 'labs/Lab15_16_speculative_decoding.ipynb'
+      - '19_22a:Fixed Point & Affine, by Hand': 'labs/Lab19_22a.md'
+      - '19_22b:Quantization Error, Measured': 'labs/Lab19_22b.md'
+      - '19_22b:Quantization error, measured': 'labs/Lab19_22b_quantization_error.ipynb'
   - Demos:
       - 'Speculative decoding: the acceptance rule': 'viz/acceptance-rule.html'
       # - 'Speculative decoding: convergence bench': 'viz/rejection-sampling.html'
