@@ -201,21 +201,75 @@ $$
 
 #### Multi-head Latent Attention (MLA): compress what is cached
 
-![DeepSeek-V3 block with multi-head latent attention: the input is projected by W_dkv into one compressed key-and-value vector, which W_uk and W_uv expand into keys and values; regular multi-head attention projects the input directly into a query, key and value per head](../images/attention/mla_vs_mha.png)
+**MLA separates what is stored from what is computed.** The cache holds **one compressed latent per token**; each head's key and value are projected from it only when attention runs.
 
-*Figure: Sebastian Raschka, [The Big LLM Architecture Comparison](https://magazine.sebastianraschka.com/p/the-big-llm-architecture-comparison).*
+- **GQA and MQA change how many heads share K and V. MLA changes the storage format:** every head still gets its own key and value, all built from the same latent.
+
+![Traditional multi-head attention caches a separate key and value for every head of every token; multi-head latent attention caches one shared compressed latent per token, from which each head's key and value are projected when attention is computed](../images/attention/mla_shared_latent.png)
+
+*Figure: ZeroMathAI, [Multi-Head Latent Attention](https://zeromathai.com/en/multi-head-latent-attention-en/).*
 
 DeepSeek-V2 and V3 cache a **compressed vector** in place of per-head keys and values:
 
-- Per token per layer, the cache holds a latent $c_t$ of width $d_c = 512$, produced by $W_{dkv}$ (the figure's compressed key and value), and a small key $k^R_t$ of width $d_r = 64$ that carries the RoPE position: **576 elements**.
+- Per token per layer, the cache holds a latent $c_t$ of width $d_c = 512$, produced by a down-projection $W_{dkv}$ (the figure's teal latent), and a small key $k^R_t$ of width $d_r = 64$ that carries the RoPE position: **576 elements**.
 - Each head's keys and values are $W_{uk} c_t$ and $W_{uv} c_t$. Because $q^\top (W_{uk} c_t) = (W_{uk}^\top q)^\top c_t$, the up-projections fold into the query and output weights, so **attention runs directly on the cached latent** and per-head keys and values are never rebuilt.
 - An MHA layer with 128 heads of width 128 caches $2 \times 128 \times 128 =$ 32,768 elements per token. MLA stores **1.8%** of that.
 - **DeepSeek-V3 (671B parameters):** 61 layers × 576 × 2 bytes ≈ **69 KiB per token**. That is less than Llama-3-8B's 128 KiB, and **about 7× less than Llama-2-7B**.
 
+**What absorption is: reordering one matrix product.**
+
+$$
+q^\top (W_{uk}\, c_t) \;=\; (W_{uk}^\top q)^\top c_t
+$$
+
+- **Without absorption:** rebuild every cached token's key $W_{uk} c_t$, then dot it with $q$. That is **one matrix-vector product per cached token**, at every decode step.
+- **With absorption:** move $W_{uk}$ onto the query **once per step**, then dot the result straight against each cached latent. Same score, **no keys rebuilt**.
+- **The condition:** absorption needs **nothing position-dependent** between $q$ and $W_{uk}$.
+
+??? example "Worked example: absorption by hand (one head)"
+
+    Sizes: latent width $d_c = 3$, head width $d_h = 2$.
+
+    | Quantity | Value |
+    | --- | --- |
+    | Up-projection $W_{uk}$ (2×3) | $\begin{bmatrix}1 & 0 & 2 \\ 0 & 1 & 1\end{bmatrix}$ |
+    | Cached latent, one past token | $c_t = [1, 2, 3]$ |
+    | Current query | $q = [1, 1]$ |
+
+    **Without absorption: rebuild the key, then dot.**
+
+    1. Rebuild the key: $k_t = W_{uk} c_t = [1\cdot1 + 0\cdot2 + 2\cdot3,\; 0\cdot1 + 1\cdot2 + 1\cdot3] = [7, 5]$
+    2. Score: $q \cdot k_t = 1\cdot7 + 1\cdot5 = \mathbf{12}$
+
+    Step 1 repeats **for every cached token, at every decode step**.
+
+    **With absorption: move $W_{uk}$ onto the query once.**
+
+    1. Absorb once per step: $\tilde q = W_{uk}^\top q = [1,\; 1,\; 2+1] = [1, 1, 3]$
+    2. Score directly against the cache: $\tilde q \cdot c_t = 1\cdot1 + 1\cdot2 + 3\cdot3 = \mathbf{12}$
+
+    **Same score, 12.** The second path never builds $k_t$.
+
+**Why position needs its own key (decoupled RoPE):**
+
+![Sinusoidal positional encoding adds a position vector to the token embedding once, before the first layer, so Q, K and V all carry position indirectly; RoPE adds nothing at the input and instead rotates Q and K by their positions inside every attention layer, leaves V unchanged, and caches rotated keys, so the score depends only on the relative distance n minus m](../images/attention/sinusoidal_pe_vs_rope.png)
+
+- **RoPE is where position enters in modern LLMs.** Sinusoidal PE adds position **once, at the input**. RoPE rotates **only Q and K, inside every layer**, and leaves V untouched. Because $R_m^\top R_n = R_{n-m}$, the score sees only the **relative distance**.
+- RoPE rotates each key by an angle set by its **position**: the key becomes $R_t W_{uk} c_t$.
+- The rotation sits between the query and $W_{uk}$, and it changes with every cached token. **No single $W_{uk}^\top q$ works for all of them**, so absorption breaks and attention would have to rebuild every head's key for every cached token.
+- DeepSeek's fix: **content** goes through the latent, unrotated, so absorption still works. **Position** goes into the separate 64-wide key $k^R_t$, shared by all heads, rotated once and cached as is.
+
+**Why quality survives the compression:**
+
+- Keys and values across heads are **largely redundant**. The down-projection is **learned end to end**, so the latent keeps what next-token prediction needs.
+- Each head keeps its **own up-projections**, so heads still read different views of the same latent. In MQA, every head reads the identical K and V.
+
 | Pros | Cons |
 | --- | --- |
 | **Smallest cache:** in DeepSeek-V2's ablation (Table 9), 15.6K vs 110.6K elements per token in the small MoE, 34.6K vs 860.2K in the large | **Complex:** decoupled RoPE key and folded projections make the attention stack harder to implement |
-| **Quality kept:** matches or beats MHA on most benchmarks in the same ablation | **Scale-dependent:** practitioners report GQA is easier to tune below roughly 100B parameters |
+| **Quality kept:** matches or beats MHA on most benchmarks in the same ablation | **Serving work:** speed depends on custom kernels and a matching cache layout, not on the equations alone |
+| **Pays off at long context:** savings grow with every cached token, so long documents and large batches gain most | **Latent too small loses detail:** rare or long-range token interactions can drop out of an over-compressed latent |
+| | **Scale-dependent:** practitioners report GQA is easier to tune below roughly 100B parameters |
 
 #### Sliding-window attention (SWA): cache only a recent window
 
@@ -358,3 +412,4 @@ $$
 12. Sebastian Raschka, [*A Visual Guide to Attention Variants in Modern LLMs*](https://magazine.sebastianraschka.com/p/visual-attention-variants) (2026) — GQA, MLA, sliding-window, sparse and hybrid attention, with their trade-offs
 13. Gemma Team, [*Gemma 3 Technical Report*](https://arxiv.org/abs/2503.19786) (2025) — 5:1 local-to-global sliding-window attention
 14. Qiu et al., [*Gated Attention for Large Language Models: Non-linearity, Sparsity, and Attention-Sink-Free*](https://arxiv.org/abs/2505.06708) (2025) — the gated full-attention layers in Qwen3-Next and Qwen3.5
+15. ZeroMathAI, [*Multi-Head Latent Attention — Reducing the KV Cache with Shared Latents per Token*](https://zeromathai.com/en/multi-head-latent-attention-en/) (2026) — stored vs computed representations, shared latent per token, MLA's failure modes
