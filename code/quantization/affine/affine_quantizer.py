@@ -14,11 +14,11 @@ class AffineQuantizer:
         # TODO A: the integer grid. Write every end with shifts, as in FixedPoint TODO B.
         # signed 8-bit: [-128, 127]    unsigned 8-bit: [0, 255]
         if signed:
-            self.q_min = -(1<< (bit_width-1))
-            self.q_max = (1<< (bit_width-1)) -1
+            self.q_min = ...
+            self.q_max = ...
         else:
-            self.q_min = 0
-            self.q_max = (1<< bit_width) -1
+            self.q_min = ...
+            self.q_max = ...
 
         self.scale = None       # S, a positive float: the real value of one integer step
         self.zero_point = None  # Z, an int on the grid: the integer that means real 0.0
@@ -28,8 +28,8 @@ class AffineQuantizer:
 
         # TODO B: real 0.0 must sit inside [r_min, r_max] so it gets an exact integer.
         # Stretch the range to include it: [2.0, 5.0] becomes [0.0, 5.0].
-        r_min = min(r_min,0)
-        r_max = max(r_max, 0)
+        r_min = ...
+        r_max = ...
 
         real_range = r_max - r_min
         if real_range == 0:  # an all-zero tensor: any scale works
@@ -37,26 +37,21 @@ class AffineQuantizer:
             return
 
         # TODO C: the real range spread evenly over the integer range.
-        self.scale = (r_max - r_min)/(self.q_max - self.q_min)
+        self.scale = ...
 
         # TODO D: solve r_min = S * (q_min - Z) for Z. Z lives on the grid, so round it
         # to a Python int, then clamp it into [q_min, q_max].
-        initial_zero = self.q_min - (r_min/self.scale)
-        self.zero_point = int(np.round(initial_zero))
-        self.zero_point = min(self.q_max, max(self.q_min, self.zero_point))
+        self.zero_point = ...
 
     def quantize(self, r):
         # TODO E: real -> integer. Divide by the scale, shift by the zero-point,
         # round with np.round, clip into the grid. Return an integer array.
-        result = np.round(r/self.scale + self.zero_point)
-        return result
+        ...
 
     def dequantize(self, q):
         # TODO F: integer -> real. Subtract the zero-point first, then scale.
         # Convert q to float32 before subtracting.
-        # result = self.scale * (q.astype(np.float32)- self.zero_point)
-        result = self.scale * (q- self.zero_point)
-        return result
+        ...
 
 
 def affine_dot(q_w, z_w, q_x, z_x):

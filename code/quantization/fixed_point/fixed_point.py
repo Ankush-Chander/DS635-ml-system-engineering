@@ -13,24 +13,24 @@ class FixedPoint:
         self.n = frac_bits
 
         # TODO A: scale = 2**frac_bits. Compute it with a bit shift.
-        self.scale = 1 << frac_bits
+        self.scale = ...
 
         total_bits = int_bits + frac_bits + 1
 
         # TODO B: two's-complement range of a signed `total_bits`-bit integer.
         # For 8 bits that is [-128, 127]. Write both ends with shifts.
-        self.min_int = -(1<< (total_bits-1))
-        self.max_int = (1<< (total_bits-1)) - 1
+        self.min_int = ...
+        self.max_int = ...
 
         if isinstance(value, float):
             # TODO: encode the real number: scale it, round to nearest, make it an int.
-            self.raw = round(value * self.scale)
+            self.raw = ...
         else:
             # An int is taken to be an already-encoded raw value.
             self.raw = value
 
         # TODO C: saturate raw into [min_int, max_int]. One line, no if-statements.
-        self.raw = max(self.min_int, min(self.max_int, self.raw))
+        self.raw = ...
 
     def __repr__(self):
         return f"{self.raw / self.scale} (Raw: {self.raw})"
@@ -39,18 +39,17 @@ class FixedPoint:
         # TODO: both operands share one scale. How do the raws combine?
         # Return a new FixedPoint from the raw sum, keeping int_bits and frac_bits.
         # Think: where does overflow get handled?
-        raw = self.raw + other.raw
-        return FixedPoint(raw, self.int_bits, self.n)
+        ...
 
     def __mul__(self, other):
         # TODO D: multiply the raws. What scale does the product carry?
-        wide_product = self.raw * other.raw
+        wide_product = ...
 
         # TODO E: rounding bias = half of one output step, written as a shift.
-        rounding_bias = self.scale >> 1
+        rounding_bias = ...
 
         # TODO F: bring the product back to `scale`: add the bias, shift right by n.
-        final_raw = (wide_product + rounding_bias) >> self.n
+        final_raw = ...
 
         return FixedPoint(final_raw, self.int_bits, self.n)
 
