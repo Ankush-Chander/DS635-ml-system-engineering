@@ -206,6 +206,26 @@
     
     
       <li class="md-tabs__item">
+        <a href="../../notebooks/gguf_the_long_way_around/" class="md-tabs__link">
+          
+  
+  
+  Notebooks
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
         <a href="../../viz/acceptance-rule.html" class="md-tabs__link">
           
   
@@ -1638,7 +1658,7 @@
   <span class="md-ellipsis">
     
   
-    Demos
+    Notebooks
   
 
     
@@ -1651,6 +1671,149 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Notebooks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/gguf_the_long_way_around/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GGUF, the long way around
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/decoding_strategies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decoding strategies, live
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/kv_cache_shapes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KV cache, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2325,14 +2488,78 @@
 </tbody>
 </table>
 <h4 id="multi-head-latent-attention-mla-compress-what-is-cached">Multi-head Latent Attention (MLA): compress what is cached</h4>
-<p><img alt="DeepSeek-V3 block with multi-head latent attention: the input is projected by W_dkv into one compressed key-and-value vector, which W_uk and W_uv expand into keys and values; regular multi-head attention projects the input directly into a query, key and value per head" src="../../images/attention/mla_vs_mha.png" /></p>
-<p><em>Figure: Sebastian Raschka, <a href="https://magazine.sebastianraschka.com/p/the-big-llm-architecture-comparison">The Big LLM Architecture Comparison</a>.</em></p>
+<p><strong>MLA separates what is stored from what is computed.</strong> The cache holds <strong>one compressed latent per token</strong>; each head's key and value are projected from it only when attention runs.</p>
+<ul>
+<li><strong>GQA and MQA change how many heads share K and V. MLA changes the storage format:</strong> every head still gets its own key and value, all built from the same latent.</li>
+</ul>
+<p><img alt="Traditional multi-head attention caches a separate key and value for every head of every token; multi-head latent attention caches one shared compressed latent per token, from which each head's key and value are projected when attention is computed" src="../../images/attention/mla_shared_latent.png" /></p>
+<p><em>Figure: ZeroMathAI, <a href="https://zeromathai.com/en/multi-head-latent-attention-en/">Multi-Head Latent Attention</a>.</em></p>
 <p>DeepSeek-V2 and V3 cache a <strong>compressed vector</strong> in place of per-head keys and values:</p>
 <ul>
-<li>Per token per layer, the cache holds a latent <span class="arithmatex">\(c_t\)</span> of width <span class="arithmatex">\(d_c = 512\)</span>, produced by <span class="arithmatex">\(W_{dkv}\)</span> (the figure's compressed key and value), and a small key <span class="arithmatex">\(k^R_t\)</span> of width <span class="arithmatex">\(d_r = 64\)</span> that carries the RoPE position: <strong>576 elements</strong>.</li>
+<li>Per token per layer, the cache holds a latent <span class="arithmatex">\(c_t\)</span> of width <span class="arithmatex">\(d_c = 512\)</span>, produced by a down-projection <span class="arithmatex">\(W_{dkv}\)</span> (the figure's teal latent), and a small key <span class="arithmatex">\(k^R_t\)</span> of width <span class="arithmatex">\(d_r = 64\)</span> that carries the RoPE position: <strong>576 elements</strong>.</li>
 <li>Each head's keys and values are <span class="arithmatex">\(W_{uk} c_t\)</span> and <span class="arithmatex">\(W_{uv} c_t\)</span>. Because <span class="arithmatex">\(q^\top (W_{uk} c_t) = (W_{uk}^\top q)^\top c_t\)</span>, the up-projections fold into the query and output weights, so <strong>attention runs directly on the cached latent</strong> and per-head keys and values are never rebuilt.</li>
 <li>An MHA layer with 128 heads of width 128 caches <span class="arithmatex">\(2 \times 128 \times 128 =\)</span> 32,768 elements per token. MLA stores <strong>1.8%</strong> of that.</li>
 <li><strong>DeepSeek-V3 (671B parameters):</strong> 61 layers × 576 × 2 bytes ≈ <strong>69 KiB per token</strong>. That is less than Llama-3-8B's 128 KiB, and <strong>about 7× less than Llama-2-7B</strong>.</li>
+</ul>
+<p><strong>What absorption is: reordering one matrix product.</strong></p>
+<div class="arithmatex">\[
+q^\top (W_{uk}\, c_t) \;=\; (W_{uk}^\top q)^\top c_t
+\]</div>
+<ul>
+<li><strong>Without absorption:</strong> rebuild every cached token's key <span class="arithmatex">\(W_{uk} c_t\)</span>, then dot it with <span class="arithmatex">\(q\)</span>. That is <strong>one matrix-vector product per cached token</strong>, at every decode step.</li>
+<li><strong>With absorption:</strong> move <span class="arithmatex">\(W_{uk}\)</span> onto the query <strong>once per step</strong>, then dot the result straight against each cached latent. Same score, <strong>no keys rebuilt</strong>.</li>
+<li><strong>The condition:</strong> absorption needs <strong>nothing position-dependent</strong> between <span class="arithmatex">\(q\)</span> and <span class="arithmatex">\(W_{uk}\)</span>.</li>
+</ul>
+<details class="example">
+<summary>Worked example: absorption by hand (one head)</summary>
+<p>Sizes: latent width <span class="arithmatex">\(d_c = 3\)</span>, head width <span class="arithmatex">\(d_h = 2\)</span>.</p>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Up-projection <span class="arithmatex">\(W_{uk}\)</span> (2×3)</td>
+<td><span class="arithmatex">\(\begin{bmatrix}1 &amp; 0 &amp; 2 \\ 0 &amp; 1 &amp; 1\end{bmatrix}\)</span></td>
+</tr>
+<tr>
+<td>Cached latent, one past token</td>
+<td><span class="arithmatex">\(c_t = [1, 2, 3]\)</span></td>
+</tr>
+<tr>
+<td>Current query</td>
+<td><span class="arithmatex">\(q = [1, 1]\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Without absorption: rebuild the key, then dot.</strong></p>
+<ol>
+<li>Rebuild the key: <span class="arithmatex">\(k_t = W_{uk} c_t = [1\cdot1 + 0\cdot2 + 2\cdot3,\; 0\cdot1 + 1\cdot2 + 1\cdot3] = [7, 5]\)</span></li>
+<li>Score: <span class="arithmatex">\(q \cdot k_t = 1\cdot7 + 1\cdot5 = \mathbf{12}\)</span></li>
+</ol>
+<p>Step 1 repeats <strong>for every cached token, at every decode step</strong>.</p>
+<p><strong>With absorption: move <span class="arithmatex">\(W_{uk}\)</span> onto the query once.</strong></p>
+<ol>
+<li>Absorb once per step: <span class="arithmatex">\(\tilde q = W_{uk}^\top q = [1,\; 1,\; 2+1] = [1, 1, 3]\)</span></li>
+<li>Score directly against the cache: <span class="arithmatex">\(\tilde q \cdot c_t = 1\cdot1 + 1\cdot2 + 3\cdot3 = \mathbf{12}\)</span></li>
+</ol>
+<p><strong>Same score, 12.</strong> The second path never builds <span class="arithmatex">\(k_t\)</span>.</p>
+</details>
+<p><strong>Why position needs its own key (decoupled RoPE):</strong></p>
+<p><img alt="Sinusoidal positional encoding adds a position vector to the token embedding once, before the first layer, so Q, K and V all carry position indirectly; RoPE adds nothing at the input and instead rotates Q and K by their positions inside every attention layer, leaves V unchanged, and caches rotated keys, so the score depends only on the relative distance n minus m" src="../../images/attention/sinusoidal_pe_vs_rope.png" /></p>
+<ul>
+<li><strong>RoPE is where position enters in modern LLMs.</strong> Sinusoidal PE adds position <strong>once, at the input</strong>. RoPE rotates <strong>only Q and K, inside every layer</strong>, and leaves V untouched. Because <span class="arithmatex">\(R_m^\top R_n = R_{n-m}\)</span>, the score sees only the <strong>relative distance</strong>.</li>
+<li>RoPE rotates each key by an angle set by its <strong>position</strong>: the key becomes <span class="arithmatex">\(R_t W_{uk} c_t\)</span>.</li>
+<li>The rotation sits between the query and <span class="arithmatex">\(W_{uk}\)</span>, and it changes with every cached token. <strong>No single <span class="arithmatex">\(W_{uk}^\top q\)</span> works for all of them</strong>, so absorption breaks and attention would have to rebuild every head's key for every cached token.</li>
+<li>DeepSeek's fix: <strong>content</strong> goes through the latent, unrotated, so absorption still works. <strong>Position</strong> goes into the separate 64-wide key <span class="arithmatex">\(k^R_t\)</span>, shared by all heads, rotated once and cached as is.</li>
+</ul>
+<p><strong>Why quality survives the compression:</strong></p>
+<ul>
+<li>Keys and values across heads are <strong>largely redundant</strong>. The down-projection is <strong>learned end to end</strong>, so the latent keeps what next-token prediction needs.</li>
+<li>Each head keeps its <strong>own up-projections</strong>, so heads still read different views of the same latent. In MQA, every head reads the identical K and V.</li>
 </ul>
 <table>
 <thead>
@@ -2348,6 +2575,14 @@
 </tr>
 <tr>
 <td><strong>Quality kept:</strong> matches or beats MHA on most benchmarks in the same ablation</td>
+<td><strong>Serving work:</strong> speed depends on custom kernels and a matching cache layout, not on the equations alone</td>
+</tr>
+<tr>
+<td><strong>Pays off at long context:</strong> savings grow with every cached token, so long documents and large batches gain most</td>
+<td><strong>Latent too small loses detail:</strong> rare or long-range token interactions can drop out of an over-compressed latent</td>
+</tr>
+<tr>
+<td></td>
 <td><strong>Scale-dependent:</strong> practitioners report GQA is easier to tune below roughly 100B parameters</td>
 </tr>
 </tbody>
@@ -2596,6 +2831,7 @@
 <li>Sebastian Raschka, <a href="https://magazine.sebastianraschka.com/p/visual-attention-variants"><em>A Visual Guide to Attention Variants in Modern LLMs</em></a> (2026) — GQA, MLA, sliding-window, sparse and hybrid attention, with their trade-offs</li>
 <li>Gemma Team, <a href="https://arxiv.org/abs/2503.19786"><em>Gemma 3 Technical Report</em></a> (2025) — 5:1 local-to-global sliding-window attention</li>
 <li>Qiu et al., <a href="https://arxiv.org/abs/2505.06708"><em>Gated Attention for Large Language Models: Non-linearity, Sparsity, and Attention-Sink-Free</em></a> (2025) — the gated full-attention layers in Qwen3-Next and Qwen3.5</li>
+<li>ZeroMathAI, <a href="https://zeromathai.com/en/multi-head-latent-attention-en/"><em>Multi-Head Latent Attention — Reducing the KV Cache with Shared Latents per Token</em></a> (2026) — stored vs computed representations, shared latent per token, MLA's failure modes</li>
 </ol>
 
 

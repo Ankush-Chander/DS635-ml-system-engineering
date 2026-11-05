@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://DS635.ankushchander.com/notebooks/gguf_the_long_way_around/">
       
       
+        <link rel="prev" href="../../labs/Lab19_22b_quantization_error/">
+      
+      
+        <link rel="next" href="../decoding_strategies/">
       
       
         
@@ -185,6 +189,28 @@
   
   
   Labs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Notebooks
 
         </a>
       </li>
@@ -1346,6 +1372,559 @@
       
   
   
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notebooks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Notebooks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GGUF, the long way around
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GGUF, the long way around
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The question
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-route" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The route
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#course-spine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Course spine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-a-model-is-a-file-but-first-it-has-to-be-a-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. A model is a file — but first it has to be a program
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. A model is a file — but first it has to be a program">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-nulltella-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Nulltella problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-is-the-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The is the model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-how-big-is-a-model-really" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. How big is a model, really?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-serialization-from-heap-to-disk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Serialization: from heap to disk
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-and-the-reason-we-left-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. , and the reason we left it
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. , and the reason we left it">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pickle-store-names-not-actual-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pickle store names, not actual objects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pickle-allows-for-arbitary-code-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pickle allows for arbitary code execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ptpickle-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .pt/pickle summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-safetensors-round-trip-it-then-dissect-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. safetensors: round-trip it, then dissect it
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. safetensors: round-trip it, then dissect it">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-same-file-at-real-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The same file, at real scale
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#close-up-a-safetensors-file-is-only-the-weights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Close-up: a safetensors file is only the weights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-it-all-fits-together-to-run-a-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it all fits together to run a model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-what-every-binary-format-is-made-of" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. What every binary format is made of
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-checkpoints-saving-the-run-not-just-the-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Checkpoints: saving the run, not just the model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-local-inference-and-the-road-to-gguf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Local inference, and the road to GGUF
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-gguf-write-one-read-it-back" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. GGUF: write one, read it back
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. GGUF: write one, read it back">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dissect-it-the-four-parts-in-the-bytes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dissect it — the four parts, in the bytes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-it-back-and-run-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read it back, and run it
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-reading-a-real-model-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Reading a real model file
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Reading a real model file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#close-up-a-gguf-holds-the-whole-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Close-up: a GGUF holds the whole model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-onnx-the-model-as-a-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. ONNX: the model as a program
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-where-we-ended-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Where we ended up
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decoding_strategies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decoding strategies, live
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kv_cache_shapes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KV cache, measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
   
   
     
@@ -1362,10 +1941,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -1383,8 +1962,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5207,6 +5786,44 @@ about what an <em>inference</em> format considers essential?</p>
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../labs/Lab19_22b_quantization_error/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lab 19–22b — Quantization error, measured">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Lab 19–22b — Quantization error, measured
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../decoding_strategies/" class="md-footer__link md-footer__link--next" aria-label="Next: Decoding strategies, live">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Decoding strategies, live
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">
